@@ -6,12 +6,20 @@ use XF\Mvc\ParameterBag;
 
 class Thread extends XFCP_Thread
 {
+    const CONTROLLER_NAME = 'XF\Pub\Controller\Thread';
+
     protected function preDispatchController($action, ParameterBag $params)
     {
-        $app = $this->app();
-        $userActivityRepo = $app->repository('SV\UserActivity\Repository\UserActivity');
-        $controller = $app->extension()->resolveExtendedClassToRoot($this);
-        $userActivityRepo->registerHandler($controller, 'thread', 'thread_id');
+        $userActivityRepo = $this->app->repository('SV\UserActivity\Repository\UserActivity');
+        $userActivityRepo->registerHandler(self::CONTROLLER_NAME, 'thread', 'thread_id');
         return parent::preDispatchController($action, $params);
+    }
+
+    public function actionIndex(ParameterBag $params)
+    {
+        $response = parent::actionIndex($params);
+        $userActivityRepo = $this->app->repository('SV\UserActivity\Repository\UserActivity');
+        $userActivityRepo->insertUserActivityIntoViewResponse(self::CONTROLLER_NAME, $response);
+        return $response;
     }
 }

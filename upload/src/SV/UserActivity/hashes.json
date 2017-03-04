@@ -2,10 +2,10 @@
     "src/addons/SV/UserActivity/addon.json": "8e5ad7e5c1a82b25064b8e62790bb1ba1992c6c79ba1cb1c012f796c2e420073",
     "src/addons/SV/UserActivity/Cron/ActivityGarbageCollect.php": "19b387e159d3090dafde1b5ab94a000ffe289e2cff5b928dae4f37712f55016d",
     "src/addons/SV/UserActivity/Job/ActivityGarbageCollect.php": "34e636ea97317fa30d6cbbb108946876891278c3d331413d9bace23d76c8ebda",
-    "src/addons/SV/UserActivity/Repository/UserActivity.php": "d15df7979d5e6939a59a72c8ad698ee77f8efeb5123cfce7fec17d92625bf99b",
-    "src/addons/SV/UserActivity/XF/Pub/Controller/Conversation.php": "da8dd67e76d9f00fbeaa926a625ae50fcd93e9cb7b5537edef645e7b69566e4b",
-    "src/addons/SV/UserActivity/XF/Pub/Controller/Post.php": "a814a08de3d1b3903bbaab0306aee46e0882dea32179f2d6272db12e0cb40e14",
-    "src/addons/SV/UserActivity/XF/Pub/Controller/Thread.php": "55ae6db485bd7a51de7b290cbce956b926da3cc1f8e3a075cb9e600da8e9ae4c",
+    "src/addons/SV/UserActivity/Repository/UserActivity.php": "f1ab35ba22c32d8666e012295f92fe662918d1e07964475e2001b72caa77d57f",
+    "src/addons/SV/UserActivity/XF/Pub/Controller/Conversation.php": "62876b1cfafde4c3cf060d0d5dd74f5325c1a3c9981ad5dc448d7a0edcae0748",
+    "src/addons/SV/UserActivity/XF/Pub/Controller/Post.php": "a6dcdcf46236b37295375656f23a97ce46e06efaa151e71cfe0176aecc03b87b",
+    "src/addons/SV/UserActivity/XF/Pub/Controller/Thread.php": "5038718afa9852ce8771076833bed18b9f60abdbc0ecd6c09ec2e6a5ad896c43",
     "src/addons/SV/UserActivity/XF/Repository/SessionActivity.php": "a498468e4008c683cf895457a9834e689d617b87bad7e7b5cb32bd4b452562a2",
     "src/addons/SV/UserActivity/_data/class_extensions.xml": "f2de4bcaf567e0f9ed74dd85bbe43c7667beac8198ccc16668512efa04161eb0",
     "src/addons/SV/UserActivity/_data/options.xml": "de990b0d76c04d4ec3aee89993f17a484941566fe947ab73c744513dd999cacb",
@@ -13,6 +13,6 @@
     "src/addons/SV/UserActivity/_data/phrases.xml": "0a7f404f27737e48baf3c897c50a49c66dd109e85f0267c16c50e53904c5638c",
     "src/addons/SV/UserActivity/_data/style_properties.xml": "784aa4be857bb49a4f69cd2692d6afff1f47d5240abba148f3a56b6cfe581110",
     "src/addons/SV/UserActivity/_data/style_property_groups.xml": "359226a65429d911121edca067768b57663e099923aa62ece00a7a3db69b98a5",
-    "src/addons/SV/UserActivity/_data/templates.xml": "b92d5a4a5928577c60b608fe676442441a9131a32c8ebf9ba6509ae6d7b3c7ce",
-    "src/addons/SV/UserActivity/_data/template_modifications.xml": "aa560a7f8d1e78e2a419ae5337647648c25971cee0f2e452c5fe8e429e37bba6"
+    "src/addons/SV/UserActivity/_data/templates.xml": "6632214c9b0cd5e1d60b1fdfdf31261b39dc089f2a7754c6cba31a488c111b40",
+    "src/addons/SV/UserActivity/_data/template_modifications.xml": "c1b80c86522b32875f3c32bafb114305609a9c4fdc71d912b10ffd6cb84fad5b"
 }

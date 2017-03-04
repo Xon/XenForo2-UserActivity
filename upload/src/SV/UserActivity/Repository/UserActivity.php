@@ -38,10 +38,10 @@ class UserActivity extends Repository
         }
         return self::$handlers[$controllerName];
     }
-/*
+
     public function insertUserActivityIntoViewResponse($controllerName, &$response)
     {
-        if ($response instanceof XenForo_ControllerResponse_View)
+        if ($response instanceof \XF\Mvc\Reply\View)
         {
             $handler = $this->getHandler($controllerName);
             if (empty($handler))
@@ -50,22 +50,25 @@ class UserActivity extends Repository
             }
             $contentType = $handler[0];
             $contentIdField = $handler[1];
-            if (empty($response->params[$contentType][$contentIdField]))
+            $content = $response->getParam($contentType);
+            if (empty($content[$contentIdField]))
             {
                 return;
             }
 
-            $visitor = XenForo_Visitor::getInstance();
+            $visitor = \XF::visitor();
             if (!$visitor->hasPermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers'))
             {
-                return;
+                //return;
             }
-            $response->params['UA_UsersViewing'] = $this->getUsersViewing($contentType, $response->params[$contentType][$contentIdField], $visitor->toArray());
-            $response->params['UA_ViewerPermission'] = !empty($response->params['UA_UsersViewing']);
-            $response->params['UA_ContentType'] = new XenForo_Phrase($contentType);
+            $records = $this->getUsersViewing($contentType, $content[$contentIdField], $visitor);
+            if (!empty($records))
+            {
+                $response->setParam('UA_Records', $records);
+            }
         }
     }
-*/
+
     public function GarbageCollectActivity(array $data, $targetRunTime = null)
     {
         $app = $this->app();

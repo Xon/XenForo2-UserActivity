@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
-  <template type="public" title="UA_ViewContainer_macros" version_id="1000000" version_string="1.0.0"><![CDATA[<xf:macro name="UserActivity" arg-permission="{{ false }}" arg-contentType="" arg-records="">
-	<xf:if is="{$permission}">
+  <template type="public" title="UA_ViewContainer_macros" version_id="1000000" version_string="1.0.0"><![CDATA[<xf:macro name="UserActivity" arg-contentTypePhrase="" arg-contentId="" arg-records="">	
+	<xf:if is="{$records}">
 		<xf:if contentcheck="true">
 		<xf:css src="UserActivity.css" />
 		<div id="uaThreadViewContainer" class="section secondaryContent">
-			<h3>{{ phrase('UA_ViewingTitle', {'ContentType': $contentType, 'users': $records.members, 'guests': $records.guests}) }}</h3>
+			<h3>{{ phrase('UA_ViewingTitle', {'ContentType': $contentTypePhrase, 'users': $records.members, 'guests': $records.guests}) }}</h3>
 			<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">
 				<ol class="listInline commaImplode">
 			<xf:elseif is="{$xf.options.RainDD_UA_ThreadViewType} == 1" />
@@ -14,11 +14,11 @@
 			<xf:contentcheck>
 				<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">
 				<xf:foreach loop="$records.records" value="$user">
-					<li><xf:username user="$user" rich="true" title="{{ phrase('ua_x_was_last_seen', {'username': $user.username}) }}: {{ date($user.effective_last_activity) }}"/></li>
+					<li><xf:username user="$user" rich="true" title="{{ phrase('ua_x_was_last_seen', {'username': $user.username}) }}: {{ date_dynamic($user.effective_last_activity) }}"/></li>
 				</xf:foreach>
 				<xf:elseif is="{$xf.options.RainDD_UA_ThreadViewType} == 1" />
 				<xf:foreach loop="$records.records" value="$user">
-					<li><xf:avatar user="$user" size="s" img="true" title="{{ phrase('ua_x_was_last_seen', {'username': $user.username}) }}: {{ date($user.effective_last_activity) }}"/></li>
+					<li><xf:avatar user="$user" size="s" img="true" title="{{ phrase('ua_x_was_last_seen', {'username': $user.username}) }}: {{ date_dynamic($user.effective_last_activity) }}"/></li>
 				</xf:foreach>
 				</xf:if>
 			</xf:contentcheck>
