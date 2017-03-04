@@ -1,5 +1,5 @@
 {
-    "src/addons/SV/UserActivity/addon.json": "f6a96c91a9ef844a0e0c20a4b7f08e9a30103e66d1ee86a9192765c8f68d35f2",
+    "src/addons/SV/UserActivity/addon.json": "8e5ad7e5c1a82b25064b8e62790bb1ba1992c6c79ba1cb1c012f796c2e420073",
     "src/addons/SV/UserActivity/Cron/ActivityGarbageCollect.php": "19b387e159d3090dafde1b5ab94a000ffe289e2cff5b928dae4f37712f55016d",
     "src/addons/SV/UserActivity/Job/ActivityGarbageCollect.php": "34e636ea97317fa30d6cbbb108946876891278c3d331413d9bace23d76c8ebda",
     "src/addons/SV/UserActivity/Repository/UserActivity.php": "d15df7979d5e6939a59a72c8ad698ee77f8efeb5123cfce7fec17d92625bf99b",
