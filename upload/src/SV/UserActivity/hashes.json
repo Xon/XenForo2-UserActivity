@@ -2,5 +2,10 @@
     "src/addons/SV/UserActivity/addon.json": "f6a96c91a9ef844a0e0c20a4b7f08e9a30103e66d1ee86a9192765c8f68d35f2",
     "src/addons/SV/UserActivity/Cron/ActivityGarbageCollect.php": "19b387e159d3090dafde1b5ab94a000ffe289e2cff5b928dae4f37712f55016d",
     "src/addons/SV/UserActivity/Job/ActivityGarbageCollect.php": "34e636ea97317fa30d6cbbb108946876891278c3d331413d9bace23d76c8ebda",
-    "src/addons/SV/UserActivity/Repository/UserActivity.php": "3a2b563c870889467283f297c14ff9bd94f10785a3d5099e3735ebc368c61afa"
+    "src/addons/SV/UserActivity/Repository/UserActivity.php": "3a2b563c870889467283f297c14ff9bd94f10785a3d5099e3735ebc368c61afa",
+    "src/addons/SV/UserActivity/XF/Pub/Controller/Conversation.php": "7debdba20c7d805cbd66237850738767ea9a060bff6b54aa6449c4a5a85aecbb",
+    "src/addons/SV/UserActivity/XF/Pub/Controller/Post.php": "8024920be0931fe43dc6a22fca045914cc27458b879f2eaddc6d281b77100997",
+    "src/addons/SV/UserActivity/XF/Pub/Controller/Thread.php": "8c724ba7da7a9b28e755b4b5dc525c6e6b7bffae6019711da9720d5b37475802",
+    "src/addons/SV/UserActivity/XF/Repository/SessionActivity.php": "881a6af41e2eea542ad28b9a5bf927bde4d521aca9442e7c3d4acb1dfb1b35a2",
+    "src/addons/SV/UserActivity/_data/class_extensions.xml": "f2de4bcaf567e0f9ed74dd85bbe43c7667beac8198ccc16668512efa04161eb0"
 }
