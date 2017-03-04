@@ -14,11 +14,11 @@
 			<xf:contentcheck>
 				<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">
 				<xf:foreach loop="$records.records" value="$user">
-					<li><xf:username user="$user" rich="true" title="{{ phrase('ua_x_was_last_seen', {'username': $user.username}) }}: {{ datetime($user.effective_last_activity) }}"/></li>
+					<li><xf:username user="$user" rich="true" title="{{ phrase('ua_x_was_last_seen', {'username': $user.username}) }}: {{ date($user.effective_last_activity) }}"/></li>
 				</xf:foreach>
 				<xf:elseif is="{$xf.options.RainDD_UA_ThreadViewType} == 1" />
 				<xf:foreach loop="$records.records" value="$user">
-					<li><xf:avatar user="$user" size="s" img="true" title="{{ phrase('ua_x_was_last_seen', {'username': $user.username}) }}: {{ datetime($user.effective_last_activity) }}"/></li>
+					<li><xf:avatar user="$user" size="s" img="true" title="{{ phrase('ua_x_was_last_seen', {'username': $user.username}) }}: {{ date($user.effective_last_activity) }}"/></li>
 				</xf:foreach>
 				</xf:if>
 			</xf:contentcheck>
