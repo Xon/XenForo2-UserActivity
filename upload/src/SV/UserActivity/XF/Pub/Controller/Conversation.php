@@ -10,7 +10,8 @@ class Conversation extends XFCP_Conversation
     {
         $app = $this->app();
         $userActivityRepo = $app->repository('SV\UserActivity\Repository\UserActivity');
-        $userActivityRepo->registerHandler('Conversation', 'thread', 'thread_id');
+        $controller = $app->extension()->resolveExtendedClassToRoot($this);
+        $userActivityRepo->registerHandler($controller, 'conversation', 'conversation_id');
         return parent::preDispatchController($action, $params);
     }
 }
