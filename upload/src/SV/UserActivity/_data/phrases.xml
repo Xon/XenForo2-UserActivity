@@ -22,6 +22,7 @@
   <phrase title="option_explain.UA_pruneChance" version_id="1000000" version_string="1.0.0"><![CDATA[When the list of active users per content type is returned, this is the probability that a prune operation will be considered.]]></phrase>
   <phrase title="option_group.SV_UA_Options" version_id="1000000" version_string="1.0.0"><![CDATA[User Activity]]></phrase>
   <phrase title="option_group_description.SV_UA_Options" version_id="1000000" version_string="1.0.0"><![CDATA[Show recent User Activity on various content]]></phrase>
+  <phrase title="permission.RainDD_UA_PermissionsMain_RainDD_UA_ThreadViewers" version_id="1000000" version_string="1.0.0"><![CDATA[View users who are viewing content]]></phrase>
   <phrase title="style_prop.RainDD_UA_Avatar" version_id="1000000" version_string="1.0.0"><![CDATA[Thread Avatar]]></phrase>
   <phrase title="style_prop.RainDD_UA_ThreadContainer" version_id="1000000" version_string="1.0.0"><![CDATA[Thread Container]]></phrase>
   <phrase title="style_prop.RainDD_UA_ThreadContainerH3" version_id="1000000" version_string="1.0.0"><![CDATA[Thread Container Title]]></phrase>

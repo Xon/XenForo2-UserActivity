@@ -59,7 +59,7 @@ class UserActivity extends Repository
             $visitor = \XF::visitor();
             if (!$visitor->hasPermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers'))
             {
-                //return;
+                return;
             }
             $records = $this->getUsersViewing($contentType, $content[$contentIdField], $visitor);
             if (!empty($records))
