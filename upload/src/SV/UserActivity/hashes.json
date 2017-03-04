@@ -1,0 +1,6 @@
+{
+    "src/addons/SV/UserActivity/addon.json": "f6a96c91a9ef844a0e0c20a4b7f08e9a30103e66d1ee86a9192765c8f68d35f2",
+    "src/addons/SV/UserActivity/Cron/ActivityGarbageCollect.php": "19b387e159d3090dafde1b5ab94a000ffe289e2cff5b928dae4f37712f55016d",
+    "src/addons/SV/UserActivity/Job/ActivityGarbageCollect.php": "34e636ea97317fa30d6cbbb108946876891278c3d331413d9bace23d76c8ebda",
+    "src/addons/SV/UserActivity/Repository/UserActivity.php": "3a2b563c870889467283f297c14ff9bd94f10785a3d5099e3735ebc368c61afa"
+}
