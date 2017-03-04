@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phrases>
+  <phrase title="RainDD_UA_Disabled" version_id="1000000" version_string="1.0.0"><![CDATA[Disabled]]></phrase>
+  <phrase title="RainDD_UA_DisplayAvatar" version_id="1000000" version_string="1.0.0"><![CDATA[Avatar]]></phrase>
+  <phrase title="RainDD_UA_DisplayName" version_id="1000000" version_string="1.0.0"><![CDATA[Username]]></phrase>
+  <phrase title="RainDD_UA_PositionAbovePageNav" version_id="1000000" version_string="1.0.0"><![CDATA[Above PageNav]]></phrase>
+  <phrase title="RainDD_UA_PositionAboveQR" version_id="1000000" version_string="1.0.0"><![CDATA[Above Quick Reply]]></phrase>
+  <phrase title="RainDD_UA_PositionBelowQR" version_id="1000000" version_string="1.0.0"><![CDATA[Below Quick Reply]]></phrase>
+  <phrase title="option.RainDD_UA_ThreadViewPos" version_id="1000000" version_string="1.0.0"><![CDATA[Viewing Thread Container Position]]></phrase>
+  <phrase title="option.RainDD_UA_ThreadViewType" version_id="1000000" version_string="1.0.0"><![CDATA[Viewing Thread Display Type]]></phrase>
+  <phrase title="option.SV_UA_Cutoff" version_id="1000000" version_string="1.0.0"><![CDATA[User cutoff]]></phrase>
+  <phrase title="option.SV_UA_TrackRobots" version_id="1000000" version_string="1.0.0"><![CDATA[Track Robots]]></phrase>
+  <phrase title="option.UA_fillFactor" version_id="1000000" version_string="1.0.0"><![CDATA[Fill Factor]]></phrase>
+  <phrase title="option.UA_pruneChance" version_id="1000000" version_string="1.0.0"><![CDATA[Prune Chance]]></phrase>
+  <phrase title="option_explain.RainDD_UA_ThreadViewPos" version_id="1000000" version_string="1.0.0"><![CDATA[Enable and choose where in the thread view the container for Viewing Thread will appear.]]></phrase>
+  <phrase title="option_explain.RainDD_UA_ThreadViewType" version_id="1000000" version_string="1.0.0"><![CDATA[Display users name or avatar for users Viewing Thread.]]></phrase>
+  <phrase title="option_explain.SV_UA_Cutoff" version_id="1000000" version_string="1.0.0"><![CDATA[Maximum number of users to display before it is displays as "...and X others".<br/>
+0 to show all usernames always.]]></phrase>
+  <phrase title="option_explain.SV_UA_TrackRobots" version_id="1000000" version_string="1.0.0"><![CDATA[Show/Hid robots from user activity]]></phrase>
+  <phrase title="option_explain.UA_fillFactor" version_id="1000000" version_string="1.0.0"><![CDATA[When doing a prune operation, the number of inactive users must be greater than active users times this fill factor.]]></phrase>
+  <phrase title="option_explain.UA_pruneChance" version_id="1000000" version_string="1.0.0"><![CDATA[When the list of active users per content type is returned, this is the probability that a prune operation will be considered.]]></phrase>
+  <phrase title="option_group.SV_UA_Options" version_id="1000000" version_string="1.0.0"><![CDATA[User Activity]]></phrase>
+  <phrase title="option_group_description.SV_UA_Options" version_id="1000000" version_string="1.0.0"><![CDATA[Show recent User Activity on various content]]></phrase>
+  <phrase title="style_prop.RainDD_UA_Avatar" version_id="1000000" version_string="1.0.0"><![CDATA[Thread Avatar]]></phrase>
+  <phrase title="style_prop.RainDD_UA_ThreadContainer" version_id="1000000" version_string="1.0.0"><![CDATA[Thread Container]]></phrase>
+  <phrase title="style_prop.RainDD_UA_ThreadContainerH3" version_id="1000000" version_string="1.0.0"><![CDATA[Thread Container Title]]></phrase>
+  <phrase title="style_prop.RainDD_UA_ThreadContainerH3Footnote" version_id="1000000" version_string="1.0.0"><![CDATA[Thread Container Counts]]></phrase>
+  <phrase title="style_prop_desc.RainDD_UA_Avatar" version_id="1000000" version_string="1.0.0"><![CDATA[]]></phrase>
+  <phrase title="style_prop_desc.RainDD_UA_ThreadContainer" version_id="1000000" version_string="1.0.0"><![CDATA[Adjust container properties such as background, border, and default font size.]]></phrase>
+  <phrase title="style_prop_desc.RainDD_UA_ThreadContainerH3" version_id="1000000" version_string="1.0.0"><![CDATA[Adjust container title font and border.]]></phrase>
+  <phrase title="style_prop_desc.RainDD_UA_ThreadContainerH3Footnote" version_id="1000000" version_string="1.0.0"><![CDATA[Adjust font properties for user and guest counts.]]></phrase>
+  <phrase title="style_prop_group.raindd_ua_main" version_id="1000000" version_string="1.0.0"><![CDATA[User Activity]]></phrase>
+  <phrase title="style_prop_group_desc.raindd_ua_main" version_id="1000000" version_string="1.0.0"><![CDATA[]]></phrase>
+</phrases>

@@ -7,5 +7,10 @@
     "src/addons/SV/UserActivity/XF/Pub/Controller/Post.php": "a814a08de3d1b3903bbaab0306aee46e0882dea32179f2d6272db12e0cb40e14",
     "src/addons/SV/UserActivity/XF/Pub/Controller/Thread.php": "55ae6db485bd7a51de7b290cbce956b926da3cc1f8e3a075cb9e600da8e9ae4c",
     "src/addons/SV/UserActivity/XF/Repository/SessionActivity.php": "a498468e4008c683cf895457a9834e689d617b87bad7e7b5cb32bd4b452562a2",
-    "src/addons/SV/UserActivity/_data/class_extensions.xml": "f2de4bcaf567e0f9ed74dd85bbe43c7667beac8198ccc16668512efa04161eb0"
+    "src/addons/SV/UserActivity/_data/class_extensions.xml": "f2de4bcaf567e0f9ed74dd85bbe43c7667beac8198ccc16668512efa04161eb0",
+    "src/addons/SV/UserActivity/_data/options.xml": "de990b0d76c04d4ec3aee89993f17a484941566fe947ab73c744513dd999cacb",
+    "src/addons/SV/UserActivity/_data/option_groups.xml": "f1ee5e57fc9d1a165483207ae406539e785d80fd49e4dedc2e250fdbd54f0f2f",
+    "src/addons/SV/UserActivity/_data/phrases.xml": "33d6b771aa29729c224582d4f6478655918a9ce89eae493eda7c3c3c278a815c",
+    "src/addons/SV/UserActivity/_data/style_properties.xml": "784aa4be857bb49a4f69cd2692d6afff1f47d5240abba148f3a56b6cfe581110",
+    "src/addons/SV/UserActivity/_data/style_property_groups.xml": "359226a65429d911121edca067768b57663e099923aa62ece00a7a3db69b98a5"
 }

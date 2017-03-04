@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<options>
+  <option option_id="RainDD_UA_ThreadViewPos" edit_format="select" data_type="integer">
+    <default_value>3</default_value>
+    <edit_format_params>0={{ phrase('RainDD_UA_Disabled') }}
+1={{ phrase('RainDD_UA_PositionAbovePageNav') }}
+2={{ phrase('RainDD_UA_PositionAboveQR') }}
+3={{ phrase('RainDD_UA_PositionBelowQR') }}</edit_format_params>
+    <relation group_id="SV_UA_Options" display_order="100"/>
+  </option>
+  <option option_id="RainDD_UA_ThreadViewType" edit_format="radio" data_type="integer">
+    <default_value>0</default_value>
+    <edit_format_params>0={{ phrase('RainDD_UA_DisplayName') }}
+1={{ phrase('RainDD_UA_DisplayAvatar') }}</edit_format_params>
+    <relation group_id="SV_UA_Options" display_order="120"/>
+  </option>
+  <option option_id="SV_UA_Cutoff" edit_format="spinbox" data_type="unsigned_integer">
+    <default_value>250</default_value>
+    <relation group_id="SV_UA_Options" display_order="130"/>
+  </option>
+  <option option_id="SV_UA_TrackRobots" edit_format="onoff" data_type="boolean">
+    <default_value></default_value>
+    <relation group_id="SV_UA_Options" display_order="10"/>
+  </option>
+  <option option_id="UA_fillFactor" edit_format="textbox" data_type="unsigned_numeric">
+    <default_value>1.2</default_value>
+    <relation group_id="SV_UA_Options" display_order="30"/>
+  </option>
+  <option option_id="UA_pruneChance" edit_format="textbox" data_type="unsigned_numeric">
+    <default_value>0.1</default_value>
+    <relation group_id="SV_UA_Options" display_order="20"/>
+  </option>
+</options>
