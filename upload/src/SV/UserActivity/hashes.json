@@ -10,7 +10,9 @@
     "src/addons/SV/UserActivity/_data/class_extensions.xml": "f2de4bcaf567e0f9ed74dd85bbe43c7667beac8198ccc16668512efa04161eb0",
     "src/addons/SV/UserActivity/_data/options.xml": "de990b0d76c04d4ec3aee89993f17a484941566fe947ab73c744513dd999cacb",
     "src/addons/SV/UserActivity/_data/option_groups.xml": "f1ee5e57fc9d1a165483207ae406539e785d80fd49e4dedc2e250fdbd54f0f2f",
-    "src/addons/SV/UserActivity/_data/phrases.xml": "33d6b771aa29729c224582d4f6478655918a9ce89eae493eda7c3c3c278a815c",
+    "src/addons/SV/UserActivity/_data/phrases.xml": "0a7f404f27737e48baf3c897c50a49c66dd109e85f0267c16c50e53904c5638c",
     "src/addons/SV/UserActivity/_data/style_properties.xml": "784aa4be857bb49a4f69cd2692d6afff1f47d5240abba148f3a56b6cfe581110",
-    "src/addons/SV/UserActivity/_data/style_property_groups.xml": "359226a65429d911121edca067768b57663e099923aa62ece00a7a3db69b98a5"
+    "src/addons/SV/UserActivity/_data/style_property_groups.xml": "359226a65429d911121edca067768b57663e099923aa62ece00a7a3db69b98a5",
+    "src/addons/SV/UserActivity/_data/templates.xml": "0f71d26fc9cd39b2bd040ccea1de56ea10ff7b1e472d43239e6b6c5d868cc36f",
+    "src/addons/SV/UserActivity/_data/template_modifications.xml": "aa560a7f8d1e78e2a419ae5337647648c25971cee0f2e452c5fe8e429e37bba6"
 }

@@ -6,6 +6,7 @@
   <phrase title="RainDD_UA_PositionAbovePageNav" version_id="1000000" version_string="1.0.0"><![CDATA[Above PageNav]]></phrase>
   <phrase title="RainDD_UA_PositionAboveQR" version_id="1000000" version_string="1.0.0"><![CDATA[Above Quick Reply]]></phrase>
   <phrase title="RainDD_UA_PositionBelowQR" version_id="1000000" version_string="1.0.0"><![CDATA[Below Quick Reply]]></phrase>
+  <phrase title="UA_ViewingTitle" version_id="1000000" version_string="1.0.0"><![CDATA[Users Who Are Viewing This {ContentType} <span class="footnote">(Users: {users}, Guests: {guests})</span>]]></phrase>
   <phrase title="option.RainDD_UA_ThreadViewPos" version_id="1000000" version_string="1.0.0"><![CDATA[Viewing Thread Container Position]]></phrase>
   <phrase title="option.RainDD_UA_ThreadViewType" version_id="1000000" version_string="1.0.0"><![CDATA[Viewing Thread Display Type]]></phrase>
   <phrase title="option.SV_UA_Cutoff" version_id="1000000" version_string="1.0.0"><![CDATA[User cutoff]]></phrase>
@@ -31,4 +32,5 @@
   <phrase title="style_prop_desc.RainDD_UA_ThreadContainerH3Footnote" version_id="1000000" version_string="1.0.0"><![CDATA[Adjust font properties for user and guest counts.]]></phrase>
   <phrase title="style_prop_group.raindd_ua_main" version_id="1000000" version_string="1.0.0"><![CDATA[User Activity]]></phrase>
   <phrase title="style_prop_group_desc.raindd_ua_main" version_id="1000000" version_string="1.0.0"><![CDATA[]]></phrase>
+  <phrase title="ua_x_was_last_seen" version_id="1000000" version_string="1.0.0"><![CDATA[{username} was last seen]]></phrase>
 </phrases>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+  <template type="public" title="UA_ViewContainer_macros" version_id="1000000" version_string="1.0.0"><![CDATA[<xf:macro name="UserActivity" arg-permission="{{ false }}" arg-contentType="" arg-records="">
+	<xf:if is="{$permission}">
+		<xf:if contentcheck="true">
+		<xf:css src="UserActivity.css" />
+		<div id="uaThreadViewContainer" class="section secondaryContent">
+			<h3>{{ phrase('UA_ViewingTitle', {'ContentType': $contentType, 'users': $records.members, 'guests': $records.guests}) }}</h3>
+			<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">
+				<ol class="listInline commaImplode">
+			<xf:elseif is="{$xf.options.RainDD_UA_ThreadViewType} == 1" />
+				<ol class="listInline">
+			</xf:if>
+			<xf:contentcheck>
+				<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">
+				<xf:foreach loop="$records.records" value="$user">
+					<li><xf:username user="$user" rich="true" title="{{ phrase('ua_x_was_last_seen', {'username': $user.username}) }}: {{ datetime($user.effective_last_activity) }}"/></li>
+				</xf:foreach>
+				<xf:elseif is="{$xf.options.RainDD_UA_ThreadViewType} == 1" />
+				<xf:foreach loop="$records.records" value="$user">
+					<li><xf:avatar user="$user" size="s" img="true" title="{{ phrase('ua_x_was_last_seen', {'username': $user.username}) }}: {{ datetime($user.effective_last_activity) }}"/></li>
+				</xf:foreach>
+				</xf:if>
+			</xf:contentcheck>
+				<xf:if is="{$records.recordsUnseen}">
+					<li class="moreLink">{{ phrase('ellipsis_and_x_more', {'count': $records.recordsUnseen}) }}</li>
+				</xf:if>
+				</ol>
+		</div>
+		</xf:if>
+	</xf:if>
+</xf:macro>]]></template>
+  <template type="public" title="UserActivity.css" version_id="1000000" version_string="1.0.0"><![CDATA[#uaThreadViewContainer,
+#uaThreadReadContainer
+{
+	@RainDD_UA_ThreadContainer
+}
+
+#uaThreadViewContainer h3,
+#uaThreadReadContainer h3
+{
+	@RainDD_UA_ThreadContainerH3
+}
+
+#uaThreadViewContainer h3 .footnote,
+#uaThreadReadContainer h3 .footnote
+{
+	@RainDD_UA_ThreadContainerH3Footnote
+}
+
+#uaThreadViewContainer .avatar img,
+#uaThreadReadContainer .avatar img
+{
+	@RainDD_UA_Avatar
+}]]></template>
+</templates>
