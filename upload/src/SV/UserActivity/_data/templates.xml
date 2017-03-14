@@ -3,30 +3,33 @@
   <template type="public" title="UA_ViewContainer_macros" version_id="1000000" version_string="1.0.0"><![CDATA[<xf:macro name="UserActivity" arg-contentTypePhrase="" arg-contentId="" arg-records="">	
 	<xf:if is="{$records}">
 		<xf:if contentcheck="true">
-		<xf:css src="UserActivity.css" />
-		<div id="uaThreadViewContainer" class="section secondaryContent">
-			<h3>{{ phrase('UA_ViewingTitle', {'ContentType': $contentTypePhrase, 'users': $records.members, 'guests': $records.guests}) }}</h3>
-			<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">
-				<ol class="listInline commaImplode">
-			<xf:elseif is="{$xf.options.RainDD_UA_ThreadViewType} == 1" />
-				<ol class="listInline">
-			</xf:if>
-			<xf:contentcheck>
-				<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">
-				<xf:foreach loop="$records.records" value="$user">
-					<li><xf:username user="$user" rich="true" title="{{ phrase('ua_x_was_last_seen', {'username': $user.username}) }}: {{ date_dynamic($user.effective_last_activity) }}"/></li>
-				</xf:foreach>
-				<xf:elseif is="{$xf.options.RainDD_UA_ThreadViewType} == 1" />
-				<xf:foreach loop="$records.records" value="$user">
-					<li><xf:avatar user="$user" size="s" img="true" title="{{ phrase('ua_x_was_last_seen', {'username': $user.username}) }}: {{ date_dynamic($user.effective_last_activity) }}"/></li>
-				</xf:foreach>
-				</xf:if>
-			</xf:contentcheck>
-				<xf:if is="{$records.recordsUnseen}">
-					<li class="moreLink">{{ phrase('ellipsis_and_x_more', {'count': $records.recordsUnseen}) }}</li>
-				</xf:if>
-				</ol>
-		</div>
+			<div class="block">
+				<div class="block-container">
+					<h3 class="block-minorHeader">{{ phrase('UA_ViewingTitle', {'ContentType': $contentTypePhrase, 'users': $records.members, 'guests': $records.guests}) }}</h3>
+					<div class="block-body">
+						<div class="block-row block-row--minor">
+							<xf:contentcheck>
+								<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">
+									<ul class="listInline listInline--comma">
+										<xf:foreach loop="$records.records" value="$user"><xf:trim>
+											<li><xf:username user="$user" rich="true" class="{{ !$user.visible ? 'username--invisible' : '' }}" /></li>
+										</xf:trim></xf:foreach>
+									</ul>
+								<xf:elseif is="{$xf.options.RainDD_UA_ThreadViewType} == 1" />
+									<ul class="listHeap">
+										<xf:foreach loop="$records.records" value="$user">
+											<li><xf:avatar user="$user" size="s" img="true"/></li>
+										</xf:foreach>
+									</ul>
+								</xf:if>
+							</xf:contentcheck>
+							<xf:if is="{$records.recordsUnseen}">
+								<li class="moreLink">{{ phrase('ellipsis_and_x_more', {'count': $records.recordsUnseen}) }}</li>
+							</xf:if>
+						</div>
+					</div>
+				</div>
+			</div>
 		</xf:if>
 	</xf:if>
 </xf:macro>]]></template>
