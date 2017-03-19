@@ -5,7 +5,7 @@
     "src/addons/SV/UserActivity/Repository/UserActivity.php": "39fa8b6ee545b22818ea846f470c686a371cd892ccc23fc2bbd40f64accdfb09",
     "src/addons/SV/UserActivity/XF/Pub/Controller/Conversation.php": "62876b1cfafde4c3cf060d0d5dd74f5325c1a3c9981ad5dc448d7a0edcae0748",
     "src/addons/SV/UserActivity/XF/Pub/Controller/Post.php": "a6dcdcf46236b37295375656f23a97ce46e06efaa151e71cfe0176aecc03b87b",
-    "src/addons/SV/UserActivity/XF/Pub/Controller/Thread.php": "ca19814e09fac6badc4cbd01a50908861f1eb34bdc9f29d10e5bb9202581dddc",
+    "src/addons/SV/UserActivity/XF/Pub/Controller/Thread.php": "5038718afa9852ce8771076833bed18b9f60abdbc0ecd6c09ec2e6a5ad896c43",
     "src/addons/SV/UserActivity/XF/Repository/SessionActivity.php": "a498468e4008c683cf895457a9834e689d617b87bad7e7b5cb32bd4b452562a2",
     "src/addons/SV/UserActivity/_data/class_extensions.xml": "f2de4bcaf567e0f9ed74dd85bbe43c7667beac8198ccc16668512efa04161eb0",
     "src/addons/SV/UserActivity/_data/options.xml": "0ad4e7e86d6fb91b0e5dadf3436d67ea86d11e6e78bbe053e409a26d047abee5",
