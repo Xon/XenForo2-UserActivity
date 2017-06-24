@@ -1,4 +1,4 @@
-# XenForo-UserActivity
+# XenForo2-UserActivity
 
 Displays user activity below content.
 
