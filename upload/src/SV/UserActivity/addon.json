@@ -7,7 +7,7 @@
     "dev" : "Xon",
     "dev_url": "https://atelieraphelion.com/",
     "faq_url": "",
-    "support_url": "",
+    "support_url": "https://xenforo.com/community/resources/user-activity-by-xon.5567/",
     "extra_urls": [],
     "require" : {
         "SV/RedisCache" : [1, "Redis Cache"],

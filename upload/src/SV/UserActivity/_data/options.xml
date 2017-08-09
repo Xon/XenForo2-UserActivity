@@ -19,7 +19,7 @@
     <relation group_id="SV_UA_Options" display_order="130"/>
   </option>
   <option option_id="SV_UA_TrackRobots" edit_format="onoff" data_type="boolean">
-    <default_value/>
+    <default_value></default_value>
     <relation group_id="SV_UA_Options" display_order="10"/>
   </option>
   <option option_id="UA_fillFactor" edit_format="textbox" data_type="unsigned_numeric">
