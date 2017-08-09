@@ -15,6 +15,22 @@ $2
 </xf:if>
 $3]]></replace>
   </modification>
+  <modification type="public" template="report_view" modification_key="report_view_UA_Containers" description="Adds activity containers" execution_order="10" enabled="1" action="preg_replace">
+    <find><![CDATA[#(\s*)(<h3 class="block-header">{{ phrase\('comments'\) }}</h3>.*?)(\s*<xf:editorrow.*?)(\s*</xf:editorrow>)#si]]></find>
+    <replace><![CDATA[$1
+<xf:if is="{$xf.options.RainDD_UA_ThreadViewPos} == 1">
+	<xf:macro template="UA_ViewContainer_macros" name="UserActivity" arg-contentTypePhrase="{{ phrase('thread') }}" arg-records="{$UA_Records}"/>
+</xf:if>
+$1$2
+<xf:if is="{$xf.options.RainDD_UA_ThreadViewPos} == 2">
+	<xf:macro template="UA_ViewContainer_macros" name="UserActivity" arg-contentTypePhrase="{{ phrase('thread') }}" arg-records="{$UA_Records}"/>
+</xf:if>
+$3$4
+<xf:if is="{$xf.options.RainDD_UA_ThreadViewPos} == 3">
+	<xf:macro template="UA_ViewContainer_macros" name="UserActivity" arg-contentTypePhrase="{{ phrase('thread') }}" arg-records="{$UA_Records}"/>
+</xf:if>
+]]></replace>
+  </modification>
   <modification type="public" template="thread_view" modification_key="thread_view_UA_Containers" description="Adds activity containers" execution_order="10" enabled="1" action="preg_replace">
     <find><![CDATA[#(<xf:if is="\$poll.*?)(<xf:if is="\$thread\.canReply\(.*?)(<xf:macro name="thread_status)#si]]></find>
     <replace><![CDATA[<xf:if is="{$xf.options.RainDD_UA_ThreadViewPos} == 1">

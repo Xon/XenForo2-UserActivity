@@ -2,6 +2,7 @@
 <class_extensions>
   <extension from_class="XF\Pub\Controller\Conversation" to_class="SV\UserActivity\XF\Pub\Controller\Conversation" execute_order="3178" active="1"/>
   <extension from_class="XF\Pub\Controller\Post" to_class="SV\UserActivity\XF\Pub\Controller\Post" execute_order="3178" active="1"/>
+  <extension from_class="XF\Pub\Controller\Report" to_class="SV\UserActivity\XF\Pub\Controller\Report" execute_order="3178" active="1"/>
   <extension from_class="XF\Pub\Controller\Thread" to_class="SV\UserActivity\XF\Pub\Controller\Thread" execute_order="3178" active="1"/>
   <extension from_class="XF\Repository\SessionActivity" to_class="SV\UserActivity\XF\Repository\SessionActivity" execute_order="3178" active="1"/>
 </class_extensions>
