@@ -2,7 +2,7 @@
     "legacy_addon_id": "SV_UserActivity",
     "title": "User Activity",
     "description": "",
-    "version_string": "1.1.1",
+    "version_string": "1.2.0",
     "version_id": 1010100,
     "dev" : "Xon",
     "dev_url": "https://atelieraphelion.com/",
@@ -10,7 +10,7 @@
     "support_url": "https://xenforo.com/community/resources/user-activity-by-xon.5567/",
     "extra_urls": [],
     "require" : {
-        "SV/RedisCache" : [1, "Redis Cache"],
+        "SV/RedisCache" : [1010000, "Redis Cache"],
         "php": ["5.6.0", "PHP 5.6.0+"]
     },
     "icon": ""
