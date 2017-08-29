@@ -82,7 +82,7 @@ class UserActivity extends Repository
         $options = $app->options();
         $onlineStatusTimeout = $options->onlineStatusTimeout * 60;
         // we need to manually expire records out of the per content hash set if they are kept alive with activity
-        $key = $app->config['cache']['namespace'] . '[activity].';
+        $key = $cache->getNamespacedId('activity_');
 
         $end = $app->time - $onlineStatusTimeout;
         $end = $end - ($end  % $this->getSampleInterval());
@@ -185,7 +185,7 @@ class UserActivity extends Repository
         $raw = implode("\n", $data);
 
         // record keeping
-        $key = $app->config['cache']['namespace'] . "[activity].{$contentType}.{$contentId}";
+        $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
         $onlineStatusTimeout = $options->onlineStatusTimeout * 60;
 
         if ($useLua)
@@ -244,7 +244,7 @@ class UserActivity extends Repository
         }
         else
         {
-            $key = $app->config['cache']['namespace'] . "[activity].{$contentType}.{$contentId}";
+            $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
 
             $options = $app->options();
             $start = $app->time  - $options->onlineStatusTimeout * 60;
