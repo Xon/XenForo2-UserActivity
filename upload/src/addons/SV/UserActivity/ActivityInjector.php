@@ -9,7 +9,7 @@ trait ActivityInjector
 {
     protected function preDispatchController($action, ParameterBag $params)
     {
-        if (!empty($this->activityInjector['controller']))
+        if (!empty($this->activityInjector['controller']) && !empty($this->activityInjector['type']))
         {
             $userActivityRepo = $this->app->repository('SV\UserActivity\Repository\UserActivity');
             $userActivityRepo->registerHandler($this->activityInjector['controller'], $this->activityInjector['type'], $this->activityInjector['id']);
@@ -19,7 +19,7 @@ trait ActivityInjector
 
     protected function postDispatchController($action, ParameterBag $params, AbstractReply &$reply)
     {
-        if (!empty($this->activityInjector['controller']) && !empty($this->activityInjector['actions']))
+        if (!empty($this->activityInjector['controller']) && !empty($this->activityInjector['actions']) && !empty($this->activityInjector['type']))
         {
             $actionL = strtolower($action);
             if (in_array($actionL, $this->activityInjector['actions'], true))
