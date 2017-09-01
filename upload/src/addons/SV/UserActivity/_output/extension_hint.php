@@ -5,7 +5,7 @@
 
 namespace SV\UserActivity\SV\ContentRatings\Pub\Controller
 {
-	class XFCP_Ratings extends \SV\UserActivity\XF\Pub\Controller\Ratings {}
+	class XFCP_Ratings extends \SV\ContentRatings\Pub\Controller\Ratings {}
 }
 
 namespace SV\UserActivity\XF\Pub\Controller

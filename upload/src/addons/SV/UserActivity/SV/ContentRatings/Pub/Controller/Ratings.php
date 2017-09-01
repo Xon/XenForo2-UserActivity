@@ -2,6 +2,9 @@
 
 namespace SV\UserActivity\SV\ContentRatings\Pub\Controller;
 
+use SV\UserActivity\ActivityInjector;
+use XF\Mvc\ParameterBag;
+
 class Ratings extends XFCP_Ratings
 {
     protected $activityInjector = [
@@ -10,11 +13,15 @@ class Ratings extends XFCP_Ratings
         'id' => null,
         'actions' => ['like', 'list'],
     ];
-    use \SV\UserActivity\ActivityInjector
+    use ActivityInjector
     {
         preDispatchController as preDispatchControllerTrait;
     }
 
+    /**
+     * @param $action
+     * @param ParameterBag $params
+     */
     protected function preDispatchController($action, ParameterBag $params)
     {
         $input = $this->filter([
@@ -24,6 +31,6 @@ class Ratings extends XFCP_Ratings
         $this->activityInjector['type'] = $input['content_type'];
         $this->activityInjector['id'] = $input['content_id'];
 
-        return $this->preDispatchControllerTrait();
+        $this->preDispatchControllerTrait($action, $params);
     }
 }
