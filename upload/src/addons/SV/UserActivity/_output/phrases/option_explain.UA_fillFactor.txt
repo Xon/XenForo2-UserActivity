@@ -1,0 +1,1 @@
+When doing a prune operation, the number of inactive users must be greater than active users times this fill factor.

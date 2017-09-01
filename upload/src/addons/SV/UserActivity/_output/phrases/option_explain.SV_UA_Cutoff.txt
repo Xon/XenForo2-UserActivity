@@ -1,0 +1,2 @@
+Maximum number of users to display before it is displays as "...and X others".<br/>
+0 to show all usernames always.

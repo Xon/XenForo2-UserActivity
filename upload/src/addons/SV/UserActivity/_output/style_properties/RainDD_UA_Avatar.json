@@ -1,0 +1,15 @@
+{
+    "group_name": "raindd_ua_main",
+    "title": "Thread Avatar",
+    "description": "",
+    "property_type": "css",
+    "css_components": [
+        "extra"
+    ],
+    "value_type": "",
+    "value_parameters": "",
+    "depends_on": "",
+    "value_group": "",
+    "property_value": [],
+    "display_order": 40
+}

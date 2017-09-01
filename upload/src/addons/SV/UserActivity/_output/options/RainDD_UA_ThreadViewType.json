@@ -1,0 +1,12 @@
+{
+    "edit_format": "radio",
+    "edit_format_params": "0={{ phrase('RainDD_UA_DisplayName') }}\n1={{ phrase('RainDD_UA_DisplayAvatar') }}",
+    "data_type": "integer",
+    "sub_options": [],
+    "validation_class": "",
+    "validation_method": "",
+    "default_value": "0",
+    "relations": {
+        "SV_UA_Options": 120
+    }
+}

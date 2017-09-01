@@ -1,0 +1,20 @@
+{
+    "group_name": "raindd_ua_main",
+    "title": "Thread Container Counts",
+    "description": "Adjust font properties for user and guest counts.",
+    "property_type": "css",
+    "css_components": [
+        "text",
+        "extra"
+    ],
+    "value_type": "",
+    "value_parameters": "",
+    "depends_on": "",
+    "value_group": "",
+    "property_value": {
+        "font-size": "12px",
+        "color": "@xf-paletteColor4",
+        "extra": "margin-bottom:5px;"
+    },
+    "display_order": 30
+}

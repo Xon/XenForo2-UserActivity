@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Pub\\Controller\\Conversation",
+    "to_class": "SV\\UserActivity\\XF\\Pub\\Controller\\Conversation",
+    "execute_order": 3178,
+    "active": true
+}

@@ -1,0 +1,6 @@
+{
+    "from_class": "SV\\UserActivity\\XF\\Pub\\Controller\\Ratings",
+    "to_class": "SV\\UserActivity\\SV\\ContentRatings\\Pub\\Controller\\Ratings",
+    "execute_order": 10,
+    "active": true
+}

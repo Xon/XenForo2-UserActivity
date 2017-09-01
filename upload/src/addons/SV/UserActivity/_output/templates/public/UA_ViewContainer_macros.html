@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<templates>
-  <template type="public" title="UA_ViewContainer_macros" version_id="1000000" version_string="1.0.0"><![CDATA[<xf:macro name="UserActivity" arg-contentTypePhrase="" arg-contentId="" arg-records="">	
+<xf:macro name="UserActivity" arg-contentTypePhrase="" arg-contentId="" arg-records="">	
 	<xf:if is="{$records}">
 		<xf:if contentcheck="true">
 			<div class="block">
@@ -32,28 +30,4 @@
 			</div>
 		</xf:if>
 	</xf:if>
-</xf:macro>]]></template>
-  <template type="public" title="UserActivity.css" version_id="1000000" version_string="1.0.0"><![CDATA[#uaThreadViewContainer,
-#uaThreadReadContainer
-{
-	@RainDD_UA_ThreadContainer
-}
-
-#uaThreadViewContainer h3,
-#uaThreadReadContainer h3
-{
-	@RainDD_UA_ThreadContainerH3
-}
-
-#uaThreadViewContainer h3 .footnote,
-#uaThreadReadContainer h3 .footnote
-{
-	@RainDD_UA_ThreadContainerH3Footnote
-}
-
-#uaThreadViewContainer .avatar img,
-#uaThreadReadContainer .avatar img
-{
-	@RainDD_UA_Avatar
-}]]></template>
-</templates>
+</xf:macro>

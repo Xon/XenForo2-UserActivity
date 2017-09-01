@@ -1,0 +1,20 @@
+{
+    "SV-UserActivity-XF-Pub-Controller-Ratings_SV-UserActivity-SV-ContentRatings-Pub-Controller-Ratings.json": {
+        "hash": "ca8ce615d58ae7b4b8598d430ff6d17c"
+    },
+    "XF-Pub-Controller-Conversation_SV-UserActivity-XF-Pub-Controller-Conversation.json": {
+        "hash": "9ba6f3468e6fbb6ed353f640a9f4c68a"
+    },
+    "XF-Pub-Controller-Post_SV-UserActivity-XF-Pub-Controller-Post.json": {
+        "hash": "4429a40a1b436dcd16b311744fbe4837"
+    },
+    "XF-Pub-Controller-Report_SV-UserActivity-XF-Pub-Controller-Report.json": {
+        "hash": "bd64f8005096098f098486c97d5b1fdb"
+    },
+    "XF-Pub-Controller-Thread_SV-UserActivity-XF-Pub-Controller-Thread.json": {
+        "hash": "6e85cd4120dbbb1db3e5e0638bb0e80f"
+    },
+    "XF-Repository-SessionActivity_SV-UserActivity-XF-Repository-SessionActivity.json": {
+        "hash": "55bfdc0e6a3e2e384fb612d9ff483f59"
+    }
+}

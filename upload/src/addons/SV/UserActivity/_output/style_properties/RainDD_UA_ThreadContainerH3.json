@@ -1,0 +1,29 @@
+{
+    "group_name": "raindd_ua_main",
+    "title": "Thread Container Title",
+    "description": "Adjust container title font and border.",
+    "property_type": "css",
+    "css_components": [
+        "text",
+        "border",
+        "border_radius",
+        "border_width_simple",
+        "border_color_simple",
+        "border_radius_simple",
+        "padding",
+        "extra"
+    ],
+    "value_type": "",
+    "value_parameters": "",
+    "depends_on": "",
+    "value_group": "",
+    "property_value": {
+        "font-size": "12pt",
+        "color": "@xf-paletteColor4",
+        "border-bottom-width": "1px",
+        "border-bottom-color": "@xf-paletteColor2",
+        "padding-bottom": "2px",
+        "extra": "margin-bottom:5px;"
+    },
+    "display_order": 20
+}

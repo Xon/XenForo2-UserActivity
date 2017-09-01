@@ -1,0 +1,12 @@
+{
+    "edit_format": "textbox",
+    "edit_format_params": "",
+    "data_type": "unsigned_numeric",
+    "sub_options": [],
+    "validation_class": "",
+    "validation_method": "",
+    "default_value": "1.2",
+    "relations": {
+        "SV_UA_Options": 30
+    }
+}

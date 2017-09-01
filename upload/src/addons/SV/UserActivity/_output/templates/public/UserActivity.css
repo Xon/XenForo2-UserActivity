@@ -1,0 +1,23 @@
+#uaThreadViewContainer,
+#uaThreadReadContainer
+{
+	@RainDD_UA_ThreadContainer
+}
+
+#uaThreadViewContainer h3,
+#uaThreadReadContainer h3
+{
+	@RainDD_UA_ThreadContainerH3
+}
+
+#uaThreadViewContainer h3 .footnote,
+#uaThreadReadContainer h3 .footnote
+{
+	@RainDD_UA_ThreadContainerH3Footnote
+}
+
+#uaThreadViewContainer .avatar img,
+#uaThreadReadContainer .avatar img
+{
+	@RainDD_UA_Avatar
+}

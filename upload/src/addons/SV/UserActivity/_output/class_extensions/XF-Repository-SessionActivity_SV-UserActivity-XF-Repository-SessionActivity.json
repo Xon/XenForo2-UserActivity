@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Repository\\SessionActivity",
+    "to_class": "SV\\UserActivity\\XF\\Repository\\SessionActivity",
+    "execute_order": 3178,
+    "active": true
+}

@@ -1,0 +1,1 @@
+Display users name or avatar for users Viewing Thread.
