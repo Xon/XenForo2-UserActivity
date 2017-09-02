@@ -5,6 +5,7 @@ namespace SV\UserActivity\XF\Pub\Controller;
 use SV\UserActivity\ActivityInjector;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
+use XF\Mvc\Reply\Redirect;
 use XF\Mvc\Reply\View;
 
 class Post extends XFCP_Post
@@ -18,12 +19,17 @@ class Post extends XFCP_Post
 
     protected function canUpdateSessionActivity($action, ParameterBag $params, AbstractReply &$reply, &$viewState)
     {
-        $actionL = strtolower($action);
-        switch($actionL)
+        if ($reply instanceof View)
         {
-            case 'like':
-            case 'threadmark':
-                return true;
+            $actionL = strtolower($action);
+            switch ($actionL)
+            {
+                case 'like':
+                case 'likes':
+                case 'threadmark':
+                    $viewState = 'valid';
+                    return true;
+            }
         }
 
         return parent::canUpdateSessionActivity($action, $params, $reply, $viewState);
@@ -31,15 +37,25 @@ class Post extends XFCP_Post
 
     protected function updateSessionActivity($action, ParameterBag $params, AbstractReply &$reply)
     {
-        if ($reply instanceof View && $this->_request->getParam('thread_id') === null)
+        if ($reply instanceof View &&
+            $this->request->get('thread_id') === false &&
+            ($postId = $params->get('post_id')))
         {
-            if (isset($controllerResponse->params['post']['thread_id']))
+            // $reply should be Error if they don't have permission.
+            // if the entity is cached, then this request returned something useful,
+            /** \XF\Entity\Post */
+            $post = $this->em()->findCached('XF:Post', $postId);
+            if ($post)
             {
-                $this->_request->setParam('thread_id', $controllerResponse->params['post']['thread_id']);
+                $this->request->set('thread_id', $post['thread_id']);
             }
-            else if (isset($controllerResponse->params['thread']['thread_id']))
+            else if ($post = $reply->getParam('post') && isset($post['thread_id']))
             {
-                $this->_request->setParam('thread_id', $controllerResponse->params['thread']['thread_id']);
+                $this->request->set('thread_id', $post['thread_id']);
+            }
+            else if ($thread = $reply->getParam('thread') && isset($thread['thread_id']))
+            {
+                $this->request->set('thread_id', $thread['thread_id']);
             }
         }
         parent::updateSessionActivity($action, $params, $reply);
