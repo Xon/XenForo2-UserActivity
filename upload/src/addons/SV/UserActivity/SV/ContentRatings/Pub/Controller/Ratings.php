@@ -21,15 +21,10 @@ class Ratings extends XFCP_Ratings
     /** @var ParameterBag $_params */
     protected $_params = null;
 
-    /**
-     * @return array
-     */
-    protected function assertViewableContent($contentType, $contentId)
+    protected function assertViewableContent(\XF\Like\AbstractHandler $likeHandler, $contentType, $contentId)
     {
-        $list = parent::assertViewableContent($contentType, $contentId);
-        /** @var \XF\Mvc\Entity\Entity $content */
-        $content = $list[0];
-
+        $content = parent::assertViewableContent($likeHandler, $contentType, $contentId);
+        /** @noinspection PhpUndefinedMethodInspection */
         if ($this->_params !== null && is_callable([$content, 'getContainer']) && ($container = $content->getContainer()))
         {
             /** @var \XF\Mvc\Entity\Entity $container */
@@ -44,7 +39,7 @@ class Ratings extends XFCP_Ratings
             }
         }
 
-        return $list;
+        return $content;
     }
 
     /**
