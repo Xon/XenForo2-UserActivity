@@ -19,7 +19,7 @@ class Ratings extends XFCP_Ratings
     }
 
     /** @var ParameterBag $_params */
-    protected $_params;
+    protected $_params = null;
 
     /**
      * @return array
@@ -30,7 +30,7 @@ class Ratings extends XFCP_Ratings
         /** @var \XF\Mvc\Entity\Entity $content */
         $content = $list[0];
 
-        if (is_callable([$content, 'getContainer']) && ($container = $content->getContainer()))
+        if ($this->_params !== null && is_callable([$content, 'getContainer']) && ($container = $content->getContainer()))
         {
             /** @var \XF\Mvc\Entity\Entity $container */
 
