@@ -76,7 +76,7 @@ class UserActivity extends Repository
         $app = $this->app();
         /** @var Redis $cache */
         $cache = $app->cache();
-        if (!$cache || !method_exists($cache, 'getCredis') || !($credis = $cache->getCredis($cache)))
+        if (!($cache instanceof Redis) || !($credis = $cache->getCredis(false)))
         {
             // do not have a fallback
             return false;
@@ -136,12 +136,12 @@ class UserActivity extends Repository
         $app = $this->app();
         /** @var Redis $cache */
         $cache = $app->cache();
-        if (!$cache || !method_exists($cache, 'getCredis') || !($credis = $cache->getCredis($cache)))
+        if (!($cache instanceof Redis) || !($credis = $cache->getCredis(false)))
         {
             // do not have a fallback
             return;
         }
-        $useLua = method_exists($cache, 'useLua') && $cache->useLua();
+        $useLua = $cache->useLua();
 
         $score = $app->time - ($app->time  % $this->getSampleInterval());
         $data = array
@@ -190,7 +190,7 @@ class UserActivity extends Repository
 
         // record keeping
         $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
-        $onlineStatusTimeout = $options->onlineStatusTimeout * 60;
+        $onlineStatusTimeout = min(60, intval($options->onlineStatusTimeout * 60));
 
         if ($useLua)
         {
@@ -213,7 +213,7 @@ class UserActivity extends Repository
         {
             $credis->pipeline()->multi();
             // O(log(N)) for each item added, where N is the number of elements in the sorted set.
-            $credis->zadd($key, $score, $raw);
+            $credis->zAdd($key, $score, $raw);
             $credis->expire($key, $onlineStatusTimeout);
             $credis->exec();
         }
@@ -255,15 +255,15 @@ class UserActivity extends Repository
             $start = $app->time  - $options->onlineStatusTimeout * 60;
             $start = $start - ($start  % $this->getSampleInterval());
             $end = $app->time + 1;
-            $onlineRecords = $credis->zrevrangebyscore($key, $end, $start, array('withscores' => true));
+            $onlineRecords = $credis->zRevRangeByScore($key, $end, $start, array('withscores' => true));
             // check if the activity counter needs pruning
             if (mt_rand() < $options->UA_pruneChance)
             {
                 $credis = $cache->getCredis(false);
-                if ($credis->zcard($key) >= count($onlineRecords) * $options->UA_fillFactor)
+                if ($credis->zCard($key) >= count($onlineRecords) * $options->UA_fillFactor)
                 {
                     // O(log(N)+M) with N being the number of elements in the sorted set and M the number of elements removed by the operation.
-                    $credis->zremrangebyscore($key, 0, $start - 1);
+                    $credis->zRemRangeByScore($key, 0, $start - 1);
                 }
             }
         }
