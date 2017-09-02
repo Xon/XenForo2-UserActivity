@@ -2,14 +2,17 @@
 
 namespace SV\UserActivity\Job;
 
+use XF\Job\AbstractJob;
+
 class ActivityGarbageCollect extends AbstractJob
 {
     public function run($maxRunTime)
     {
         $app = \XF::app();
 
-		$userActivityRepo = $app->repository('SV\UserActivity\Repository\UserActivity');
-		$data = $userActivityRepo->GarbageCollectActivity($this->data, $maxRunTime);        
+        /** @var \SV\UserActivity\Repository\UserActivity $userActivityRepo */
+		$userActivityRepo = $app->repository('SV\UserActivity:UserActivity');
+		$data = $userActivityRepo->garbageCollectActivity($this->data, $maxRunTime);
 		if (!$data)
 		{
 			return $this->complete();

@@ -2,6 +2,8 @@
 
 namespace SV\UserActivity\XF\Pub\Controller;
 
+use SV\UserActivity\ActivityInjector;
+
 class Thread extends XFCP_Thread
 {
     protected $activityInjector = [
@@ -10,5 +12,5 @@ class Thread extends XFCP_Thread
         'id' => 'thread_id',
         'actions' => ['index'],
     ];
-    use \SV\UserActivity\ActivityInjector;
+    use ActivityInjector;
 }

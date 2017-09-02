@@ -2,6 +2,8 @@
 
 namespace SV\UserActivity\XF\Pub\Controller;
 
+use SV\UserActivity\ActivityInjector;
+
 class Conversation extends XFCP_Conversation
 {
     protected $activityInjector = [
@@ -10,5 +12,5 @@ class Conversation extends XFCP_Conversation
         'id' => 'conversation_id',
         'actions' => ['view'],
     ];
-    use \SV\UserActivity\ActivityInjector;
+    use ActivityInjector;
 }

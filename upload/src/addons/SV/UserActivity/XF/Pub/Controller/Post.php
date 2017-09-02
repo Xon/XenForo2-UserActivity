@@ -2,8 +2,10 @@
 
 namespace SV\UserActivity\XF\Pub\Controller;
 
+use SV\UserActivity\ActivityInjector;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
+use XF\Mvc\Reply\View;
 
 class Post extends XFCP_Post
 {
@@ -12,7 +14,7 @@ class Post extends XFCP_Post
         'type' => 'thread',
         'id' => 'thread_id',
     ];
-    use \SV\UserActivity\ActivityInjector;
+    use ActivityInjector;
 
     protected function canUpdateSessionActivity($action, ParameterBag $params, AbstractReply &$reply, &$viewState)
     {
@@ -29,7 +31,7 @@ class Post extends XFCP_Post
 
     protected function updateSessionActivity($action, ParameterBag $params, AbstractReply &$reply)
     {
-        if ($reply instanceof XenForo_ControllerResponse_View && $this->_request->getParam('thread_id') === null)
+        if ($reply instanceof View && $this->_request->getParam('thread_id') === null)
         {
             if (isset($controllerResponse->params['post']['thread_id']))
             {

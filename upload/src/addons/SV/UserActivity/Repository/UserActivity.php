@@ -2,7 +2,10 @@
 
 namespace SV\UserActivity\Repository;
 
+use SV\RedisCache\Redis;
+use XF\Entity\User;
 use XF\Mvc\Entity\Repository;
+use XF\Mvc\Reply\View;
 
 class UserActivity extends Repository
 {
@@ -14,7 +17,7 @@ class UserActivity extends Repository
         return 30;
     }
 
-    public function supresssLogging()
+    public function supressLogging()
     {
         self::$logging = false;
     }
@@ -23,7 +26,6 @@ class UserActivity extends Repository
     {
         return self::$logging;
     }
-
 
     public function registerHandler($controllerName, $contentType, $contentIdField)
     {
@@ -41,7 +43,7 @@ class UserActivity extends Repository
 
     public function insertUserActivityIntoViewResponse($controllerName, &$response)
     {
-        if ($response instanceof \XF\Mvc\Reply\View)
+        if ($response instanceof View)
         {
             $handler = $this->getHandler($controllerName);
             if (empty($handler))
@@ -69,20 +71,21 @@ class UserActivity extends Repository
         }
     }
 
-    public function GarbageCollectActivity(array $data, $targetRunTime = null)
+    public function garbageCollectActivity(array $data, $targetRunTime = null)
     {
         $app = $this->app();
+        /** @var Redis $cache */
         $cache = $app->cache();
         if (!$cache || !method_exists($cache, 'getCredis') || !($credis = $cache->getCredis($cache)))
         {
             // do not have a fallback
-            return;
+            return false;
         }
 
         $options = $app->options();
         $onlineStatusTimeout = $options->onlineStatusTimeout * 60;
         // we need to manually expire records out of the per content hash set if they are kept alive with activity
-        $key = $cache->getNamespacedId('activity_');
+        $dataKey = $cache->getNamespacedId('activity_');
 
         $end = $app->time - $onlineStatusTimeout;
         $end = $end - ($end  % $this->getSampleInterval());
@@ -96,7 +99,7 @@ class UserActivity extends Repository
         $s = microtime(true);
         do
         {
-            $keys = $credis->scan($cursor, $datakey ."*", $count);
+            $keys = $credis->scan($cursor, $dataKey ."*", $count);
             $loopGuard--;
             if ($keys === false)
             {
@@ -128,9 +131,10 @@ class UserActivity extends Repository
 
     const LUA_IFZADDEXPIRE_SH1 = 'dc1d76eefaca2f4ccf848a6ed7e80def200ac7b7';
 
-    public function updateSessionActivity($contentType, $contentId, $ip, $robotKey, \XF\Entity\User $viewingUser)
+    public function updateSessionActivity($contentType, $contentId, $ip, $robotKey, User $viewingUser)
     {
         $app = $this->app();
+        /** @var Redis $cache */
         $cache = $app->cache();
         if (!$cache || !method_exists($cache, 'getCredis') || !($credis = $cache->getCredis($cache)))
         {
@@ -228,7 +232,7 @@ class UserActivity extends Repository
         'ip',
     );
 
-    public function getUsersViewing($contentType, $contentId, \XF\Entity\User $viewingUser)
+    public function getUsersViewing($contentType, $contentId, User $viewingUser)
     {
         $app = $this->app();
         $memberCount = 1;
@@ -236,8 +240,9 @@ class UserActivity extends Repository
         $robotCount = 0;
         $records = array($viewingUser);
 
+        /** @var Redis $cache */
         $cache = $app->cache();
-        if (!$cache || !method_exists($cache, 'getCredis') || !($credis = $cache->getCredis($cache)))
+        if (!($cache instanceof Redis) || !($credis = $cache->getCredis(true)))
         {
             // do not have a fallback
             return null;
@@ -254,7 +259,7 @@ class UserActivity extends Repository
             // check if the activity counter needs pruning
             if (mt_rand() < $options->UA_pruneChance)
             {
-                $credis = $registry->getCredis($cache, false);
+                $credis = $cache->getCredis(false);
                 if ($credis->zcard($key) >= count($onlineRecords) * $options->UA_fillFactor)
                 {
                     // O(log(N)+M) with N being the number of elements in the sorted set and M the number of elements removed by the operation.
