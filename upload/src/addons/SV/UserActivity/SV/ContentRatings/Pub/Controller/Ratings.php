@@ -36,10 +36,12 @@ class Ratings extends XFCP_Ratings
 
             $this->activityInjector['type'] = $container->getEntityContentType();
             $this->_params['container_id'] = $container->getEntityId();
-
-            /** @var \SV\UserActivity\Repository\UserActivity $userActivityRepo */
-            $userActivityRepo = $this->app->repository('SV\UserActivity:UserActivity');
-            $userActivityRepo->registerHandler($this->activityInjector['controller'], $this->activityInjector['type'], $this->activityInjector['id']);
+            if ($this->activityInjector['type'])
+            {
+                /** @var \SV\UserActivity\Repository\UserActivity $userActivityRepo */
+                $userActivityRepo = $this->app->repository('SV\UserActivity:UserActivity');
+                $userActivityRepo->registerHandler($this->activityInjector['controller'], $this->activityInjector['type'], $this->activityInjector['id']);
+            }
         }
 
         return $list;
