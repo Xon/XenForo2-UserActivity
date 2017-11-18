@@ -1,9 +1,9 @@
 {
     "legacy_addon_id": "SV_UserActivity",
     "title": "User Activity",
-    "description": "",
-    "version_string": "2.0.1",
-    "version_id": 2000100,
+    "description": "Displays user activity viewing content",
+    "version_string": "2.0.2",
+    "version_id": 2000200,
     "dev" : "Xon",
     "dev_url": "https://atelieraphelion.com/",
     "faq_url": "",
