@@ -131,6 +131,12 @@
         "version_string": "1.0.0",
         "hash": "b4b0d81f6c1226fa2f08076fba4c0a2e"
     },
+    "permission_interface.raindd_ua_pigm.txt": {
+        "global_cache": false,
+        "version_id": 2000200,
+        "version_string": "2.0.2",
+        "hash": "7fcb2fbc80751ca824592a5d5206fa0a"
+    },
     "style_prop.RainDD_UA_Avatar.txt": {
         "global_cache": false,
         "version_id": 1000000,
