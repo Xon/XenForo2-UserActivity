@@ -151,7 +151,6 @@ class UserActivity extends Repository
             'visible' => $viewingUser->visible && $viewingUser->activity_visible ? 1 : null,
             'robot'  => empty($robotKey) ? null : 1,
             'display_style_group_id' => null,
-            'gender' => null,
             'avatar_date' => null,
             'gravatar' => null,
             'ip' => null,
@@ -171,7 +170,6 @@ class UserActivity extends Repository
             }
             else if ($options->RainDD_UA_ThreadViewType == 1)
             {
-                $data['gender'] = $viewingUser->gender;
                 $data['avatar_date'] = $viewingUser->avatar_date;
                 $data['gravatar'] = $viewingUser->gravatar;
             }
@@ -226,7 +224,6 @@ class UserActivity extends Repository
         'visible',
         'robot',
         'display_style_group_id',
-        'gender',
         'avatar_date',
         'gravatar',
         'ip',
