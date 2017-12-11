@@ -2,6 +2,7 @@
 
 namespace SV\UserActivity\Repository;
 
+use Credis_Client;
 use SV\RedisCache\Redis;
 use XF\Entity\User;
 use XF\Mvc\Entity\Repository;
@@ -71,16 +72,56 @@ class UserActivity extends Repository
         }
     }
 
-    public function garbageCollectActivity(array $data, $targetRunTime = null)
+    /**
+     * @return Credis_Client|null
+     */
+    protected function getCredis()
     {
         $app = $this->app();
         /** @var Redis $cache */
         $cache = $app->cache();
         if (!($cache instanceof Redis) || !($credis = $cache->getCredis(false)))
         {
-            // do not have a fallback
-            return false;
+            return null;
         }
+        return $credis;
+    }
+
+    /**
+     * @param array        $data
+     * @param integer|null $targetRunTime
+     * @return array|bool
+     */
+    protected function _garbageCollectActivityFallback(array $data, $targetRunTime = null)
+    {
+        $app = $this->app();
+        $options = $app->options();
+        $onlineStatusTimeout = $options->onlineStatusTimeout * 60;
+        $end = \XF::$time - $onlineStatusTimeout;
+        $end = $end - ($end % $this->getSampleInterval());
+
+        $db = $this->db();
+        $db->query('DELETE FROM `xf_sv_user_activity` WHERE `timestamp` < ?', $end);
+
+        return false;
+    }
+
+
+    /**
+     * @param array $data
+     * @param null  $targetRunTime
+     * @return array|bool
+     */
+    public function garbageCollectActivity(array $data, $targetRunTime = null)
+    {
+        $credis = $this->getCredis();
+        if (!$credis)
+        {
+            return $this->_garbageCollectActivityFallback($data, $targetRunTime);
+        }
+        $app = $this->app();
+        /** @var Redis $cache */
+        $cache = $app->cache();
 
         $options = $app->options();
         $onlineStatusTimeout = $options->onlineStatusTimeout * 60;
@@ -131,18 +172,40 @@ class UserActivity extends Repository
 
     const LUA_IFZADDEXPIRE_SH1 = 'dc1d76eefaca2f4ccf848a6ed7e80def200ac7b7';
 
+    /**
+     * @param string  $contentType
+     * @param integer $contentId
+     * @param integer $time
+     * @param array   $data
+     * @param string  $raw
+     * @return array
+     */
+    protected function _updateSessionActivityFallback($contentType, $contentId, $time, array $data, $raw)
+    {
+        $db = $this->db();
+        $db->query(
+            '
+            INSERT INTO xf_sv_user_activity 
+            (content_type, content_id, `timestamp`, `blob`) 
+            VALUES 
+            (?,?,?,?)
+             ON DUPLICATE KEY UPDATE `timestamp` = values(`timestamp`)',
+            [$contentType, $contentId, $time, $raw]
+        );
+
+        return $data;
+    }
+
+    /**
+     * @param string $contentType
+     * @param int    $contentId
+     * @param string $ip
+     * @param string $robotKey
+     * @param User $viewingUser
+     */
     public function updateSessionActivity($contentType, $contentId, $ip, $robotKey, User $viewingUser)
     {
         $app = $this->app();
-        /** @var Redis $cache */
-        $cache = $app->cache();
-        if (!($cache instanceof Redis) || !($credis = $cache->getCredis(false)))
-        {
-            // do not have a fallback
-            return;
-        }
-        $useLua = $cache->useLua();
-
         $score = $app->time - ($app->time  % $this->getSampleInterval());
         $data = array
         (
@@ -185,6 +248,18 @@ class UserActivity extends Repository
 
         // encode the data
         $raw = implode("\n", $data);
+
+        $credis = $this->getCredis();
+        if (!$credis)
+        {
+            // do not have a fallback
+            $this->_updateSessionActivityFallback($contentType, $contentId, $score, $data, $raw);
+
+            return;
+        }
+        /** @var Redis $cache */
+        $cache = $app->cache();
+        $useLua = $cache->useLua();
 
         // record keeping
         $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
@@ -229,29 +304,65 @@ class UserActivity extends Repository
         'ip',
     );
 
+    /**
+     * @param string  $contentType
+     * @param integer $contentId
+     * @param integer $start
+     * @param integer $end
+     * @return array
+     */
+    protected function _getUsersViewingFallback($contentType, $contentId, $start, $end)
+    {
+        $db = $this->db();
+        $raw = $db->fetchAll(
+            'SELECT * FROM xf_sv_user_activity WHERE content_type = ? AND content_id = ? AND `timestamp` >= ? ORDER BY `timestamp` desc',
+            [$contentType, $contentId, $start]
+        );
+
+        $records = [];
+        foreach ($raw as $row)
+        {
+            $records[$row['blob']] = $row['timestamp'];
+        }
+
+        return $records;
+    }
+
+    /**
+     * @param string $contentType
+     * @param int    $contentId
+     * @param User $viewingUser
+     * @return array|null
+     */
     public function getUsersViewing($contentType, $contentId, User $viewingUser)
     {
-        $app = $this->app();
         $memberCount = 1;
         $guestCount = 0;
         $robotCount = 0;
         $records = array($viewingUser);
 
-        /** @var Redis $cache */
-        $cache = $app->cache();
-        if (!($cache instanceof Redis) || !($credis = $cache->getCredis(true)))
+        $app = $this->app();
+        $options = $app->options();
+        $start = $app->time  - $options->onlineStatusTimeout * 60;
+        $start = $start - ($start  % $this->getSampleInterval());
+        $end = $app->time + 1;
+
+        $credis = $this->getCredis();
+        if (!$credis)
         {
-            // do not have a fallback
-            return null;
+            $onlineRecords = $this->_getUsersViewingFallback($contentType, $contentId, $start, $end);
+            // check if the activity counter needs pruning
+            if ($options->UA_pruneChance > 0 && mt_rand() < $options->UA_pruneChance)
+            {
+                $this->_garbageCollectActivityFallback([]);
+            }
         }
         else
         {
+            /** @var Redis $cache */
+            $cache = $app->cache();
             $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
 
-            $options = $app->options();
-            $start = $app->time  - $options->onlineStatusTimeout * 60;
-            $start = $start - ($start  % $this->getSampleInterval());
-            $end = $app->time + 1;
             $onlineRecords = $credis->zRevRangeByScore($key, $end, $start, array('withscores' => true));
             // check if the activity counter needs pruning
             if (mt_rand() < $options->UA_pruneChance)
