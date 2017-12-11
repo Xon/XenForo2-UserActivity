@@ -4,6 +4,14 @@
     "description": "",
     "property_type": "css",
     "css_components": [
+        "text",
+        "background",
+        "border",
+        "border_radius",
+        "border_width_simple",
+        "border_color_simple",
+        "border_radius_simple",
+        "padding",
         "extra"
     ],
     "value_type": "",

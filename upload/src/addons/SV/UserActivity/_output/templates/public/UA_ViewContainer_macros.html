@@ -1,8 +1,9 @@
 <xf:macro name="UserActivity" arg-contentTypePhrase="" arg-contentId="" arg-records="">	
 	<xf:if is="{$records}">
+		<xf:css src="UserActivity.less" />
 		<xf:if contentcheck="true">
 			<div class="block">
-				<div class="block-container">
+				<div id="uaThreadViewContainer" class="block-container">
 					<h3 class="block-minorHeader">{{ phrase('UA_ViewingTitle', {'ContentType': $contentTypePhrase, 'users': $records.members, 'guests': $records.guests}) }}</h3>
 					<div class="block-body">
 						<div class="block-row block-row--minor">

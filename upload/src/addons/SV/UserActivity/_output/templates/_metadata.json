@@ -1,12 +1,12 @@
 {
     "public/UA_ViewContainer_macros.html": {
-        "version_id": 1000000,
-        "version_string": "1.0.0",
-        "hash": "e46b9ae04016f43b456f7ba210c2aacc"
+        "version_id": 2010000,
+        "version_string": "2.1.0",
+        "hash": "2b8f23ff09faa7dec5ba96f662c1e874"
     },
-    "public/UserActivity.css": {
-        "version_id": 1000000,
-        "version_string": "1.0.0",
-        "hash": "4e234171553eb8411788aecbffee5b3a"
+    "public/UserActivity.less": {
+        "version_id": 2010000,
+        "version_string": "2.1.0",
+        "hash": "d8a0568dfda4fa2e1b30b333f0ac957c"
     }
 }
