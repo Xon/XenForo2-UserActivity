@@ -339,7 +339,7 @@ class UserActivity extends Repository
         $memberCount = 1;
         $guestCount = 0;
         $robotCount = 0;
-        $records = array($viewingUser);
+        $records = $viewingUser->user_id ? [$viewingUser] : [];
 
         $app = $this->app();
         $options = $app->options();

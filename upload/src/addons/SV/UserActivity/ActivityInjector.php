@@ -17,7 +17,7 @@ trait ActivityInjector
         if (!empty($this->activityInjector['controller']) && !empty($this->activityInjector['type']))
         {
             /** @var \SV\UserActivity\Repository\UserActivity $userActivityRepo */
-            $userActivityRepo = $this->app()->repository('SV\UserActivity:UserActivity');
+            $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');
             $userActivityRepo->registerHandler($this->activityInjector['controller'], $this->activityInjector['type'], $this->activityInjector['id']);
         }
         parent::preDispatchController($action, $params);
@@ -37,7 +37,7 @@ trait ActivityInjector
             if (in_array($actionL, $this->activityInjector['actions'], true))
             {
                 /** @var \SV\UserActivity\Repository\UserActivity $userActivityRepo */
-                $userActivityRepo = $this->app()->repository('SV\UserActivity:UserActivity');
+                $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');
                 $userActivityRepo->insertUserActivityIntoViewResponse($this->activityInjector['controller'], $reply);
             }
         }
