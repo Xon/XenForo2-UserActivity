@@ -1,6 +1,8 @@
 <?php
 
 namespace SV\UserActivity\XF\Pub\Controller;
+
+use SV\UserActivity\ActivityInjector;
 use XF\App;
 use XF\Http\Request;
 use XF\Mvc\ParameterBag;
