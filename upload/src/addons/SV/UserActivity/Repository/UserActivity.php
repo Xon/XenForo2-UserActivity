@@ -381,10 +381,11 @@ class UserActivity extends Repository
      */
     public function getUsersViewing($contentType, $contentId, User $viewingUser)
     {
-        $memberCount = 1;
+        $isGuest = $viewingUser->user_id ? false : true;
+        $memberCount = $isGuest ? 0 : 1;
         $guestCount = 0;
         $robotCount = 0;
-        $records = $viewingUser->user_id ? [$viewingUser] : [];
+        $records = $isGuest ? [] : [$viewingUser];
 
         $app = $this->app();
         $options = $app->options();
@@ -422,7 +423,8 @@ class UserActivity extends Repository
         }
 
         $cutoff = $options->SV_UA_Cutoff;
-        $memberVisibleCount = 1;
+        $memberVisibleCount = $isGuest ? 0 : 1;
+        $recordsUnseen = 0;
 
         if(is_array($onlineRecords))
         {
@@ -444,16 +446,21 @@ class UserActivity extends Repository
                     {
                         $seen[$rec['user_id']] = true;
                         $memberCount += 1;
-                        if(!empty($rec['visible']) || $bypassUserPrivacy)
+                        if (!empty($rec['visible']) || $bypassUserPrivacy)
                         {
                             $memberVisibleCount += 1;
                             if ($cutoff > 0 && $memberVisibleCount > $cutoff)
                             {
+                                $recordsUnseen += 1;
                                 continue;
                             }
                             $score = $score - ($score % $sampleInterval);
                             $rec['effective_last_activity'] = $score;
                             $records[] = $rec;
+                        }
+                        else
+                        {
+                            $recordsUnseen += 1;
                         }
                     }
                 }
@@ -474,7 +481,7 @@ class UserActivity extends Repository
             'guests'  => $guestCount,
             'robots'  => $robotCount,
             'records' => $records,
-            'recordsUnseen' => $cutoff > 0 ? $memberVisibleCount - count($records) : 0,
+            'recordsUnseen' => $recordsUnseen,
         );
     }
 

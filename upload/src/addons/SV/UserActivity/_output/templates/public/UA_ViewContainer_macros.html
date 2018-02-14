@@ -1,4 +1,4 @@
-<xf:macro name="UserActivity" arg-contentTypePhrase="" arg-contentId="" arg-records="">	
+<xf:macro name="UserActivity" arg-contentTypePhrase="" arg-contentId="" arg-records="">
 	<xf:if is="{$records}">
 		<xf:css src="UserActivity.less" />
 		<xf:if contentcheck="true">
@@ -23,7 +23,11 @@
 								</xf:if>
 							</xf:contentcheck>
 							<xf:if is="{$records.recordsUnseen}">
-								<li class="moreLink">{{ phrase('ellipsis_and_x_more', {'count': $records.recordsUnseen}) }}</li>
+								<xf:if is="{$records.records}">
+									<li class="moreLink">{{ phrase('ellipsis_and_x_more', {'count': $records.recordsUnseen}) }}</li>
+								<xf:else />
+									<li></li>
+								</xf:if>
 							</xf:if>
 						</div>
 					</div>

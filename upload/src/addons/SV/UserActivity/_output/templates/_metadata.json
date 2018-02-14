@@ -1,8 +1,8 @@
 {
     "public/UA_ViewContainer_macros.html": {
-        "version_id": 2010000,
-        "version_string": "2.1.0",
-        "hash": "2b8f23ff09faa7dec5ba96f662c1e874"
+        "version_id": 2010200,
+        "version_string": "2.1.2",
+        "hash": "f0a014a0145a78bf5a6734f753ca06d4"
     },
     "public/UserActivity.less": {
         "version_id": 2010000,
