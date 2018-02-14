@@ -5,7 +5,6 @@ namespace SV\UserActivity\XF\Pub\Controller;
 use SV\UserActivity\ActivityInjector;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
-use XF\Mvc\Reply\Redirect;
 use XF\Mvc\Reply\View;
 
 class Post extends XFCP_Post

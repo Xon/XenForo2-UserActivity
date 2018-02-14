@@ -6,13 +6,18 @@ use Credis_Client;
 use SV\RedisCache\Redis;
 use XF\Entity\User;
 use XF\Mvc\Entity\Repository;
+use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View;
 
 class UserActivity extends Repository
 {
     protected static $handlers = array();
     protected static $logging = true;
+    protected static $forceFallback = false;
 
+    /**
+     * @return int
+     */
     public function getSampleInterval()
     {
         return 30;
@@ -23,25 +28,41 @@ class UserActivity extends Repository
         self::$logging = false;
     }
 
+    /**
+     * @return bool
+     */
     public function isLogging()
     {
         return self::$logging;
     }
 
+    /**
+     * @param string $controllerName
+     * @param string $contentType
+     * @param string $contentIdField
+     */
     public function registerHandler($controllerName, $contentType, $contentIdField)
     {
         self::$handlers[$controllerName] = array($contentType, $contentIdField);
     }
 
+    /**
+     * @param string $controllerName
+     * @return array
+     */
     public function getHandler($controllerName)
     {
         if (empty(self::$handlers[$controllerName]))
         {
-            return false;
+            return [];
         }
         return self::$handlers[$controllerName];
     }
 
+    /**
+     * @param string $controllerName
+     * @param AbstractReply $response
+     */
     public function insertUserActivityIntoViewResponse($controllerName, &$response)
     {
         if ($response instanceof View)
@@ -77,6 +98,10 @@ class UserActivity extends Repository
      */
     protected function getCredis()
     {
+        if (self::$forceFallback)
+        {
+            return null;
+        }
         $app = $this->app();
         /** @var Redis $cache */
         $cache = $app->cache();
@@ -92,7 +117,7 @@ class UserActivity extends Repository
      * @param integer|null $targetRunTime
      * @return array|bool
      */
-    protected function _garbageCollectActivityFallback(array $data, $targetRunTime = null)
+    protected function _garbageCollectActivityFallback(/** @noinspection PhpUnusedParameterInspection */array $data, $targetRunTime = null)
     {
         $app = $this->app();
         $options = $app->options();
@@ -222,16 +247,17 @@ class UserActivity extends Repository
         $options = $app->options();
         if ($viewingUser->user_id)
         {
-            if (!isset($options->RainDD_UA_ThreadViewType))
+            $threadViewType = $options->RainDD_UA_ThreadViewType;
+            if (!isset($threadViewType))
             {
                 // add-on not fully installed
                 return;
             }
-            else if ($options->RainDD_UA_ThreadViewType == 0)
+            else if ($threadViewType == 0)
             {
                 $data['display_style_group_id'] = $viewingUser->display_style_group_id;
             }
-            else if ($options->RainDD_UA_ThreadViewType == 1)
+            else if ($threadViewType == 1)
             {
                 $data['avatar_date'] = $viewingUser->avatar_date;
                 $data['gravatar'] = $viewingUser->gravatar;
@@ -279,6 +305,7 @@ class UserActivity extends Repository
                     "end ".
                     "redis.call('EXPIRE', KEYS[1], ARGV[3]) ".
                     "return retVal ";
+                /** @noinspection PhpUnusedLocalVariableInspection */
                 $ret = $credis->eval($script, array($key), array($score, $raw, $onlineStatusTimeout));
             }
         }
@@ -311,7 +338,7 @@ class UserActivity extends Repository
      * @param integer $end
      * @return array
      */
-    protected function _getUsersViewingFallback($contentType, $contentId, $start, $end)
+    protected function _getUsersViewingFallback(/** @noinspection PhpUnusedParameterInspection */ $contentType, $contentId, $start, $end)
     {
         $db = $this->db();
         $raw = $db->fetchAll(
