@@ -25,21 +25,25 @@ class Forum extends XFCP_Forum
         }
     }
 
-    public function actionList(ParameterBag $params)
+    protected function postDispatchType($action, ParameterBag $params, AbstractReply &$reply)
     {
-        return $this->injectResponse(parent::actionList($params));
-    }
-
-    public function actionForum(ParameterBag $params)
-    {
-        return $this->injectResponse(parent::actionForum($params));
+        // this updates the session, and occurs after postDispatchController
+        parent::postDispatchType($action, $params, $reply);
+        $action = strtolower($action); // don't need utf8_strtolower
+        switch($action)
+        {
+            case 'list':
+            case 'forum':
+                $this->injectResponse($reply);
+                break;
+        }
     }
 
     /**
      * @param AbstractReply $response
      * @return AbstractReply
      */
-    public function injectResponse($response)
+    public function injectResponse(AbstractReply &$response)
     {
         if ($response instanceof View && !$response->getParam('touchedUA'))
         {
@@ -84,8 +88,6 @@ class Forum extends XFCP_Forum
                 $userActivityRepo->insertBulkUserActivityIntoViewResponse($response, $fetchData);
             }
         }
-
-        return $response;
     }
 
 
