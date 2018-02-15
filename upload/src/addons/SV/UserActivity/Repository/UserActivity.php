@@ -99,7 +99,9 @@ class UserActivity extends Repository
             }
 
             $visitor = \XF::visitor();
-            if (!$visitor->hasPermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers'))
+            $session = \XF::session();
+            $isRobot = isset($session['robot']) ? $session['robot'] : '';
+            if ($isRobot || !$visitor->hasPermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers'))
             {
                 return;
             }
