@@ -55,9 +55,10 @@ class Forum extends XFCP_Forum
             if ($options->svUATrackForum)
             {
                 $fetchData['node'] = [];
-                if ($nodeExtras = $response->getParam('nodeExtras'))
+                /** @var \XF\Tree $nodeTree */
+                if ($nodeTree = $response->getParam('nodeTree'))
                 {
-                    $fetchData['node'] = array_keys($nodeExtras);
+                    $fetchData['node'] = $nodeTree->childIds();
                 }
                 /** @var \XF\Entity\Forum $forum */
                 if ($forum = $response->getParam('forum'))
