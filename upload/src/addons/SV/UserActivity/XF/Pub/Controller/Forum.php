@@ -4,6 +4,7 @@ namespace SV\UserActivity\XF\Pub\Controller;
 
 use SV\UserActivity\ActivityInjector;
 use XF\App;
+use XF\Entity\Node;
 use XF\Http\Request;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\ParameterBag;
@@ -33,17 +34,19 @@ class Forum extends XFCP_Forum
         switch($action)
         {
             case 'list':
+                $this->injectResponse($reply, 1);
+                break;
             case 'forum':
-                $this->injectResponse($reply);
+                $this->injectResponse($reply, 0);
                 break;
         }
     }
 
     /**
      * @param AbstractReply $response
-     * @return AbstractReply
+     * @param int           $childDepth
      */
-    public function injectResponse(AbstractReply &$response)
+    public function injectResponse(AbstractReply &$response, $childDepth)
     {
         if ($response instanceof View && !$response->getParam('touchedUA'))
         {
@@ -51,14 +54,23 @@ class Forum extends XFCP_Forum
             $fetchData = [];
             $options = \XF::options();
 
-            /** @noinspection PhpUndefinedFieldInspection */
             if ($options->svUATrackForum)
             {
                 $fetchData['node'] = [];
                 /** @var \XF\Tree $nodeTree */
                 if ($nodeTree = $response->getParam('nodeTree'))
                 {
-                    $fetchData['node'] = $nodeTree->childIds();
+                    $nodes = [];
+                    $flattenedNodeList = $nodeTree->getFlattened();
+                    foreach($flattenedNodeList as $id => $node)
+                    {
+                        /** @var Node[] $nodes */
+                        if ($node['depth'] <= $childDepth)
+                        {
+                            $nodes[] = $id;
+                        }
+                    }
+                    $fetchData['node'] = $nodes;
                 }
                 /** @var \XF\Entity\Forum $forum */
                 if ($forum = $response->getParam('forum'))
@@ -67,7 +79,6 @@ class Forum extends XFCP_Forum
                 }
             }
 
-            /** @noinspection PhpUndefinedFieldInspection */
             if ($options->svUADisplayThreads)
             {
                 $fetchData['thread'] = [];
