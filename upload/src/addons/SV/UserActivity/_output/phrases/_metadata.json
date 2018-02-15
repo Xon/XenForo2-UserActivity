@@ -77,6 +77,18 @@
         "version_string": "1.0.0",
         "hash": "aec2c3afedfa1033c07721ac21df25c3"
     },
+    "option.svUADisplayThreads.txt": {
+        "global_cache": false,
+        "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "94b8d5aac75e99c40d31101ebb68a04b"
+    },
+    "option.svUATrackForum.txt": {
+        "global_cache": false,
+        "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "da64e214fd8ffa5761b9b893475677b7"
+    },
     "option_explain.RainDD_UA_ThreadViewPos.txt": {
         "global_cache": false,
         "version_id": 1000000,
@@ -112,6 +124,18 @@
         "version_id": 1000000,
         "version_string": "1.0.0",
         "hash": "5caed82df7ea70ce17acae1f4c56fd04"
+    },
+    "option_explain.svUADisplayThreads.txt": {
+        "global_cache": false,
+        "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "88f8aef580b29b19df24006c4b0dac18"
+    },
+    "option_explain.svUATrackForum.txt": {
+        "global_cache": false,
+        "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "759fe0b98b677fe97cdffdee0a9e88a6"
     },
     "option_group.SV_UA_Options.txt": {
         "global_cache": false,
@@ -161,6 +185,12 @@
         "version_string": "1.0.0",
         "hash": "e82cf89ae66d4c2f3d2fbe8a27a5eb86"
     },
+    "style_prop.UA_ViewerCount.txt": {
+        "global_cache": false,
+        "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "824ba7d4e31134cac214d8ad67d48fc2"
+    },
     "style_prop_desc.RainDD_UA_Avatar.txt": {
         "global_cache": false,
         "version_id": 1000000,
@@ -185,6 +215,12 @@
         "version_string": "1.0.0",
         "hash": "1589115d1cb484b7bafe24f14e956c67"
     },
+    "style_prop_desc.UA_ViewerCount.txt": {
+        "global_cache": false,
+        "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "7f8119de8829126d49e1444d0015189b"
+    },
     "style_prop_group.raindd_ua_main.txt": {
         "global_cache": false,
         "version_id": 1000000,
@@ -196,6 +232,18 @@
         "version_id": 1000000,
         "version_string": "1.0.0",
         "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "ua_node_view_count.txt": {
+        "global_cache": false,
+        "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "e72382852c0ce16441ab8c8cf1e303f3"
+    },
+    "ua_node_view_count_single.txt": {
+        "global_cache": false,
+        "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "ac6ba925fcf051b53fec8c78d99ff05d"
     },
     "ua_x_was_last_seen.txt": {
         "global_cache": false,

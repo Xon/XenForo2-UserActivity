@@ -1,0 +1,9 @@
+{
+    "template": "forum_view",
+    "description": "Adds activity containers",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#({\\$forum\\.Node\\.title}.*?)(</xf:title>)#si",
+    "replace": "$1<xf:macro template=\"UA_ViewContainer_macros\" name=\"viewerCounts\"\n\t\t\targ-recordCounts=\"{$UA_RecordCounts}\" \n\t\t\targ-contentType=\"node\"\n\t\t\targ-contentId=\"{$forum.node_id}\"\n\t\t\t/>$2\n{{ dump($UA_RecordCounts) }}"
+}

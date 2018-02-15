@@ -1,4 +1,8 @@
-<xf:macro name="UserActivity" arg-contentTypePhrase="" arg-contentId="" arg-records="">
+<xf:macro name="UserActivity" 
+		  arg-contentTypePhrase="!" 
+		  arg-contentId="!" 
+		  arg-records="!"
+		  >
 	<xf:if is="{$records}">
 		<xf:css src="UserActivity.less" />
 		<xf:if contentcheck="true">
@@ -34,5 +38,19 @@
 				</div>
 			</div>
 		</xf:if>
+	</xf:if>
+</xf:macro>
+
+<xf:macro name="viewerCounts"
+		  arg-recordCounts="!"
+		  arg-contentType="!"
+		  arg-contentId="!"
+		  >
+	<xf:css src="UserActivity.less" />
+	<xf:set var="$activityCount" value="{$recordCounts.{$contentType}.{$contentId}}" />
+	<xf:if is="{$activityCount} == 1">
+	<span class="uaViewerCount">{{ phrase('ua_node_view_count_single', {'count': {$activityCount|number}}) }}</span>
+	<xf:elseif is="{$activityCount}"/>
+	<span class="uaViewerCount">{{ phrase('ua_node_view_count', {'count': {$activityCount|number}}) }}</span>
 	</xf:if>
 </xf:macro>

@@ -5,6 +5,7 @@ namespace SV\UserActivity\XF\Pub\Controller;
 use SV\UserActivity\ActivityInjector;
 use XF\App;
 use XF\Http\Request;
+use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View;
@@ -40,7 +41,7 @@ class Forum extends XFCP_Forum
      */
     public function injectResponse($response)
     {
-        if ($response instanceof View && $response->getParam('touchedUA'))
+        if ($response instanceof View && !$response->getParam('touchedUA'))
         {
             $response->setParam('touchedUA', true);
             $fetchData = [];
@@ -67,11 +68,13 @@ class Forum extends XFCP_Forum
                 $fetchData['thread'] = [];
                 if ($threads = $response->getParam('threads'))
                 {
-                    $fetchData['thread'] = array_keys($threads);
+                    $threadIds =  ($threads instanceof AbstractCollection) ? $threads->keys() : array_keys($threads);
+                    $fetchData['thread'] = $threadIds;
                 }
                 if ($threads = $response->getParam('stickyThreads'))
                 {
-                    $fetchData['thread'] = array_merge($fetchData['thread'], array_keys($threads));
+                    $threadIds =  ($threads instanceof AbstractCollection) ? $threads->keys() : array_keys($threads);
+                    $fetchData['thread'] = array_merge($fetchData['thread'], $threadIds);
                 }
             }
             if ($fetchData)

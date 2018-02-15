@@ -1,0 +1,1 @@
+Display Thread view counts on thread list

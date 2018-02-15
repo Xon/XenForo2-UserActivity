@@ -2,8 +2,17 @@
     "public/conversation_view_UA_Containers.json": {
         "hash": "c9eee3d6415ed6cc003cf92d93fc267b"
     },
+    "public/forum_view_UA_Containers.json": {
+        "hash": "db77df9db9e30ae0eb3c0a38d329b5fd"
+    },
+    "public/node_list_forum_UA_Containers.json": {
+        "hash": "e8b43d1bdd06ce8782e3a151ddbab151"
+    },
     "public/report_view_UA_Containers.json": {
         "hash": "3e569dfeaee3115df1e7b58e00b66913"
+    },
+    "public/thread_list_macros_user_activity.json": {
+        "hash": "f6dbd3899301846d290b969f05e0955a"
     },
     "public/thread_view_UA_Containers.json": {
         "hash": "fed8b87b0232f38ad8cf62811344d2dc"

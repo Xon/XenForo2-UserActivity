@@ -1,0 +1,3 @@
+This tracks and displays users per forum. Does not track sub-forum traffic!<br/>
+<br/>
+Only shows counts, not a list of users.

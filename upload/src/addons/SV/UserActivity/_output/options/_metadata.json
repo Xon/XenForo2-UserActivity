@@ -16,5 +16,11 @@
     },
     "UA_pruneChance.json": {
         "hash": "2d4592c4968bdd89de2c20427150d8c8"
+    },
+    "svUADisplayThreads.json": {
+        "hash": "df8e999d53e3c34db325d0a6afaba325"
+    },
+    "svUATrackForum.json": {
+        "hash": "8765f3d036105e6a5c1095ab6034c90c"
     }
 }

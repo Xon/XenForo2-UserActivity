@@ -1,0 +1,1 @@
+Styling for viewer counts next to thread/forums/etc
