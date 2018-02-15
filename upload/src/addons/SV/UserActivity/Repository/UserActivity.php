@@ -309,7 +309,7 @@ class UserActivity extends Repository
 
         // record keeping
         $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
-        $onlineStatusTimeout = min(60, intval($options->onlineStatusTimeout * 60));
+        $onlineStatusTimeout = max(60, intval($options->onlineStatusTimeout) * 60);
 
         if ($useLua)
         {
