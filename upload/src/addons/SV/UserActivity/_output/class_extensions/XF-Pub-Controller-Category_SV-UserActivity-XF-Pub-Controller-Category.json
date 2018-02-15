@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Pub\\Controller\\Category",
+    "to_class": "SV\\UserActivity\\XF\\Pub\\Controller\\Category",
+    "execute_order": 10,
+    "active": true
+}

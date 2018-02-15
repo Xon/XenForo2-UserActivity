@@ -10,6 +10,7 @@ namespace SV\UserActivity\SV\ContentRatings\Pub\Controller
 
 namespace SV\UserActivity\XF\Pub\Controller
 {
+	class XFCP_Category extends \XF\Pub\Controller\Category {}
 	class XFCP_Conversation extends \XF\Pub\Controller\Conversation {}
 	class XFCP_Forum extends \XF\Pub\Controller\Forum {}
 	class XFCP_Post extends \XF\Pub\Controller\Post {}
