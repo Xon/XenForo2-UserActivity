@@ -2,7 +2,7 @@
 
 namespace SV\UserActivity\XF\Pub\Controller;
 
-use SV\UserActivity\ActivityInjector;
+use SV\UserActivity\UserActivityInjector;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View;
@@ -11,10 +11,11 @@ class Post extends XFCP_Post
 {
     protected $activityInjector = [
         'controller' => 'XF\Pub\Controller\Post',
-        'type' => 'thread',
-        'id' => 'thread_id',
+        'type'       => 'thread',
+        'id'         => 'thread_id',
+        'activeKey'  => 'thread',
     ];
-    use ActivityInjector;
+    use UserActivityInjector;
 
     protected function canUpdateSessionActivity($action, ParameterBag $params, AbstractReply &$reply, &$viewState)
     {

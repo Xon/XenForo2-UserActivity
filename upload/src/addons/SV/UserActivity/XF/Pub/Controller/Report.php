@@ -2,15 +2,16 @@
 
 namespace SV\UserActivity\XF\Pub\Controller;
 
-use SV\UserActivity\ActivityInjector;
+use SV\UserActivity\UserActivityInjector;
 
 class Report extends XFCP_Report
 {
     protected $activityInjector = [
         'controller' => 'XF\Pub\Controller\Report',
-        'type' => 'report',
-        'id' => 'report_id',
-        'actions' => ['view'],
+        'type'       => 'report',
+        'id'         => 'report_id',
+        'actions'    => ['view'],
+        'activeKey'  => 'report',
     ];
-    use ActivityInjector;
+    use UserActivityInjector;
 }

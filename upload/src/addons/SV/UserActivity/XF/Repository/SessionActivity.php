@@ -21,17 +21,13 @@ class SessionActivity extends XFCP_SessionActivity
         $handler = $userActivityRepo->getHandler($controller);
         if (!empty($handler) && $userActivityRepo->isLogging() && $viewState == 'valid')
         {
-            $requiredKey = $handler[1];
+            $requiredKey = $handler['id'];
             if (!empty($params[$requiredKey]))
             {
-                if (empty($robotKey) || $app->options()->SV_UA_TrackRobots)
+                $visitor = \XF::visitor();
+                if($userId === $visitor->user_id)
                 {
-                    $visitor = \XF::visitor();
-                    if($userId === $visitor->user_id)
-                    {
-                        $contentType = $handler[0];
-                        $userActivityRepo->updateSessionActivity($contentType, $params[$requiredKey], $ip, $robotKey, $visitor);
-                    }
+                    $userActivityRepo->trackViewerUsage($handler['type'], $params[$requiredKey], $handler['activeKey'], $ip, $robotKey, $visitor);
                 }
             }
         }

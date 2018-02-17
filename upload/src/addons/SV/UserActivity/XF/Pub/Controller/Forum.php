@@ -2,42 +2,139 @@
 
 namespace SV\UserActivity\XF\Pub\Controller;
 
-use SV\UserActivity\ActivityInjector;
-use SV\UserActivity\ForumActivityInjector;
-use XF\App;
-use XF\Http\Request;
+use SV\UserActivity\Repository\UserActivity;
+use SV\UserActivity\UserActivityInjector;
+use SV\UserActivity\UserCountActivityInjector;
+use XF\Entity\Node;
+use XF\Mvc\ParameterBag;
+use XF\Mvc\Reply\View;
 
 /**
  * Extends \XF\Pub\Controller\Forum
  */
 class Forum extends XFCP_Forum
 {
-    public function __construct(App $app, Request $request)
+    public function actionForum(ParameterBag $params)
     {
-        parent::__construct($app, $request);
-        /** @noinspection PhpUndefinedFieldInspection */
-        if (!\XF::options()->svUATrackForum)
+        $response = parent::actionForum($params);
+        // alias forum => node, limitations of activity tracking
+        if ($response instanceof View &&
+            $this->responseType !== 'rss' &&
+            ($forum = $response->getParam('forum')) &&
+            (null === $response->getParam('node')))
         {
-            $this->activityInjector = [];
+            $response->setParam('node', $forum);
         }
+
+        return $response;
     }
 
-    protected $forumActivityInjector = [
-        'list' => [
-            'depth' => 1,
+    protected function forumFetcher(
+        /** @noinspection PhpUnusedParameterInspection */
+        View $response,
+        $action,
+        array $config)
+    {
+        /** @var \XF\Entity\Forum $forum */
+        if ($forum = $response->getParam('forum'))
+        {
+            return $forum->node_id;
+        }
+
+        return null;
+    }
+
+    protected function forumListFetcher(
+        /** @noinspection PhpUnusedParameterInspection */
+        View $response,
+        $action,
+        array $config)
+
+    {
+        $repo = $this->getUserActivityRepo();
+
+        /** @var \XF\Tree $nodeTree */
+        if ($nodeTree = $response->getParam('nodeTree'))
+        {
+            /** @var Node[] $nodes */
+            $nodes = $repo->flattenTreeToDepth($nodeTree, $action === 'list' ? 1 : 0);
+        }
+        else
+        {
+            $nodes = [];
+        }
+
+        return $repo->getFilteredNodeIds($nodes);
+    }
+
+    protected function threadFetcher(
+        /** @noinspection PhpUnusedParameterInspection */
+        View $response,
+        $action,
+        array $config)
+
+    {
+        return $this->getUserActivityRepo()->getFilteredThreadIds($response->getParams(),'threads');
+    }
+
+    protected function stickyThreadFetcher(
+        /** @noinspection PhpUnusedParameterInspection */
+        View $response,
+        $action,
+        array $config)
+
+    {
+        return $this->getUserActivityRepo()->getFilteredThreadIds($response->getParams(),'stickyThreads');
+    }
+
+    protected $countActivityInjector = [
+        [
+            'activeKey' => 'index-forum',
+            'type'      => 'node',
+            'actions'   => ['list'],
+            'fetcher'   => 'forumListFetcher',
         ],
-        'forum' => [
-            'depth' => 0,
+        [
+            'activeKey' => 'forum',
+            'type'      => 'node',
+            'actions'   => ['forum'],
+            'fetcher'   => 'forumFetcher',
+        ],
+        [
+            'activeKey' => 'sub-forum',
+            'type'      => 'node',
+            'actions'   => ['forum'],
+            'fetcher'   => 'forumListFetcher',
+        ],
+        [
+            'activeKey' => 'thread',
+            'type'      => 'thread',
+            'actions'   => ['forum'],
+            'fetcher'   => 'threadFetcher'
+        ],
+        [
+            'activeKey' => 'sticky-thread',
+            'type'      => 'thread',
+            'actions'   => ['forum'],
+            'fetcher'   => 'stickyThreadFetcher'
         ],
     ];
-    use ForumActivityInjector;
+    use UserCountActivityInjector;
 
     protected $activityInjector = [
         'controller' => 'XF\Pub\Controller\Forum',
         'type'       => 'node',
         'id'         => 'node_id',
-        'actions'    => [], // deliberate, as we do our own thing to inject content
-        'countsOnly' => true,
+        'actions'    => ['forum'],
+        'activeKey'  => 'forum',
     ];
-    use ActivityInjector;
+    use UserActivityInjector;
+
+    /**
+     * @return \XF\Mvc\Entity\Repository|UserActivity
+     */
+    protected function getUserActivityRepo()
+    {
+        return \XF::repository('SV\UserActivity:UserActivity');
+    }
 }

@@ -1,0 +1,5 @@
+Limits the number of node's view state touched by when a thread is viewed.<br/>
+<br/>
+When a thread is viewed, the bread-crumb is traced to find each node above the thread to contribute the thread's view to.<br/>
+0 to disable<br/>
+-1 for all

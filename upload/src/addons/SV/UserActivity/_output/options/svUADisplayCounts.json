@@ -1,0 +1,14 @@
+{
+    "edit_format": "checkbox",
+    "edit_format_params": "thread=Thread List\nsticky-thread=Sticky Thread List\nindex-forum=Index Page Forums\nforum=Forum List\nsimilar-threads={{ phrase('svUA_display_count_similar_threads') }}\nsub-forum=Sub forum List\nfind-new=Find New Threads\nwatched-forums=Watched Forum List\nwatched-threads=Watched Thread List\nconversation=Conversation List",
+    "data_type": "array",
+    "sub_options": [
+        "*"
+    ],
+    "validation_class": "",
+    "validation_method": "",
+    "default_value": "[]",
+    "relations": {
+        "SV_UA_Options": 300
+    }
+}

@@ -2,7 +2,7 @@
 
 namespace SV\UserActivity\SV\ContentRatings\Pub\Controller;
 
-use SV\UserActivity\ActivityInjector;
+use SV\UserActivity\UserActivityInjector;
 use XF\Mvc\ParameterBag;
 
 class Ratings extends XFCP_Ratings
@@ -13,9 +13,9 @@ class Ratings extends XFCP_Ratings
         'id' => 'container_id',
         'actions' => ['like', 'list'],
     ];
-    use ActivityInjector
+    use UserActivityInjector
     {
-        preDispatchController as preDispatchControllerTrait;
+        preDispatch as preDispatchTrait;
     }
 
     /** @var ParameterBag $_params */
@@ -35,7 +35,7 @@ class Ratings extends XFCP_Ratings
             {
                 /** @var \SV\UserActivity\Repository\UserActivity $userActivityRepo */
                 $userActivityRepo = $this->app->repository('SV\UserActivity:UserActivity');
-                $userActivityRepo->registerHandler($this->activityInjector['controller'], $this->activityInjector['type'], $this->activityInjector['id']);
+                $userActivityRepo->registerHandler($this->activityInjector['controller'], $this->activityInjector);
             }
         }
 
@@ -46,9 +46,9 @@ class Ratings extends XFCP_Ratings
      * @param $action
      * @param ParameterBag $params
      */
-    protected function preDispatchController($action, ParameterBag $params)
+    public function _preDispatch($action, ParameterBag $params)
     {
         $this->_params = $params;
-        parent::preDispatchController($action, $params);
+        $this->preDispatchTrait($action, $params);
     }
 }

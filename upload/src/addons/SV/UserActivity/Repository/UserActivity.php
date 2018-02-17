@@ -4,15 +4,18 @@ namespace SV\UserActivity\Repository;
 
 use Credis_Client;
 use SV\RedisCache\Redis;
+use XF\Entity\Node;
+use XF\Entity\Thread;
 use XF\Entity\User;
 use XF\Mvc\Entity\Repository;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View;
+use XF\Tree;
 
 class UserActivity extends Repository
 {
-    protected static $handlers = array();
-    protected static $logging = true;
+    protected static $handlers      = [];
+    protected static $logging       = true;
     protected static $forceFallback = false;
 
     /**
@@ -38,12 +41,11 @@ class UserActivity extends Repository
 
     /**
      * @param string $controllerName
-     * @param string $contentType
-     * @param string $contentIdField
+     * @param array  $config
      */
-    public function registerHandler($controllerName, $contentType, $contentIdField)
+    public function registerHandler($controllerName, $config)
     {
-        self::$handlers[$controllerName] = array($contentType, $contentIdField);
+        self::$handlers[$controllerName] = $config;
     }
 
     /**
@@ -56,6 +58,7 @@ class UserActivity extends Repository
         {
             return [];
         }
+
         return self::$handlers[$controllerName];
     }
 
@@ -78,7 +81,7 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param string $controllerName
+     * @param string        $controllerName
      * @param AbstractReply $response
      */
     public function insertUserActivityIntoViewResponse($controllerName, &$response)
@@ -90,8 +93,8 @@ class UserActivity extends Repository
             {
                 return;
             }
-            $contentType = $handler[0];
-            $contentIdField = $handler[1];
+            $contentType = $handler['type'];
+            $contentIdField = $handler['id'];
             $content = $response->getParam($contentType);
             if (empty($content[$contentIdField]))
             {
@@ -100,7 +103,7 @@ class UserActivity extends Repository
 
             $visitor = \XF::visitor();
             $session = \XF::session();
-            $isRobot = isset($session['robot']) ? $session['robot'] : '';
+            $isRobot = $session->isStarted() ? $session->get('robotId') : true;
             if ($isRobot || !$visitor->hasPermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers'))
             {
                 return;
@@ -129,6 +132,7 @@ class UserActivity extends Repository
         {
             return null;
         }
+
         return $credis;
     }
 
@@ -137,7 +141,8 @@ class UserActivity extends Repository
      * @param integer|null $targetRunTime
      * @return array|bool
      */
-    protected function _garbageCollectActivityFallback(/** @noinspection PhpUnusedParameterInspection */array $data, $targetRunTime = null)
+    protected function _garbageCollectActivityFallback(/** @noinspection PhpUnusedParameterInspection */
+        array $data, $targetRunTime = null)
     {
         $app = $this->app();
         $options = $app->options();
@@ -174,7 +179,7 @@ class UserActivity extends Repository
         $dataKey = $cache->getNamespacedId('activity_');
 
         $end = $app->time - $onlineStatusTimeout;
-        $end = $end - ($end  % $this->getSampleInterval());
+        $end = $end - ($end % $this->getSampleInterval());
 
         // indicate to the redis instance would like to process X items at a time.
         $count = 100;
@@ -185,7 +190,7 @@ class UserActivity extends Repository
         $s = microtime(true);
         do
         {
-            $keys = $credis->scan($cursor, $dataKey ."*", $count);
+            $keys = $credis->scan($cursor, $dataKey . "*", $count);
             $loopGuard--;
             if ($keys === false)
             {
@@ -194,7 +199,7 @@ class UserActivity extends Repository
             $data['cursor'] = $cursor;
 
             // the actual prune operation
-            foreach($keys as $key)
+            foreach ($keys as $key)
             {
                 $credis->zremrangebyscore($key, 0, $end);
             }
@@ -206,12 +211,13 @@ class UserActivity extends Repository
             }
             $loopGuard--;
         }
-        while($loopGuard > 0 && !empty($cursor));
+        while ($loopGuard > 0 && !empty($cursor));
 
         if (empty($cursor))
         {
             return false;
         }
+
         return $data;
     }
 
@@ -246,23 +252,22 @@ class UserActivity extends Repository
      * @param int    $contentId
      * @param string $ip
      * @param string $robotKey
-     * @param User $viewingUser
+     * @param User   $viewingUser
      */
     public function updateSessionActivity($contentType, $contentId, $ip, $robotKey, User $viewingUser)
     {
         $app = $this->app();
-        $score = $app->time - ($app->time  % $this->getSampleInterval());
-        $data = array
-        (
-            'user_id' => $viewingUser->user_id,
-            'username' => $viewingUser->username,
-            'visible' => $viewingUser->visible && $viewingUser->activity_visible ? 1 : null,
-            'robot'  => empty($robotKey) ? null : 1,
+        $score = $app->time - ($app->time % $this->getSampleInterval());
+        $data = [
+            'user_id'                => $viewingUser->user_id,
+            'username'               => $viewingUser->username,
+            'visible'                => $viewingUser->visible && $viewingUser->activity_visible ? 1 : null,
+            'robot'                  => empty($robotKey) ? null : 1,
             'display_style_group_id' => null,
-            'avatar_date' => null,
-            'gravatar' => null,
-            'ip' => null,
-        );
+            'avatar_date'            => null,
+            'gravatar'               => null,
+            'ip'                     => null,
+        ];
 
         $options = $app->options();
         if ($viewingUser->user_id)
@@ -298,7 +303,6 @@ class UserActivity extends Repository
         $credis = $this->getCredis();
         if (!$credis)
         {
-            // do not have a fallback
             $this->_updateSessionActivityFallback($contentType, $contentId, $score, $data, $raw);
 
             return;
@@ -313,20 +317,20 @@ class UserActivity extends Repository
 
         if ($useLua)
         {
-            $ret = $credis->evalSha(self::LUA_IFZADDEXPIRE_SH1, array($key), array($score, $raw, $onlineStatusTimeout));
+            $ret = $credis->evalSha(self::LUA_IFZADDEXPIRE_SH1, [$key], [$score, $raw, $onlineStatusTimeout]);
             if ($ret === null)
             {
                 $script =
-                    "local c = tonumber(redis.call('zscore', KEYS[1], ARGV[2])) ".
-                    "local n = tonumber(ARGV[1]) ".
-                    "local retVal = 0 ".
-                    "if c == nil or n > c then ".
-                      "retVal = redis.call('ZADD', KEYS[1], n, ARGV[2]) ".
-                    "end ".
-                    "redis.call('EXPIRE', KEYS[1], ARGV[3]) ".
+                    "local c = tonumber(redis.call('zscore', KEYS[1], ARGV[2])) " .
+                    "local n = tonumber(ARGV[1]) " .
+                    "local retVal = 0 " .
+                    "if c == nil or n > c then " .
+                    "retVal = redis.call('ZADD', KEYS[1], n, ARGV[2]) " .
+                    "end " .
+                    "redis.call('EXPIRE', KEYS[1], ARGV[3]) " .
                     "return retVal ";
                 /** @noinspection PhpUnusedLocalVariableInspection */
-                $ret = $credis->eval($script, array($key), array($score, $raw, $onlineStatusTimeout));
+                $ret = $credis->eval($script, [$key], [$score, $raw, $onlineStatusTimeout]);
             }
         }
         else
@@ -339,8 +343,7 @@ class UserActivity extends Repository
         }
     }
 
-    const CacheKeys = array
-    (
+    const CacheKeys = [
         'user_id',
         'username',
         'visible',
@@ -349,7 +352,7 @@ class UserActivity extends Repository
         'avatar_date',
         'gravatar',
         'ip',
-    );
+    ];
 
     /**
      * @param string  $contentType
@@ -358,11 +361,12 @@ class UserActivity extends Repository
      * @param integer $end
      * @return array
      */
-    protected function _getUsersViewingFallback(/** @noinspection PhpUnusedParameterInspection */ $contentType, $contentId, $start, $end)
+    protected function _getUsersViewingFallback(/** @noinspection PhpUnusedParameterInspection */
+        $contentType, $contentId, $start, $end)
     {
         $db = $this->db();
         $raw = $db->fetchAll(
-            'SELECT * FROM xf_sv_user_activity WHERE content_type = ? AND content_id = ? AND `timestamp` >= ? ORDER BY `timestamp` desc',
+            'SELECT * FROM xf_sv_user_activity WHERE content_type = ? AND content_id = ? AND `timestamp` >= ? ORDER BY `timestamp` DESC',
             [$contentType, $contentId, $start]
         );
 
@@ -378,7 +382,7 @@ class UserActivity extends Repository
     /**
      * @param string $contentType
      * @param int    $contentId
-     * @param User $viewingUser
+     * @param User   $viewingUser
      * @return array|null
      */
     public function getUsersViewing($contentType, $contentId, User $viewingUser)
@@ -391,8 +395,8 @@ class UserActivity extends Repository
 
         $app = $this->app();
         $options = $app->options();
-        $start = \XF::$time  - $options->onlineStatusTimeout * 60;
-        $start = $start - ($start  % $this->getSampleInterval());
+        $start = \XF::$time - $options->onlineStatusTimeout * 60;
+        $start = $start - ($start % $this->getSampleInterval());
         $end = \XF::$time + 1;
 
         $credis = $this->getCredis();
@@ -411,7 +415,7 @@ class UserActivity extends Repository
             $cache = $app->cache();
             $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
 
-            $onlineRecords = $credis->zRevRangeByScore($key, $end, $start, array('withscores' => true));
+            $onlineRecords = $credis->zRevRangeByScore($key, $end, $start, ['withscores' => true]);
             // check if the activity counter needs pruning
             if (mt_rand() < $options->UA_pruneChance)
             {
@@ -428,13 +432,13 @@ class UserActivity extends Repository
         $memberVisibleCount = $isGuest ? 0 : 1;
         $recordsUnseen = 0;
 
-        if(is_array($onlineRecords))
+        if (is_array($onlineRecords))
         {
-            $seen = array($viewingUser->user_id => true);
+            $seen = [$viewingUser->user_id => true];
             $bypassUserPrivacy = $viewingUser->canBypassUserPrivacy();
             $sampleInterval = $this->getSampleInterval();
 
-            foreach($onlineRecords as $rec => $score)
+            foreach ($onlineRecords as $rec => $score)
             {
                 $data = explode("\n", $rec);
                 $rec = @array_combine(self::CacheKeys, $data);
@@ -477,14 +481,13 @@ class UserActivity extends Repository
             }
         }
 
-        return array
-        (
-            'members' => $memberCount,
-            'guests'  => $guestCount,
-            'robots'  => $robotCount,
-            'records' => $records,
+        return [
+            'members'       => $memberCount,
+            'guests'        => $guestCount,
+            'robots'        => $robotCount,
+            'records'       => $records,
             'recordsUnseen' => $recordsUnseen,
-        );
+        ];
     }
 
     /**
@@ -493,15 +496,16 @@ class UserActivity extends Repository
      * @param int   $end
      * @return array
      */
-    protected function _getUsersViewingCountFallback(/** @noinspection PhpUnusedParameterInspection */ $fetchData, $start, $end)
+    protected function _getUsersViewingCountFallback(/** @noinspection PhpUnusedParameterInspection */
+        $fetchData, $start, $end)
     {
         $db = $this->db();
 
         $args = [$start];
         $sql = [];
-        foreach($fetchData as $contentType => $list)
+        foreach ($fetchData as $contentType => $list)
         {
-            $list = array_filter(array_map('intval',array_unique($list)));
+            $list = array_filter(array_map('intval', array_unique($list)));
             if ($list)
             {
                 $sql[] = "\n(content_type = " . $db->quote($contentType) . " AND content_id in (" . $db->quote($list) . "))";
@@ -536,8 +540,8 @@ class UserActivity extends Repository
     {
         $app = $this->app();
         $options = $app->options();
-        $start = \XF::$time  - $options->onlineStatusTimeout * 60;
-        $start = $start - ($start  % $this->getSampleInterval());
+        $start = \XF::$time - $options->onlineStatusTimeout * 60;
+        $start = $start - ($start % $this->getSampleInterval());
         $end = \XF::$time + 1;
 
         $credis = $this->getCredis();
@@ -545,7 +549,6 @@ class UserActivity extends Repository
         $pruneChance = $options->UA_pruneChance;
         if (!$credis)
         {
-            // do not have a fallback
             $onlineRecords = $this->_getUsersViewingCountFallback($fetchData, $start, $end);
             // check if the activity counter needs pruning
             if ($pruneChance > 0 && mt_rand() < $pruneChance)
@@ -604,5 +607,118 @@ class UserActivity extends Repository
         }
 
         return $onlineRecords;
+    }
+
+    /**
+     * @param string      $contentType
+     * @param int         $contentId
+     * @param string      $activeKey
+     * @param string|null $ip
+     * @param string|null $robotKey
+     * @param User|null   $viewingUser
+     */
+    public function trackViewerUsage($contentType, $contentId, $activeKey, $ip = null, $robotKey = null, User $viewingUser = null)
+    {
+        if (!$contentType ||
+            !$contentId ||
+            !$activeKey ||
+            !$this->isLogging())
+        {
+            return;
+        }
+        $options = \XF::options();
+        if (empty($options->svUAPopulateUsers[$activeKey]))
+        {
+            return;
+        }
+
+        if ($robotKey === null)
+        {
+            $session = \XF::session();
+            $robotKey = $session->isStarted() ? $session->get('robotId') : true;
+        }
+        if ($viewingUser === null)
+        {
+            $viewingUser = \XF::visitor();
+        }
+        /** @noinspection PhpUndefinedFieldInspection */
+        if ($options->SV_UA_TrackRobots || empty($robotKey))
+        {
+            $this->updateSessionActivity($contentType, $contentId, $ip, $robotKey, $viewingUser);
+        }
+    }
+
+    /**
+     * @param Tree $tree
+     * @param int  $depth
+     * @return array
+     */
+    public function flattenTreeToDepth(Tree $tree, $depth)
+    {
+        $nodes = [];
+        $flattenedNodeList = $tree->getFlattened();
+        foreach ($flattenedNodeList as $id => $node)
+        {
+            if ($node['depth'] <= $depth)
+            {
+                $nodes[] = $id;
+            }
+        }
+
+        return $nodes;
+    }
+
+    /**
+     * @param Node[]    $nodes
+     * @param User|null $user
+     * @return int[]
+     */
+    public function getFilteredNodeIds(array $nodes, User $user = null)
+    {
+        if (!$nodes)
+        {
+            return [];
+        }
+
+        $visitor = $user ?: \XF::visitor();
+        $permissionSet = $visitor->PermissionSet;
+        $nodeIds = [];
+        foreach ($nodes as $nodeId => $node)
+        {
+            if ($permissionSet->hasContentPermission('node', $nodeId, 'viewOthers') &&
+                $permissionSet->hasContentPermission('node', $nodeId, 'viewContent'))
+            {
+                $nodeIds[] = $nodeId;
+            }
+        }
+        return $nodeIds;
+    }
+
+    /**
+     * @param array     $params
+     * @param string    $key
+     * @param User|null $user
+     * @return int[]
+     */
+    public function getFilteredThreadIds(array $params, $key, User $user = null)
+    {
+        if (empty($params[$key]))
+        {
+            return [];
+        }
+        /** @var Thread[] $threads */
+        $threads = $params[$key];
+        $visitor = $user ?: \XF::visitor();
+        $permissionSet = $visitor->PermissionSet;
+        $threadIds = [];
+        foreach($threads as $thread)
+        {
+            $nodeId = $thread->node_id;
+            if ($permissionSet->hasContentPermission('node', $nodeId, 'viewContent'))
+            {
+                $threadIds[] = $thread->thread_id;
+            }
+        }
+        return $threadIds;
     }
 }

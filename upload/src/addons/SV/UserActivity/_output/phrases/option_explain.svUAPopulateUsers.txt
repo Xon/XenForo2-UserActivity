@@ -1,0 +1,1 @@
+Track's user activity for the listed content types. Required for the above display options to work

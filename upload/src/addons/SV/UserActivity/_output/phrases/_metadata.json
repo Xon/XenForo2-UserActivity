@@ -77,17 +77,23 @@
         "version_string": "1.0.0",
         "hash": "aec2c3afedfa1033c07721ac21df25c3"
     },
-    "option.svUADisplayThreads.txt": {
+    "option.svUADisplayCounts.txt": {
         "global_cache": false,
         "version_id": 2020000,
         "version_string": "2.2.0",
-        "hash": "94b8d5aac75e99c40d31101ebb68a04b"
+        "hash": "ff6e47ba8cd8eb51200f89997b0699ed"
     },
-    "option.svUATrackForum.txt": {
+    "option.svUAPopulateUsers.txt": {
         "global_cache": false,
         "version_id": 2020000,
         "version_string": "2.2.0",
-        "hash": "da64e214fd8ffa5761b9b893475677b7"
+        "hash": "ee5b41350f90853f2e15ba6a2b6ca174"
+    },
+    "option.svUAThreadNodeTrackLimit.txt": {
+        "global_cache": false,
+        "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "efc3d656e0c1ff5bd0f7a4d55a059445"
     },
     "option_explain.RainDD_UA_ThreadViewPos.txt": {
         "global_cache": false,
@@ -125,17 +131,23 @@
         "version_string": "1.0.0",
         "hash": "5caed82df7ea70ce17acae1f4c56fd04"
     },
-    "option_explain.svUADisplayThreads.txt": {
+    "option_explain.svUADisplayCounts.txt": {
         "global_cache": false,
         "version_id": 2020000,
         "version_string": "2.2.0",
-        "hash": "88f8aef580b29b19df24006c4b0dac18"
+        "hash": "6a1baacccdd5015f2a6f1cac88a127ec"
     },
-    "option_explain.svUATrackForum.txt": {
+    "option_explain.svUAPopulateUsers.txt": {
         "global_cache": false,
         "version_id": 2020000,
         "version_string": "2.2.0",
-        "hash": "759fe0b98b677fe97cdffdee0a9e88a6"
+        "hash": "79d084f0c5d121f33aea6766b991bb8d"
+    },
+    "option_explain.svUAThreadNodeTrackLimit.txt": {
+        "global_cache": false,
+        "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "c0bbb9d8c62f813a2abfdc584b97e0dc"
     },
     "option_group.SV_UA_Options.txt": {
         "global_cache": false,
@@ -232,6 +244,24 @@
         "version_id": 1000000,
         "version_string": "1.0.0",
         "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "svUA_display_count_similar_threads.txt": {
+        "global_cache": false,
+        "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "3ce8ab3ede58f4c25c7486f0974400bf"
+    },
+    "svUA_display_nf_calendar.txt": {
+        "global_cache": false,
+        "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "36dd9ea05aabcf70a06924e5467f4457"
+    },
+    "svUA_display_nf_ticket.txt": {
+        "global_cache": false,
+        "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "30b6aaae0d9d72f4f05867605837725d"
     },
     "ua_node_view_count.txt": {
         "global_cache": false,
