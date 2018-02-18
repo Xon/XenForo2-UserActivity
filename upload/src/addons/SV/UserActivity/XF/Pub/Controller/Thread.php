@@ -51,7 +51,7 @@ class Thread extends XFCP_Thread
                         {
                             if ($crumb['node_type_id'] === 'Forum')
                             {
-                                $repo->bufferTrackViewerUsage('node', $node['node_id'], 'forum');
+                                $repo->bufferTrackViewerUsage('node', $crumb['node_id'], 'forum');
                                 $count++;
                                 if ($count > $nodeTrackLimit)
                                 {
