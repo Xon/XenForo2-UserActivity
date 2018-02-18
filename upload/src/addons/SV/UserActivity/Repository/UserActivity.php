@@ -326,7 +326,7 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param $updateSet
+     * @param array $updateSet
      */
     protected function updateSessionActivity($updateSet)
     {
@@ -426,7 +426,7 @@ class UserActivity extends Repository
      * @param User   $viewingUser
      * @return array|null
      */
-    public function getUsersViewing($contentType, $contentId, User $viewingUser)
+    protected function getUsersViewing($contentType, $contentId, User $viewingUser)
     {
         $isGuest = $viewingUser->user_id ? false : true;
         $memberCount = $isGuest ? 0 : 1;
@@ -577,7 +577,11 @@ class UserActivity extends Repository
         return $records;
     }
 
-    public function getUsersViewingCount($fetchData)
+    /**
+     * @param array $fetchData
+     * @return array
+     */
+    protected function getUsersViewingCount($fetchData)
     {
         $app = $this->app();
         $options = $app->options();
@@ -652,6 +656,11 @@ class UserActivity extends Repository
 
     protected $trackBuffer = [];
 
+    /**
+     * @param string $contentType
+     * @param int    $contentId
+     * @param string $activeKey
+     */
     public function bufferTrackViewerUsage($contentType, $contentId, $activeKey)
     {
         if (!$contentType ||
@@ -667,7 +676,6 @@ class UserActivity extends Repository
             return;
         }
         $this->trackBuffer[$contentType][$contentId] = true;
-
     }
 
     /**
@@ -754,6 +762,7 @@ class UserActivity extends Repository
                 $nodeIds[] = $nodeId;
             }
         }
+
         return $nodeIds;
     }
 
@@ -774,7 +783,7 @@ class UserActivity extends Repository
         $visitor = $user ?: \XF::visitor();
         $permissionSet = $visitor->PermissionSet;
         $threadIds = [];
-        foreach($threads as $thread)
+        foreach ($threads as $thread)
         {
             $nodeId = $thread->node_id;
             if ($permissionSet->hasContentPermission('node', $nodeId, 'viewContent'))
@@ -782,6 +791,7 @@ class UserActivity extends Repository
                 $threadIds[] = $thread->thread_id;
             }
         }
+
         return $threadIds;
     }
 }
