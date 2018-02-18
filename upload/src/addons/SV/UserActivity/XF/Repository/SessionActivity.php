@@ -15,21 +15,22 @@ class SessionActivity extends XFCP_SessionActivity
      */
     public function updateSessionActivity($userId, $ip, $controller, $action, array $params, $viewState, $robotKey)
     {
-        $app = $this->app();
         /** @var \SV\UserActivity\Repository\UserActivity $userActivityRepo */
-        $userActivityRepo = $app->repository('SV\UserActivity:UserActivity');
-        $handler = $userActivityRepo->getHandler($controller);
-        if (!empty($handler) && $userActivityRepo->isLogging() && $viewState == 'valid')
+        $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');
+        $visitor = \XF::visitor();
+        if ($userActivityRepo->isLogging() && $viewState == 'valid' && $userId === $visitor->user_id)
         {
-            $requiredKey = $handler['id'];
-            if (!empty($params[$requiredKey]))
+            $handler = $userActivityRepo->getHandler($controller);
+            if (!empty($handler))
             {
-                $visitor = \XF::visitor();
-                if($userId === $visitor->user_id)
+                $requiredKey = $handler['id'];
+                if (!empty($params[$requiredKey]))
                 {
-                    $userActivityRepo->trackViewerUsage($handler['type'], $params[$requiredKey], $handler['activeKey'], $ip, $robotKey, $visitor);
+                    $userActivityRepo->bufferTrackViewerUsage($handler['type'], $params[$requiredKey], $handler['activeKey']);
                 }
             }
+
+            $userActivityRepo->flushTrackViewerUsageBuffer($ip, $robotKey, $visitor);
         }
         return parent::updateSessionActivity($userId, $ip, $controller, $action, $params, $viewState, $robotKey);
     }

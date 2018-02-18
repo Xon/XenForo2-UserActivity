@@ -26,6 +26,7 @@ class Thread extends XFCP_Thread
             }
 
             $nodeTrackLimit = intval($options->svUAThreadNodeTrackLimit);
+            $nodeTrackLimit = $nodeTrackLimit < 0 ? PHP_INT_MAX : $nodeTrackLimit;
             $session = \XF::session();
             $robotKey = $session->isStarted() ? $session->get('robotId') : true;
             if (!$options->SV_UA_TrackRobots && $robotKey)
@@ -37,39 +38,28 @@ class Thread extends XFCP_Thread
             /** @var \XF\Entity\Forum $forum */
             /** @var  UserActivity $repo */
             $repo = \XF::repository('SV\UserActivity:UserActivity');
-            $ip = $this->request->getIp();
-            if ($nodeTrackLimit === 1)
-            {
-                $repo->trackViewerUsage('node', $thread->node_id, 'forum', $ip);
-            }
-            else if ($nodeTrackLimit !== 0)
+            if ($nodeTrackLimit !== 0)
             {
                 $node = $forum->Node;
-                if ($node->parent_node_id)
+                $repo->bufferTrackViewerUsage('node', $node->node_id, 'forum');
+                if ($nodeTrackLimit > 1)
                 {
-                    /** @var \XF\Finder\Node $nodeFinder */
-                    $nodeFinder = \XF::finder('XF:Node');
-                    $nodeFinder->where('lft', '<', $node->lft)
-                               ->where('rgt', '>', $node->rgt)
-                               ->where('node_type_id', '=', 'Forum')
-                               ->order('lft');
-
-                    $nodeIds = $nodeFinder->fetchColumns('node_id');
-                }
-                else
-                {
-                    $nodeIds = [];
-                }
-                $nodeIds[] = $node;
-                $count = count($nodeIds);
-                $nodeTrackLimit = $nodeTrackLimit < 0 ? PHP_INT_MAX : $nodeTrackLimit;
-                if ($count > $nodeTrackLimit)
-                {
-                    $nodeIds = \array_splice(array_reverse($nodeIds), 0, $nodeTrackLimit);
-                }
-                foreach ($nodeIds AS $node)
-                {
-                    $repo->trackViewerUsage('node', $node['node_id'], 'forum', $ip);
+                    $count = 1;
+                    if ($node->breadcrumb_data)
+                    {
+                        foreach ($node->breadcrumb_data AS $crumb)
+                        {
+                            if ($crumb['node_type_id'] === 'Forum')
+                            {
+                                $repo->bufferTrackViewerUsage('node', $node['node_id'], 'forum');
+                                $count++;
+                                if ($count > $nodeTrackLimit)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

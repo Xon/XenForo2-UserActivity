@@ -224,42 +224,48 @@ class UserActivity extends Repository
     const LUA_IFZADDEXPIRE_SH1 = 'dc1d76eefaca2f4ccf848a6ed7e80def200ac7b7';
 
     /**
-     * @param string  $contentType
-     * @param integer $contentId
-     * @param integer $time
-     * @param array   $data
-     * @param string  $raw
-     * @return array
+     * @param array $updateSet
+     * @param int   $time
+     * @return void
      */
-    protected function _updateSessionActivityFallback($contentType, $contentId, $time, array $data, $raw)
+    protected function _updateSessionActivityFallback($updateSet, $time)
     {
         $db = $this->db();
-        $db->query(
-            '
-            INSERT INTO xf_sv_user_activity 
-            (content_type, content_id, `timestamp`, `blob`) 
-            VALUES 
-            (?,?,?,?)
-             ON DUPLICATE KEY UPDATE `timestamp` = values(`timestamp`)',
-            [$contentType, $contentId, $time, $raw]
-        );
 
-        return $data;
+        $sqlParts = [];
+        $sqlArgs = [];
+        foreach ($updateSet as $record)
+        {
+            // $record has the format; [content_type, content_id, `blob`]
+            $sqlArgs = \array_merge($sqlArgs, $record);
+            $sqlArgs[] = $time;
+            $sqlParts[] = '(?,?,?,?)';
+        }
+        $sql = implode(',', $sqlParts);
+
+        $db->query(
+            "-- XFDB=noForceAllWrite
+            INSERT INTO xf_sv_user_activity 
+            (content_type, content_id, `blob`, `timestamp`) 
+            VALUES 
+              {$sql}
+             ON DUPLICATE KEY UPDATE `timestamp` = values(`timestamp`)",
+            $sqlArgs
+        );
     }
 
     /**
-     * @param string $contentType
-     * @param int    $contentId
+     * @param string $threadViewType
      * @param string $ip
      * @param string $robotKey
      * @param User   $viewingUser
+     * @return array
      */
-    public function updateSessionActivity($contentType, $contentId, $ip, $robotKey, User $viewingUser)
+    protected function buildSessionActivityBlob($threadViewType, $ip, $robotKey, User $viewingUser)
     {
-        $app = $this->app();
-        $score = $app->time - ($app->time % $this->getSampleInterval());
+        $userId = $viewingUser->user_id;
         $data = [
-            'user_id'                => $viewingUser->user_id,
+            'user_id'                => $userId,
             'username'               => $viewingUser->username,
             'visible'                => $viewingUser->visible && $viewingUser->activity_visible ? 1 : null,
             'robot'                  => empty($robotKey) ? null : 1,
@@ -269,14 +275,12 @@ class UserActivity extends Repository
             'ip'                     => null,
         ];
 
-        $options = $app->options();
-        if ($viewingUser->user_id)
+        if ($userId)
         {
-            $threadViewType = $options->RainDD_UA_ThreadViewType;
             if (!isset($threadViewType))
             {
                 // add-on not fully installed
-                return;
+                return [];
             }
             else if ($threadViewType == 0)
             {
@@ -289,7 +293,7 @@ class UserActivity extends Repository
             }
             else
             {
-                return;
+                return null;
             }
         }
         else
@@ -297,49 +301,86 @@ class UserActivity extends Repository
             $data['ip'] = $ip;
         }
 
+        return $data;
+    }
+
+    /**
+     * @param array $trackBuffer
+     * @param array $updateBlob
+     * @return array
+     */
+    protected function buildSessionActivityUpdateSet(array $trackBuffer, array $updateBlob)
+    {
         // encode the data
-        $raw = implode("\n", $data);
+        $raw = implode("\n", $updateBlob);
+        $outputSet = [];
+        foreach ($trackBuffer as $contentType => $contentIds)
+        {
+            foreach ($contentIds as $contentId => $val)
+            {
+                $outputSet[] = [$contentType, $contentId, $raw];
+            }
+        }
+
+        return $outputSet;
+    }
+
+    /**
+     * @param $updateSet
+     */
+    protected function updateSessionActivity($updateSet)
+    {
+        $score = \XF::$time - (\XF::$time % $this->getSampleInterval());
 
         $credis = $this->getCredis();
         if (!$credis)
         {
-            $this->_updateSessionActivityFallback($contentType, $contentId, $score, $data, $raw);
+            $this->_updateSessionActivityFallback($updateSet, $score);
 
             return;
         }
         /** @var Redis $cache */
-        $cache = $app->cache();
+        $cache = $this->app()->cache();
         $useLua = $cache->useLua();
 
         // record keeping
-        $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
+        $options = \XF::options();
         $onlineStatusTimeout = max(60, intval($options->onlineStatusTimeout) * 60);
 
-        if ($useLua)
+        // not ideal, but fairly cheap
+        // cluster support requires that each `key` potentially be on a separate host
+        foreach ($updateSet as &$record)
         {
-            $ret = $credis->evalSha(self::LUA_IFZADDEXPIRE_SH1, [$key], [$score, $raw, $onlineStatusTimeout]);
-            if ($ret === null)
+            // $record has the format; [content_type, content_id, `blob`]
+            list($contentType, $contentId, $raw) = $record;
+            if ($useLua)
             {
-                $script =
-                    "local c = tonumber(redis.call('zscore', KEYS[1], ARGV[2])) " .
-                    "local n = tonumber(ARGV[1]) " .
-                    "local retVal = 0 " .
-                    "if c == nil or n > c then " .
-                    "retVal = redis.call('ZADD', KEYS[1], n, ARGV[2]) " .
-                    "end " .
-                    "redis.call('EXPIRE', KEYS[1], ARGV[3]) " .
-                    "return retVal ";
-                /** @noinspection PhpUnusedLocalVariableInspection */
-                $ret = $credis->eval($script, [$key], [$score, $raw, $onlineStatusTimeout]);
+                $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
+                $ret = $credis->evalSha(self::LUA_IFZADDEXPIRE_SH1, [$key], [$score, $raw, $onlineStatusTimeout]);
+                if ($ret === null)
+                {
+                    $script =
+                        "local c = tonumber(redis.call('zscore', KEYS[1], ARGV[2])) " .
+                        "local n = tonumber(ARGV[1]) " .
+                        "local retVal = 0 " .
+                        "if c == nil or n > c then " .
+                        "retVal = redis.call('ZADD', KEYS[1], n, ARGV[2]) " .
+                        "end " .
+                        "redis.call('EXPIRE', KEYS[1], ARGV[3]) " .
+                        "return retVal ";
+                    /** @noinspection PhpUnusedLocalVariableInspection */
+                    $ret = $credis->eval($script, [$key], [$score, $raw, $onlineStatusTimeout]);
+                }
             }
-        }
-        else
-        {
-            $credis->pipeline()->multi();
-            // O(log(N)) for each item added, where N is the number of elements in the sorted set.
-            $credis->zAdd($key, $score, $raw);
-            $credis->expire($key, $onlineStatusTimeout);
-            $credis->exec();
+            else
+            {
+                $credis->pipeline()->multi();
+                // O(log(N)) for each item added, where N is the number of elements in the sorted set.
+                $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
+                $credis->zAdd($key, $score, $raw);
+                $credis->expire($key, $onlineStatusTimeout);
+                $credis->exec();
+            }
         }
     }
 
@@ -609,15 +650,9 @@ class UserActivity extends Repository
         return $onlineRecords;
     }
 
-    /**
-     * @param string      $contentType
-     * @param int         $contentId
-     * @param string      $activeKey
-     * @param string|null $ip
-     * @param string|null $robotKey
-     * @param User|null   $viewingUser
-     */
-    public function trackViewerUsage($contentType, $contentId, $activeKey, $ip = null, $robotKey = null, User $viewingUser = null)
+    protected $trackBuffer = [];
+
+    public function bufferTrackViewerUsage($contentType, $contentId, $activeKey)
     {
         if (!$contentType ||
             !$contentId ||
@@ -631,6 +666,21 @@ class UserActivity extends Repository
         {
             return;
         }
+        $this->trackBuffer[$contentType][$contentId] = true;
+
+    }
+
+    /**
+     * @param string|null $ip
+     * @param string|null $robotKey
+     * @param User|null   $viewingUser
+     */
+    public function flushTrackViewerUsageBuffer($ip = null, $robotKey = null, User $viewingUser = null)
+    {
+        if (!$this->isLogging() && !$this->trackBuffer)
+        {
+            return;
+        }
 
         if ($robotKey === null)
         {
@@ -641,10 +691,23 @@ class UserActivity extends Repository
         {
             $viewingUser = \XF::visitor();
         }
-        /** @noinspection PhpUndefinedFieldInspection */
-        if ($options->SV_UA_TrackRobots || empty($robotKey))
+        $options = \XF::options();
+
+        if (empty($robotKey) || $options->SV_UA_TrackRobots)
         {
-            $this->updateSessionActivity($contentType, $contentId, $ip, $robotKey, $viewingUser);
+            $threadViewType = $options->RainDD_UA_ThreadViewType;
+            $blob = $this->buildSessionActivityBlob($threadViewType, $ip, $robotKey, $viewingUser);
+            if (!$blob)
+            {
+                return;
+            }
+
+            $updateSet = $this->buildSessionActivityUpdateSet($this->trackBuffer, $blob);
+            $this->trackBuffer = [];
+            if ($updateSet)
+            {
+                $this->updateSessionActivity($updateSet);
+            }
         }
     }
 
