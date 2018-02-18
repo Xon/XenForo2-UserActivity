@@ -46,7 +46,7 @@ class Forum extends XFCP_Forum
             /** @var  UserActivity $repo */
             $repo = \XF::repository('SV\UserActivity:UserActivity');
             $node = $forum->Node;
-            if ($nodeTrackLimit > 1)
+            if ($nodeTrackLimit > 0)
             {
                 $count = 1;
                 if ($node->breadcrumb_data)
