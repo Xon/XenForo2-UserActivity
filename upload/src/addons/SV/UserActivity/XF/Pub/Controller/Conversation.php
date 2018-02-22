@@ -17,8 +17,8 @@ class Conversation extends XFCP_Conversation
 
     {
         /** @var AbstractCollection $conversations */
-        $conversations = $response->getParam('conversations');
-        if ($conversations->count())
+        $conversations = $response->getParam('userConvs');
+        if (!$conversations || !$conversations->count())
         {
             return null;
         }
