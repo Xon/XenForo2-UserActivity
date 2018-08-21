@@ -83,6 +83,12 @@
         "version_string": "2.2.0",
         "hash": "ff6e47ba8cd8eb51200f89997b0699ed"
     },
+    "option.svUADisplayUsers.txt": {
+        "global_cache": false,
+        "version_id": 2020001,
+        "version_string": "2.2.0",
+        "hash": "333676cf82c1cccc9ac8c38a1d000600"
+    },
     "option.svUAPopulateUsers.txt": {
         "global_cache": false,
         "version_id": 2020000,
@@ -134,6 +140,12 @@
     "option_explain.svUADisplayCounts.txt": {
         "global_cache": false,
         "version_id": 2020000,
+        "version_string": "2.2.0",
+        "hash": "6a1baacccdd5015f2a6f1cac88a127ec"
+    },
+    "option_explain.svUADisplayUsers.txt": {
+        "global_cache": false,
+        "version_id": 2020001,
         "version_string": "2.2.0",
         "hash": "6a1baacccdd5015f2a6f1cac88a127ec"
     },
