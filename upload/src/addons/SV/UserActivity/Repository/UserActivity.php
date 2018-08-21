@@ -740,30 +740,29 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param Node[]    $nodes
-     * @param User|null $user
+     * @param int[] $nodeIds
      * @return int[]
      */
-    public function getFilteredNodeIds(array $nodes, User $user = null)
+    public function getFilteredNodeIds(array $nodeIds)
     {
-        if (!$nodes)
+        if (!$nodeIds)
         {
             return [];
         }
 
-        $visitor = $user ?: \XF::visitor();
+        $visitor = \XF::visitor();
         $permissionSet = $visitor->PermissionSet;
-        $nodeIds = [];
-        foreach ($nodes as $nodeId => $node)
+        $filteredNodeIds = [];
+        foreach ($nodeIds as $nodeId)
         {
             if ($permissionSet->hasContentPermission('node', $nodeId, 'viewOthers') &&
                 $permissionSet->hasContentPermission('node', $nodeId, 'viewContent'))
             {
-                $nodeIds[] = $nodeId;
+                $filteredNodeIds[] = $nodeId;
             }
         }
 
-        return $nodeIds;
+        return $filteredNodeIds;
     }
 
     /**
@@ -772,7 +771,7 @@ class UserActivity extends Repository
      * @param User|null $user
      * @return int[]
      */
-    public function getFilteredThreadIds(array $params, $key, User $user = null)
+    public function getFilteredThreadIds(array $params, $key)
     {
         if (empty($params[$key]))
         {
@@ -780,7 +779,8 @@ class UserActivity extends Repository
         }
         /** @var Thread[] $threads */
         $threads = $params[$key];
-        $visitor = $user ?: \XF::visitor();
+
+        $visitor = \XF::visitor();
         $permissionSet = $visitor->PermissionSet;
         $threadIds = [];
         foreach ($threads as $thread)
