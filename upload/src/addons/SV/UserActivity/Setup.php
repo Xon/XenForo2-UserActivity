@@ -58,6 +58,16 @@ class Setup extends AbstractSetup
         );
     }
 
+    public function upgrade2020002Step1()
+    {
+        $this->installStep1();
+    }
+
+    public function upgrade2020002Step2()
+    {
+        $this->installStep2();
+    }
+
     /**
      * Drops add-on tables.
      */
@@ -94,7 +104,7 @@ class Setup extends AbstractSetup
     {
         $tables = [];
 
-        $tables['xf_sv_user_activity'] = function (Create $table) {
+        $tables['xf_sv_user_activity'] = function ($table) {
             /** @var Create|Alter $table */
             $this->addOrChangeColumn($table, 'id', 'int')->autoIncrement()->primaryKey();
             $this->addOrChangeColumn($table, 'content_type', 'varbinary', 25);
