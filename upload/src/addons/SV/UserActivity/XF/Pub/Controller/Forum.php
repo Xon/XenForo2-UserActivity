@@ -5,7 +5,6 @@ namespace SV\UserActivity\XF\Pub\Controller;
 use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
-use XF\Entity\Node;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\View;
 
@@ -94,18 +93,18 @@ class Forum extends XFCP_Forum
     {
         $repo = $this->getUserActivityRepo();
 
+        /** @var int[] $nodeIds */
         /** @var \XF\Tree $nodeTree */
         if ($nodeTree = $response->getParam('nodeTree'))
         {
-            /** @var Node[] $nodes */
-            $nodes = $repo->flattenTreeToDepth($nodeTree, $action === 'list' ? 1 : 0);
+            $nodeIds = $repo->flattenTreeToDepth($nodeTree, $action === 'list' ? 1 : 0);
         }
         else
         {
-            $nodes = [];
+            $nodeIds = [];
         }
 
-        return $repo->getFilteredNodeIds($nodes);
+        return $repo->getFilteredNodeIds($nodeIds);
     }
 
     protected function threadFetcher(

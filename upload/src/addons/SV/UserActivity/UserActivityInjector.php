@@ -5,6 +5,9 @@ namespace SV\UserActivity;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 
+/**
+ * @property array activityInjector
+ */
 trait UserActivityInjector
 {
     /**

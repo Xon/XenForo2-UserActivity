@@ -3,16 +3,19 @@
 namespace SV\UserActivity;
 
 use SV\UserActivity\Repository\UserActivity;
-use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View;
 
+/**
+ * @property array countActivityInjector
+ */
 trait UserCountActivityInjector
 {
     protected function postDispatchType($action, ParameterBag $params, AbstractReply &$reply)
     {
         // this updates the session, and occurs after postDispatchController
+        /** @noinspection PhpUndefinedClassInspection */
         parent::postDispatchType($action, $params, $reply);
         if ($reply instanceof View &&
             !empty($this->countActivityInjector))

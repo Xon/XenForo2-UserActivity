@@ -4,7 +4,6 @@ namespace SV\UserActivity\Repository;
 
 use Credis_Client;
 use SV\RedisCache\Redis;
-use XF\Entity\Node;
 use XF\Entity\Thread;
 use XF\Entity\User;
 use XF\Mvc\Entity\Repository;
@@ -14,9 +13,9 @@ use XF\Tree;
 
 class UserActivity extends Repository
 {
-    protected static $handlers      = [];
-    protected static $logging       = true;
-    protected static $forceFallback = false;
+    protected $handlers      = [];
+    protected $logging       = true;
+    protected $forceFallback = false;
 
     /**
      * @return int
@@ -28,7 +27,7 @@ class UserActivity extends Repository
 
     public function supressLogging()
     {
-        self::$logging = false;
+        $this->logging = false;
     }
 
     /**
@@ -36,7 +35,7 @@ class UserActivity extends Repository
      */
     public function isLogging()
     {
-        return self::$logging;
+        return $this->logging;
     }
 
     /**
@@ -45,7 +44,7 @@ class UserActivity extends Repository
      */
     public function registerHandler($controllerName, $config)
     {
-        self::$handlers[$controllerName] = $config;
+        $this->handlers[$controllerName] = $config;
     }
 
     /**
@@ -54,12 +53,12 @@ class UserActivity extends Repository
      */
     public function getHandler($controllerName)
     {
-        if (empty(self::$handlers[$controllerName]))
+        if (empty($this->handlers[$controllerName]))
         {
             return [];
         }
 
-        return self::$handlers[$controllerName];
+        return $this->handlers[$controllerName];
     }
 
     /**
@@ -125,7 +124,7 @@ class UserActivity extends Repository
      */
     protected function getCredis()
     {
-        if (self::$forceFallback)
+        if ($this->forceFallback)
         {
             return null;
         }
@@ -772,7 +771,6 @@ class UserActivity extends Repository
     /**
      * @param array     $params
      * @param string    $key
-     * @param User|null $user
      * @return int[]
      */
     public function getFilteredThreadIds(array $params, $key)

@@ -3,9 +3,7 @@
 namespace SV\UserActivity\XF\Pub\Controller;
 
 use SV\UserActivity\Repository\UserActivity;
-use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
-use XF\Entity\Node;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\View;
 
@@ -94,18 +92,18 @@ class Category extends XFCP_Category
     {
         $repo = $this->getUserActivityRepo();
 
+        /** @var int[] $nodes */
         /** @var \XF\Tree $nodeTree */
         if ($nodeTree = $response->getParam('nodeTree'))
         {
-            /** @var Node[] $nodes */
-            $nodes = $repo->flattenTreeToDepth($nodeTree, $action === 'list' ? 1 : 0);
+            $nodeIds = $repo->flattenTreeToDepth($nodeTree, $action === 'list' ? 1 : 0);
         }
         else
         {
-            $nodes = [];
+            $nodeIds = [];
         }
 
-        return $repo->getFilteredNodeIds($nodes);
+        return $repo->getFilteredNodeIds($nodeIds);
     }
 
     protected $countActivityInjector = [

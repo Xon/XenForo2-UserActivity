@@ -5,9 +5,7 @@ namespace SV\UserActivity\XF\Pub\Controller;
 
 use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserCountActivityInjector;
-use XF\Entity\Node;
 use XF\Mvc\Entity\AbstractCollection;
-use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\View;
 
 /**
@@ -32,10 +30,10 @@ class Watched extends XFCP_Watched
         array $config)
 
     {
+        /** @var int[] $nodeIds */
         /** @var AbstractCollection $watchedForums */
         if ($watchedForums = $response->getParam('watchedForums'))
         {
-            /** @var int[] $nodeIds */
             $nodeIds = \XF\Util\Arr::arrayColumn($watchedForums->toArray(), 'node_id');
         }
         else
