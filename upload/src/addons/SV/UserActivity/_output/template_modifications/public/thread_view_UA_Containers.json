@@ -1,6 +1,6 @@
 {
     "template": "thread_view",
-    "description": "Adds activity containers",
+    "description": "Adds activity containers (list)",
     "execution_order": 10,
     "enabled": true,
     "action": "preg_replace",

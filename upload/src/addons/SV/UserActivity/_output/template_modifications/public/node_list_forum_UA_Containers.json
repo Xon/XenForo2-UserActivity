@@ -1,6 +1,6 @@
 {
     "template": "node_list_forum",
-    "description": "Adds activity containers",
+    "description": "Adds activity containers (count)",
     "execution_order": 10,
     "enabled": true,
     "action": "str_replace",
