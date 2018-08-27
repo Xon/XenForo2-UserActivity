@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Pub\\Controller\\WhatsNewPost",
+    "to_class": "SV\\UserActivity\\XF\\Pub\\Controller\\WhatsNewPost",
+    "execute_order": 10,
+    "active": true
+}
