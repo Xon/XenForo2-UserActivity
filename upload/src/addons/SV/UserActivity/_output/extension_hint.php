@@ -16,6 +16,7 @@ namespace SV\UserActivity\XF\Pub\Controller
 	class XFCP_Post extends \XF\Pub\Controller\Post {}
 	class XFCP_Report extends \XF\Pub\Controller\Report {}
 	class XFCP_Thread extends \XF\Pub\Controller\Thread {}
+	class XFCP_Watched extends \XF\Pub\Controller\Watched {}
 }
 
 namespace SV\UserActivity\XF\Repository

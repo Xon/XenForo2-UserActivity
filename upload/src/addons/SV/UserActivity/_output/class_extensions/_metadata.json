@@ -20,6 +20,9 @@
     "XF-Pub-Controller-Thread_SV-UserActivity-XF-Pub-Controller-Thread.json": {
         "hash": "95af2b86a97c03db91f6a4ca04afb542"
     },
+    "XF-Pub-Controller-Watched_SV-UserActivity-XF-Pub-Controller-Watched.json": {
+        "hash": "5fe581fddc15b47a2631788bc28d5480"
+    },
     "XF-Repository-SessionActivity_SV-UserActivity-XF-Repository-SessionActivity.json": {
         "hash": "732edc1c5a3b3084255f8c8b075d2d96"
     }
