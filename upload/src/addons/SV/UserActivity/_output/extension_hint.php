@@ -24,3 +24,9 @@ namespace SV\UserActivity\XF\Repository
 {
 	class XFCP_SessionActivity extends \XF\Repository\SessionActivity {}
 }
+
+namespace SV\UserActivity\XF\Widget
+{
+	class XFCP_NewPosts extends \XF\Widget\NewPosts {}
+	class XFCP_NewThreads extends \XF\Widget\NewThreads {}
+}

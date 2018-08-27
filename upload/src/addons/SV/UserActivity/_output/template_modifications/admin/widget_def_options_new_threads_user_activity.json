@@ -1,0 +1,9 @@
+{
+    "template": "widget_def_options_new_threads",
+    "description": "Adds activity containers (count)",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:numberboxrow name=\"options[limit]\"",
+    "replace": "<xf:macro template=\"public:UA_ViewContainer_macros\" \n\t\t  name=\"widget_admin_setup\"\n\t\t  arg-options=\"{$options}\"\n\t\t  />\n$0"
+}

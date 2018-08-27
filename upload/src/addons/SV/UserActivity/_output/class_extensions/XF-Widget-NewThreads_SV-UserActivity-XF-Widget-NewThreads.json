@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Widget\\NewThreads",
+    "to_class": "SV\\UserActivity\\XF\\Widget\\NewThreads",
+    "execute_order": 10,
+    "active": true
+}

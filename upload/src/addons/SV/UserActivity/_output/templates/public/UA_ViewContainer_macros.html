@@ -1,3 +1,13 @@
+<xf:macro name="widget_admin_setup"
+		  arg-options="!"
+		  >
+	<xf:checkboxrow>
+		<xf:option name="options[userActivity]" selected="$options.userActivity">
+			{{ phrase('svDisplayViewerCounts') }}
+		</xf:option>
+	</xf:checkboxrow>
+</xf:macro>
+
 <xf:macro name="UserActivity"
 		  arg-contentTypePhrase="!"
 		  arg-records="!"

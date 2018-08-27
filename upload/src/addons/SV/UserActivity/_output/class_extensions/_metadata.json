@@ -28,5 +28,11 @@
     },
     "XF-Repository-SessionActivity_SV-UserActivity-XF-Repository-SessionActivity.json": {
         "hash": "732edc1c5a3b3084255f8c8b075d2d96"
+    },
+    "XF-Widget-NewPosts_SV-UserActivity-XF-Widget-NewPosts.json": {
+        "hash": "0467a69d6c2d9f1ae78cfc231f541ab1"
+    },
+    "XF-Widget-NewThreads_SV-UserActivity-XF-Widget-NewThreads.json": {
+        "hash": "3483a34a77132a55b616a55013e62b25"
     }
 }

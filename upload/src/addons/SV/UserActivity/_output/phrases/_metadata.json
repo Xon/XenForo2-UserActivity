@@ -139,9 +139,9 @@
     },
     "option_explain.svUADisplayCounts.txt": {
         "global_cache": false,
-        "version_id": 2020000,
+        "version_id": 2020001,
         "version_string": "2.2.0",
-        "hash": "6a1baacccdd5015f2a6f1cac88a127ec"
+        "hash": "e0a1c63347c15b83f4b65ec8cc23194e"
     },
     "option_explain.svUADisplayUsers.txt": {
         "global_cache": false,
@@ -256,6 +256,12 @@
         "version_id": 1000000,
         "version_string": "1.0.0",
         "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "svDisplayViewerCounts.txt": {
+        "global_cache": false,
+        "version_id": 2020001,
+        "version_string": "2.2.0",
+        "hash": "bfe50b8b86a97ceb8f72ec8678bb38ec"
     },
     "svUA_display_count_similar_threads.txt": {
         "global_cache": false,

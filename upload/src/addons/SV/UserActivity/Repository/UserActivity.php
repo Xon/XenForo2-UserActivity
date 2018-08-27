@@ -63,20 +63,24 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param AbstractReply $response
+     * @param AbstractReply|\XF\Widget\WidgetRenderer $response
      * @param array         $fetchData
      */
     public function insertBulkUserActivityIntoViewResponse(&$response, array $fetchData)
     {
+        $visitor = \XF::visitor();
+        if (!$visitor->hasPermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers'))
+        {
+            return;
+        }
+
         if ($response instanceof View)
         {
-            $visitor = \XF::visitor();
-            if (!$visitor->hasPermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers'))
-            {
-                return;
-            }
-
             $response->setParam('UA_RecordCounts', $this->getUsersViewingCount($fetchData));
+        }
+        else if ($response instanceof \XF\Widget\WidgetRenderer)
+        {
+            $response->setViewParam('UA_RecordCounts', $this->getUsersViewingCount($fetchData));
         }
     }
 

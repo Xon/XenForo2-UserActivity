@@ -1,1 +1,3 @@
-Requires the equivalent content type be tracked by the "Track User Activity" setting
+Requires the equivalent content type be tracked by the "Track User Activity" setting.<br/>
+<br/>
+Widget support is not managed by this setting, but per supported widget
