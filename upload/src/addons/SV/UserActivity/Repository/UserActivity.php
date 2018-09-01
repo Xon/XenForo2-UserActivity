@@ -39,12 +39,38 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param string $controllerName
-     * @param array  $config
+     * @param array $handler
+     * @return array
      */
-    public function registerHandler($controllerName, $config)
+    protected function validateHandler(array $handler)
     {
-        $this->handlers[$controllerName] = $config;
+        if (empty($handler['controller']) ||
+            empty($handler['id']) ||
+            !isset($handler['type']) || // Content Rating support rewrites the content type key as required
+            (!isset($handler['actions']) && !is_array($handler['actions'])) ||
+            empty($handler['activeKey']))
+        {
+            $error = "activityInjector is not configured properly, expecting ['controller' => ..., 'id' => ..., 'type' => ..., 'actions' => ..., 'activeKey' => ..., ] ";
+            if (\XF::$debugMode)
+            {
+                throw new \LogicException($error);
+            }
+            else
+            {
+                \XF::logError($error);
+            }
+        }
+
+        return $handler;
+    }
+
+    /**
+     * @param string $controllerName
+     * @param array  $handler
+     */
+    public function registerHandler($controllerName, array $handler)
+    {
+        $this->handlers[$controllerName] = $this->validateHandler($handler);
     }
 
     /**
@@ -58,7 +84,7 @@ class UserActivity extends Repository
             return [];
         }
 
-        return $this->handlers[$controllerName];
+        return $this->validateHandler($this->handlers[$controllerName]);
     }
 
     /**
