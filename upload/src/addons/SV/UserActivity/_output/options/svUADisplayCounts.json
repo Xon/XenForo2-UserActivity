@@ -1,6 +1,6 @@
 {
     "edit_format": "checkbox",
-    "edit_format_params": "thread=Thread List\nsticky-thread=Sticky Thread List\nindex-forum=Index Page Forums\nforum=Forum List\nsimilar-threads={{ phrase('svUA_display_count_similar_threads') }}\nsub-forum=Sub forum List\nfind-new=Find New Threads\nwatched-forums=Watched Forum List\nwatched-threads=Watched Thread List\nconversation=Conversation List",
+    "edit_format_params": "thread=Thread List\nthread-view=Thread View\nsticky-thread=Sticky Thread List\nindex-forum=Index Page Forums\nforum=Forum List\ncategory-view=Category View/List\nsimilar-threads={{ phrase('svUA_display_count_similar_threads') }}\nsub-forum=Sub forum List\nfind-new=Find New Threads\nwatched-forums=Watched Forum List\nwatched-threads=Watched Thread List\nconversation=Conversation List",
     "data_type": "array",
     "sub_options": [
         "*"

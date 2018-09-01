@@ -12,7 +12,10 @@
         "hash": "1f464fa2af7151bab961daab6ddaf189"
     },
     "public/forum_view_UA_Containers.json": {
-        "hash": "4b80107431e1215695ff132387453ca3"
+        "hash": "4a10c010a727dedf461efff458b44866"
+    },
+    "public/forum_view_UA_counts2.json": {
+        "hash": "095a7a895a22581e1827afb9a90ca5c1"
     },
     "public/forum_view_UA_list.json": {
         "hash": "b3b1d8dbd1d0824128926324229a3053"
@@ -28,5 +31,8 @@
     },
     "public/thread_view_UA_Containers.json": {
         "hash": "b6584dedbefb58873a06bbfc5ced5a22"
+    },
+    "public/thread_view_UA_counts.json": {
+        "hash": "e6e1a95189888dbd8b42c38243c0d467"
     }
 }

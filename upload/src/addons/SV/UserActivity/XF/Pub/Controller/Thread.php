@@ -91,12 +91,34 @@ class Thread extends XFCP_Thread
         return null;
     }
 
+    protected function threadFetcher(
+        /** @noinspection PhpUnusedParameterInspection */
+        View $response,
+        $action,
+        array $config)
+
+    {
+        /** @var \XF\Entity\Thread $thread */
+        if ($thread = $response->getParam('thread'))
+        {
+            return [$thread->thread_id];
+        }
+
+        return null;
+    }
+
     protected $countActivityInjector = [
         [
             'activeKey' => 'similar-threads',
             'type'      => 'thread',
             'actions'   => ['index'],
             'fetcher'   => 'similarThreadFetcher'
+        ],
+        [
+            'activeKey' => 'thread-view',
+            'type'      => 'thread',
+            'actions'   => ['index'],
+            'fetcher'   => 'threadFetcher'
         ],
     ];
     use UserCountActivityInjector;
