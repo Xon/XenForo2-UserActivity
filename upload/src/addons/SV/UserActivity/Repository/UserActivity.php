@@ -827,7 +827,7 @@ class UserActivity extends Repository
     /**
      * @param View     $response
      * @param Node     $node
-     * @param string[] $key
+     * @param string[] $keys
      */
     public function pushViewUsageToParent(View $response, Node $node, $keys = ['forum'])
     {

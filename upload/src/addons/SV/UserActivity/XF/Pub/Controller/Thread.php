@@ -17,11 +17,10 @@ class Thread extends XFCP_Thread
         $options = \XF::options();
         /** @noinspection PhpUndefinedFieldInspection */
         if ($response instanceof view &&
-            ($thread = $response->getParam('thread')) &&
-            ($forum = $response->getParam('forum')))
+            ($thread = $response->getParam('thread')))
         {
-            /** @var \XF\Entity\Forum $forum */
-            $this->getUserActivityRepo()->pushViewUsageToParent($response, $forum->Node);
+            /** @var \XF\Entity\Thread $thread */
+            $this->getUserActivityRepo()->pushViewUsageToParent($response, $thread->Forum->Node);
         }
 
         return $response;

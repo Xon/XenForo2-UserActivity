@@ -44,6 +44,29 @@ class Forum extends XFCP_Forum
         return null;
     }
 
+    /**
+     * @param string   $typeFilter
+     * @param int      $depth
+     * @param \XF\Tree $nodeTree
+     * @return int[]
+     */
+    protected function nodeListFetcher($typeFilter, $depth, \XF\Tree $nodeTree = null)
+    {
+        $repo = $this->getUserActivityRepo();
+
+        $nodeIds = [];
+        $flattenedNodeList = $nodeTree ? $nodeTree->getFlattened() : [];
+        foreach ($flattenedNodeList as $id => $node)
+        {
+            if ($node['depth'] <= $depth && $node['record']->node_type_id === $typeFilter)
+            {
+                $nodeIds[] = $id;
+            }
+        }
+
+        return $repo->getFilteredNodeIds($nodeIds);
+    }
+
     protected function forumListFetcher(
         /** @noinspection PhpUnusedParameterInspection */
         View $response,
@@ -51,20 +74,23 @@ class Forum extends XFCP_Forum
         array $config)
 
     {
-        $repo = $this->getUserActivityRepo();
-
-        /** @var int[] $nodeIds */
+        $depth = $action === 'list' ? 1 : 0;
         /** @var \XF\Tree $nodeTree */
-        if ($nodeTree = $response->getParam('nodeTree'))
-        {
-            $nodeIds = $repo->flattenTreeToDepth($nodeTree, $action === 'list' ? 1 : 0);
-        }
-        else
-        {
-            $nodeIds = [];
-        }
+        $nodeTree = $response->getParam('nodeTree');
+        return $this->nodeListFetcher('Forum', $depth, $nodeTree);
+    }
 
-        return $repo->getFilteredNodeIds($nodeIds);
+    protected function categoryListFetcher(
+        /** @noinspection PhpUnusedParameterInspection */
+        View $response,
+        $action,
+        array $config)
+
+    {
+        $depth = $action === 'list' ? 1 : 0;
+        /** @var \XF\Tree $nodeTree */
+        $nodeTree = $response->getParam('nodeTree');
+        return $this->nodeListFetcher('Category', $depth, $nodeTree);
     }
 
     protected function threadFetcher(
@@ -93,6 +119,12 @@ class Forum extends XFCP_Forum
             'type'      => 'node',
             'actions'   => ['list'],
             'fetcher'   => 'forumListFetcher',
+        ],
+        [
+            'activeKey' => 'index-category',
+            'type'      => 'node',
+            'actions'   => ['list'],
+            'fetcher'   => 'categoryListFetcher',
         ],
         [
             'activeKey' => 'forum',

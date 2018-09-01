@@ -1,0 +1,9 @@
+{
+    "template": "node_list_category",
+    "description": "Adds activity containers (count)",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "{$node.title}</a>",
+    "replace": "$0<xf:macro template=\"UA_ViewContainer_macros\" name=\"viewerCounts\"\n\t\t\targ-recordCounts=\"{$__globals.UA_RecordCounts}\" \n\t\t\targ-contentType=\"node\"\n\t\t\targ-contentId=\"{$node.node_id}\"\n\t\t\t/>"
+}
