@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "preg_replace",
     "find": "#({\\$category\\.title}.*?)(</xf:h1>)#si",
-    "replace": "$1\n<xf:macro template=\"UA_ViewContainer_macros\" name=\"viewerCounts\"\n\t\t\targ-recordCounts=\"{$UA_RecordCounts}\" \n\t\t\targ-contentType=\"node\"\n\t\t\targ-contentId=\"{$forum.node_id}\"\n\t\t\t/>\n$2"
+    "replace": "$1\n<xf:macro template=\"UA_ViewContainer_macros\" name=\"viewerCounts\"\n\t\t\targ-recordCounts=\"{$UA_RecordCounts}\" \n\t\t\targ-contentType=\"node\"\n\t\t\targ-contentId=\"{$category.node_id}\"\n\t\t\t/>\n$2"
 }
