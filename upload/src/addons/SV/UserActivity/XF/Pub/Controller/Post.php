@@ -2,6 +2,7 @@
 
 namespace SV\UserActivity\XF\Pub\Controller;
 
+use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserActivityInjector;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
@@ -13,6 +14,7 @@ class Post extends XFCP_Post
         'controller' => 'XF\Pub\Controller\Post',
         'type'       => 'thread',
         'id'         => 'thread_id',
+        'actions'    => [],
         'activeKey'  => 'thread',
     ];
     use UserActivityInjector;
@@ -28,6 +30,14 @@ class Post extends XFCP_Post
                 case 'likes':
                 case 'threadmark':
                     $viewState = 'valid';
+
+                    if (($threadId = $this->request->get('thread_id')) &&
+                        ($thread = $this->em()->findCached('XF:Thread', $threadId)))
+                    {
+
+                        /** @var \XF\Entity\Thread $thread */
+                        $this->getUserActivityRepo()->pushViewUsageToParent($reply, $thread->Forum->Node);
+                    }
                     return true;
             }
         }
@@ -59,5 +69,13 @@ class Post extends XFCP_Post
             }
         }
         parent::updateSessionActivity($action, $params, $reply);
+    }
+
+    /**
+     * @return \XF\Mvc\Entity\Repository|UserActivity
+     */
+    protected function getUserActivityRepo()
+    {
+        return \XF::repository('SV\UserActivity:UserActivity');
     }
 }
