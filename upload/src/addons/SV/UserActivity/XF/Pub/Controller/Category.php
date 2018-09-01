@@ -62,7 +62,7 @@ class Category extends XFCP_Category
             $nodeIds = [];
         }
 
-        return $repo->getFilteredNodeIds($nodeIds);
+        return $repo->getFilteredForumNodeIds($nodeIds);
     }
 
     protected $countActivityInjector = [

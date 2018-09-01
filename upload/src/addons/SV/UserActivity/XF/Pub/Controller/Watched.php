@@ -41,7 +41,7 @@ class Watched extends XFCP_Watched
             $nodeIds = [];
         }
 
-        return $this->getUserActivityRepo()->getFilteredNodeIds($nodeIds);
+        return $this->getUserActivityRepo()->getFilteredForumNodeIds($nodeIds);
     }
 
     protected $countActivityInjector = [

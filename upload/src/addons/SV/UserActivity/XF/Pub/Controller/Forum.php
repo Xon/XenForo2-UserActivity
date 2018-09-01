@@ -52,8 +52,6 @@ class Forum extends XFCP_Forum
      */
     protected function nodeListFetcher($typeFilter, $depth, \XF\Tree $nodeTree = null)
     {
-        $repo = $this->getUserActivityRepo();
-
         $nodeIds = [];
         $flattenedNodeList = $nodeTree ? $nodeTree->getFlattened() : [];
         foreach ($flattenedNodeList as $id => $node)
@@ -64,7 +62,7 @@ class Forum extends XFCP_Forum
             }
         }
 
-        return $repo->getFilteredNodeIds($nodeIds);
+        return $nodeIds;
     }
 
     protected function forumListFetcher(
@@ -74,10 +72,11 @@ class Forum extends XFCP_Forum
         array $config)
 
     {
+        $repo = $this->getUserActivityRepo();
         $depth = $action === 'list' ? 1 : 0;
         /** @var \XF\Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
-        return $this->nodeListFetcher('Forum', $depth, $nodeTree);
+        return $repo->getFilteredCategoryNodeIds($this->nodeListFetcher('Forum', $depth, $nodeTree));
     }
 
     protected function categoryListFetcher(
@@ -87,10 +86,11 @@ class Forum extends XFCP_Forum
         array $config)
 
     {
+        $repo = $this->getUserActivityRepo();
         $depth = $action === 'list' ? 1 : 0;
         /** @var \XF\Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
-        return $this->nodeListFetcher('Category', $depth, $nodeTree);
+        return $repo->getFilteredCategoryNodeIds($this->nodeListFetcher('Category', $depth, $nodeTree));
     }
 
     protected function threadFetcher(

@@ -773,7 +773,7 @@ class UserActivity extends Repository
      * @param int[] $nodeIds
      * @return int[]
      */
-    public function getFilteredNodeIds(array $nodeIds)
+    public function getFilteredForumNodeIds(array $nodeIds)
     {
         if (!$nodeIds)
         {
@@ -785,8 +785,34 @@ class UserActivity extends Repository
         $filteredNodeIds = [];
         foreach ($nodeIds as $nodeId)
         {
-            if ($permissionSet->hasContentPermission('node', $nodeId, 'viewOthers') &&
+            if ($permissionSet->hasContentPermission('node', $nodeId, 'view') &&
+                $permissionSet->hasContentPermission('node', $nodeId, 'viewOthers') &&
                 $permissionSet->hasContentPermission('node', $nodeId, 'viewContent'))
+            {
+                $filteredNodeIds[] = $nodeId;
+            }
+        }
+
+        return $filteredNodeIds;
+    }
+
+    /**
+     * @param int[] $nodeIds
+     * @return int[]
+     */
+    public function getFilteredCategoryNodeIds(array $nodeIds)
+    {
+        if (!$nodeIds)
+        {
+            return [];
+        }
+
+        $visitor = \XF::visitor();
+        $permissionSet = $visitor->PermissionSet;
+        $filteredNodeIds = [];
+        foreach ($nodeIds as $nodeId)
+        {
+            if ($permissionSet->hasContentPermission('node', $nodeId, 'view'))
             {
                 $filteredNodeIds[] = $nodeId;
             }
