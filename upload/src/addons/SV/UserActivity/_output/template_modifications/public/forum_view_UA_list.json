@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<xf:ad position=\"forum_view_above_thread_list",
-    "replace": "<xf:macro template=\"UA_ViewContainer_macros\" \n\t\t  name=\"UserActivity\" \n\t\t  arg-contentTypePhrase=\"{{ phrase('thread') }}\" \n\t\t  arg-records=\"{$UA_Records}\"/>\n$0"
+    "replace": "<xf:macro template=\"UA_ViewContainer_macros\" \n\t\t  name=\"UserActivity\" \n\t\t  arg-contentTypePhrase=\"{{ phrase('forum') }}\" \n\t\t  arg-records=\"{$UA_Records}\"/>\n$0"
 }
