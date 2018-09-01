@@ -1,9 +1,9 @@
 {
-    "template": "forum_view",
-    "description": "Adds activity containers (count) ) (with xf:h1 tag)",
+    "template": "category_view",
+    "description": "Adds activity containers (count) (with xf:h1 tag)",
     "execution_order": 2000,
     "enabled": true,
     "action": "preg_replace",
-    "find": "#({\\$forum\\.Node\\.title}.*?)(</xf:h1>)#si",
+    "find": "#({\\$category\\.title}.*?)(</xf:h1>)#si",
     "replace": "$1\n<xf:macro template=\"UA_ViewContainer_macros\" name=\"viewerCounts\"\n\t\t\targ-recordCounts=\"{$UA_RecordCounts}\" \n\t\t\targ-contentType=\"node\"\n\t\t\targ-contentId=\"{$forum.node_id}\"\n\t\t\t/>\n$2"
 }

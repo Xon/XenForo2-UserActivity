@@ -68,16 +68,16 @@ class Category extends XFCP_Category
         return $response;
     }
 
-    protected function forumFetcher(
+    protected function categoryFetcher(
         /** @noinspection PhpUnusedParameterInspection */
         View $response,
         $action,
         array $config)
     {
-        /** @var \XF\Entity\Forum $forum */
-        if ($forum = $response->getParam('forum'))
+        /** @var \XF\Entity\Category $category */
+        if ($category = $response->getParam('category'))
         {
-            return $forum->node_id;
+            return $category->node_id;
         }
 
         return null;
@@ -112,6 +112,12 @@ class Category extends XFCP_Category
             'type'      => 'node',
             'actions'   => ['index'],
             'fetcher'   => 'forumListFetcher',
+        ],
+        [
+            'activeKey' => 'category-view',
+            'type'      => 'node',
+            'actions'   => ['index'],
+            'fetcher'   => 'categoryFetcher'
         ],
     ];
     use UserCountActivityInjector;

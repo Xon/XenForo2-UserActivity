@@ -5,6 +5,12 @@
     "admin/widget_def_options_new_threads_user_activity.json": {
         "hash": "edf953aab6898d8668ab4a547e3582d1"
     },
+    "public/category_view_UA_count1.json": {
+        "hash": "07dfa8f98531311e3be56325b5ff9b18"
+    },
+    "public/category_view_UA_counts.json": {
+        "hash": "5a089fdf25ce08d7d1ea5c9b6aba5af0"
+    },
     "public/conversation_list_macros_user_activity.json": {
         "hash": "f1e64e2082e1febaae53198e9a69208e"
     },
@@ -15,7 +21,7 @@
         "hash": "4a10c010a727dedf461efff458b44866"
     },
     "public/forum_view_UA_counts2.json": {
-        "hash": "095a7a895a22581e1827afb9a90ca5c1"
+        "hash": "b34b0d938e45a52b8e2f4673533f1313"
     },
     "public/forum_view_UA_list.json": {
         "hash": "b3b1d8dbd1d0824128926324229a3053"
