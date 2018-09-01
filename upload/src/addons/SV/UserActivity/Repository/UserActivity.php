@@ -4,6 +4,7 @@ namespace SV\UserActivity\Repository;
 
 use Credis_Client;
 use SV\RedisCache\Redis;
+use XF\Entity\Node;
 use XF\Entity\Thread;
 use XF\Entity\User;
 use XF\Mvc\Entity\Repository;
@@ -821,5 +822,68 @@ class UserActivity extends Repository
         }
 
         return $threadIds;
+    }
+
+    /**
+     * @param View     $response
+     * @param Node     $node
+     * @param string[] $key
+     */
+    public function pushViewUsageToParent(View $response, Node $node, $keys = ['forum'])
+    {
+        $options = \XF::options();
+        foreach($keys as $key)
+        {
+            if (empty($options->svUAPopulateUsers[$key]))
+            {
+                return;
+            }
+        }
+
+        if ($response->getParam('node') === null)
+        {
+            $response->setParam('node', $node);
+        }
+
+        $session = \XF::session();
+        $robotKey = $session->isStarted() ? $session->get('robotId') : true;
+        if (!$options->SV_UA_TrackRobots && $robotKey)
+        {
+            return;
+        }
+
+        $nodeTrackLimit = intval($options->svUAThreadNodeTrackLimit);
+        $nodeTrackLimit = $nodeTrackLimit < 0 ? PHP_INT_MAX : $nodeTrackLimit;
+
+        /** @var  UserActivity $repo */
+        $repo = \XF::repository('SV\UserActivity:UserActivity');
+        if ($nodeTrackLimit > 0)
+        {
+            $count = 1;
+            if ($node->breadcrumb_data)
+            {
+                foreach ($node->breadcrumb_data AS $crumb)
+                {
+                    if ($crumb['node_type_id'] === 'Forum')
+                    {
+                        $repo->bufferTrackViewerUsage('node', $crumb['node_id'], 'forum');
+                        $count++;
+                        if ($count > $nodeTrackLimit)
+                        {
+                            break;
+                        }
+                    }
+                    else if ($crumb['node_type_id'] === 'Category')
+                    {
+                        $repo->bufferTrackViewerUsage('node', $crumb['node_id'], 'category');
+                        $count++;
+                        if ($count > $nodeTrackLimit)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

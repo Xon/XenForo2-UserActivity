@@ -20,48 +20,8 @@ class Thread extends XFCP_Thread
             ($thread = $response->getParam('thread')) &&
             ($forum = $response->getParam('forum')))
         {
-            if (empty($options->svUAPopulateUsers['forum']))
-            {
-                return $response;
-            }
-
-            $nodeTrackLimit = intval($options->svUAThreadNodeTrackLimit);
-            $nodeTrackLimit = $nodeTrackLimit < 0 ? PHP_INT_MAX : $nodeTrackLimit;
-            $session = \XF::session();
-            $robotKey = $session->isStarted() ? $session->get('robotId') : true;
-            if (!$options->SV_UA_TrackRobots && $robotKey)
-            {
-                return $response;
-            }
-
-            /** @var \XF\Entity\Thread $thread */
             /** @var \XF\Entity\Forum $forum */
-            /** @var  UserActivity $repo */
-            $repo = \XF::repository('SV\UserActivity:UserActivity');
-            if ($nodeTrackLimit !== 0)
-            {
-                $node = $forum->Node;
-                $repo->bufferTrackViewerUsage('node', $node->node_id, 'forum');
-                if ($nodeTrackLimit > 1)
-                {
-                    $count = 1;
-                    if ($node->breadcrumb_data)
-                    {
-                        foreach ($node->breadcrumb_data AS $crumb)
-                        {
-                            if ($crumb['node_type_id'] === 'Forum')
-                            {
-                                $repo->bufferTrackViewerUsage('node', $crumb['node_id'], 'forum');
-                                $count++;
-                                if ($count > $nodeTrackLimit)
-                                {
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            $this->getUserActivityRepo()->pushViewUsageToParent($response, $forum->Node);
         }
 
         return $response;
@@ -131,4 +91,12 @@ class Thread extends XFCP_Thread
         'activeKey'  => 'thread',
     ];
     use UserActivityInjector;
+
+    /**
+     * @return \XF\Mvc\Entity\Repository|UserActivity
+     */
+    protected function getUserActivityRepo()
+    {
+        return \XF::repository('SV\UserActivity:UserActivity');
+    }
 }

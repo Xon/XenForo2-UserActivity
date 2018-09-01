@@ -1,6 +1,6 @@
 {
     "edit_format": "checkbox",
-    "edit_format_params": "thread={{ phrase('thread') }}\nforum={{ phrase('forum') }}\nconversation={{ phrase('conversation') }}\nreport={{ phrase('report') }}\nnf_ticket={{ phrase('svUA_display_nf_ticket') }}\nnf_calendar={{ phrase('svUA_display_nf_calendar') }}",
+    "edit_format_params": "thread={{ phrase('thread') }}\nforum={{ phrase('forum') }}\ncategory={{ phrase('category') }}\nconversation={{ phrase('conversation') }}\nreport={{ phrase('report') }}\nnf_ticket={{ phrase('svUA_display_nf_ticket') }}\nnf_calendar={{ phrase('svUA_display_nf_calendar') }}",
     "data_type": "array",
     "sub_options": [
         "*"

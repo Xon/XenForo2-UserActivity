@@ -17,53 +17,13 @@ class Forum extends XFCP_Forum
     {
         $response = parent::actionForum($params);
         // alias forum => node, limitations of activity tracking
+
         if ($response instanceof View &&
             $this->responseType !== 'rss' &&
             ($forum = $response->getParam('forum')))
         {
             /** @var \XF\Entity\Forum $forum */
-            if ($response->getParam('node') === null)
-            {
-                $response->setParam('node', $forum->Node);
-            }
-
-            $session = \XF::session();
-            $robotKey = $session->isStarted() ? $session->get('robotId') : true;
-            $options = \XF::options();
-            if (empty($options->svUAPopulateUsers['forum']))
-            {
-                return $response;
-            }
-            if (!$options->SV_UA_TrackRobots && $robotKey)
-            {
-                return $response;
-            }
-
-            $nodeTrackLimit = intval($options->svUAThreadNodeTrackLimit);
-            $nodeTrackLimit = $nodeTrackLimit < 0 ? PHP_INT_MAX : $nodeTrackLimit;
-
-            /** @var  UserActivity $repo */
-            $repo = \XF::repository('SV\UserActivity:UserActivity');
-            $node = $forum->Node;
-            if ($nodeTrackLimit > 0)
-            {
-                $count = 1;
-                if ($node->breadcrumb_data)
-                {
-                    foreach ($node->breadcrumb_data AS $crumb)
-                    {
-                        if ($crumb['node_type_id'] === 'Forum')
-                        {
-                            $repo->bufferTrackViewerUsage('node', $crumb['node_id'], 'forum');
-                            $count++;
-                            if ($count > $nodeTrackLimit)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+            $this->getUserActivityRepo()->pushViewUsageToParent($response, $forum->Node);
         }
 
         return $response;
