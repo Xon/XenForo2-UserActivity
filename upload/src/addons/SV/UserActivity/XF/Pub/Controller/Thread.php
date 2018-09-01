@@ -20,7 +20,7 @@ class Thread extends XFCP_Thread
             ($thread = $response->getParam('thread')))
         {
             /** @var \XF\Entity\Thread $thread */
-            $this->getUserActivityRepo()->pushViewUsageToParent($response, $thread->Forum->Node);
+            $this->getUserActivityRepo()->pushViewUsageToParent($response, $thread->Forum->Node, true);
         }
 
         return $response;

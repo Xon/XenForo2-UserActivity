@@ -21,7 +21,7 @@ class Category extends XFCP_Category
             ($category = $response->getParam('category')))
         {
             /** @var \XF\Entity\Category $category */
-            $this->getUserActivityRepo()->pushViewUsageToParent($response, $category->Node, ['forum', 'category']);
+            $this->getUserActivityRepo()->pushViewUsageToParent($response, $category->Node, false, ['forum', 'category']);
         }
 
         return $response;

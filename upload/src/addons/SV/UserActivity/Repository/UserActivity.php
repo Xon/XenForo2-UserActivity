@@ -827,9 +827,10 @@ class UserActivity extends Repository
     /**
      * @param View     $response
      * @param Node     $node
+     * @param bool     $pushToNode
      * @param string[] $keys
      */
-    public function pushViewUsageToParent(View $response, Node $node, $keys = ['forum'])
+    public function pushViewUsageToParent(View $response, Node $node, $pushToNode, $keys = ['forum'])
     {
         $options = \XF::options();
         foreach($keys as $key)
@@ -859,6 +860,14 @@ class UserActivity extends Repository
         $repo = \XF::repository('SV\UserActivity:UserActivity');
         if ($nodeTrackLimit > 0)
         {
+            if ($pushToNode)
+            {
+                $repo->bufferTrackViewerUsage('node', $node->node_id, 'forum');
+                if ($nodeTrackLimit === 1)
+                {
+                    return;
+                }
+            }
             $count = 1;
             if ($node->breadcrumb_data)
             {
