@@ -76,7 +76,7 @@ class Forum extends XFCP_Forum
         $depth = $action === 'list' ? 1 : 0;
         /** @var \XF\Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
-        return $repo->getFilteredCategoryNodeIds($this->nodeListFetcher('Forum', $depth, $nodeTree));
+        return $repo->getFilteredForumNodeIds($this->nodeListFetcher('Forum', $depth, $nodeTree));
     }
 
     protected function categoryListFetcher(
