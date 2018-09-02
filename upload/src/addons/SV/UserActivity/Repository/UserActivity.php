@@ -856,7 +856,7 @@ class UserActivity extends Repository
      * @param bool     $pushToNode
      * @param string[] $keys
      */
-    public function pushViewUsageToParent(View $response, Node $node, $pushToNode, $keys = ['forum'])
+    public function pushViewUsageToParent(View $response, Node $node, $pushToNode = false, $keys = ['forum'])
     {
         $options = \XF::options();
         foreach($keys as $key)
