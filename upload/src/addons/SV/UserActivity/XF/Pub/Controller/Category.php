@@ -42,6 +42,27 @@ class Category extends XFCP_Category
         return null;
     }
 
+    /**
+     * @param string   $typeFilter
+     * @param int      $depth
+     * @param \XF\Tree $nodeTree
+     * @return int[]
+     */
+    protected function nodeListFetcher($typeFilter, $depth, \XF\Tree $nodeTree = null)
+    {
+        $nodeIds = [];
+        $flattenedNodeList = $nodeTree ? $nodeTree->getFlattened() : [];
+        foreach ($flattenedNodeList as $id => $node)
+        {
+            if ($node['depth'] <= $depth && $node['record']->node_type_id === $typeFilter)
+            {
+                $nodeIds[] = $id;
+            }
+        }
+
+        return $nodeIds;
+    }
+
     protected function forumListFetcher(
         /** @noinspection PhpUnusedParameterInspection */
         View $response,
@@ -50,19 +71,24 @@ class Category extends XFCP_Category
 
     {
         $repo = $this->getUserActivityRepo();
-
-        /** @var int[] $nodes */
+        $depth = $action === 'list' ? 1 : 0;
         /** @var \XF\Tree $nodeTree */
-        if ($nodeTree = $response->getParam('nodeTree'))
-        {
-            $nodeIds = $repo->flattenTreeToDepth($nodeTree, $action === 'list' ? 1 : 0);
-        }
-        else
-        {
-            $nodeIds = [];
-        }
+        $nodeTree = $response->getParam('nodeTree');
+        return $repo->getFilteredForumNodeIds($this->nodeListFetcher('Forum', $depth, $nodeTree));
+    }
 
-        return $repo->getFilteredForumNodeIds($nodeIds);
+    protected function categoryListFetcher(
+        /** @noinspection PhpUnusedParameterInspection */
+        View $response,
+        $action,
+        array $config)
+
+    {
+        $repo = $this->getUserActivityRepo();
+        $depth = $action === 'list' ? 1 : 0;
+        /** @var \XF\Tree $nodeTree */
+        $nodeTree = $response->getParam('nodeTree');
+        return $repo->getFilteredCategoryNodeIds($this->nodeListFetcher('Category', $depth, $nodeTree));
     }
 
     protected $countActivityInjector = [
@@ -71,6 +97,12 @@ class Category extends XFCP_Category
             'type'      => 'node',
             'actions'   => ['index'],
             'fetcher'   => 'forumListFetcher',
+        ],
+        [
+            'activeKey' => 'sub-forum',
+            'type'      => 'node',
+            'actions'   => ['index'],
+            'fetcher'   => 'categoryListFetcher'
         ],
         [
             'activeKey' => 'category-view',
