@@ -3,10 +3,6 @@
 namespace SV\UserActivity;
 
 use SV\UserActivity\Repository\UserActivity;
-use XF\Mvc\Entity\AbstractCollection;
-use XF\Mvc\ParameterBag;
-use XF\Mvc\Reply\AbstractReply;
-use XF\Mvc\Reply\View;
 
 /**
  * @property array $options

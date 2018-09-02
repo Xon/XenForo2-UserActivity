@@ -14,8 +14,6 @@ class Thread extends XFCP_Thread
     {
         $response = parent::actionIndex($params);
 
-        $options = \XF::options();
-        /** @noinspection PhpUndefinedFieldInspection */
         if ($response instanceof view &&
             ($thread = $response->getParam('thread')))
         {
