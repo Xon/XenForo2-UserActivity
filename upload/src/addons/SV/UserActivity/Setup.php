@@ -3,6 +3,7 @@
 
 namespace SV\UserActivity;
 
+use SV\Utils\InstallerHelper;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
 use XF\AddOn\StepRunnerUninstallTrait;
@@ -17,6 +18,8 @@ use XF\Entity\User;
  */
 class Setup extends AbstractSetup
 {
+    // from https://github.com/Xon/XenForo2-Utils cloned to src/addons/SV/Utils
+    use InstallerHelper;
     use StepRunnerInstallTrait;
     use StepRunnerUpgradeTrait;
     use StepRunnerUninstallTrait;
@@ -50,12 +53,7 @@ class Setup extends AbstractSetup
 
     public function installStep3()
     {
-        $this->db()->query(
-            "INSERT IGNORE INTO xf_permission_entry (user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int) VALUES
-            (?, 0, 'RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers', 'allow', '0'),
-            (?, 0, 'RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers', 'allow', '0')
-        ", [User::GROUP_GUEST, User::GROUP_REG]
-        );
+        $this->applyGlobalPermissionByGroup('RainDD_UA_PermissionsMain','RainDD_UA_ThreadViewers', [User::GROUP_GUEST, User::GROUP_REG]);
     }
 
     public function upgrade2020002Step1()
@@ -132,37 +130,6 @@ class Setup extends AbstractSetup
         $tables = [];
 
         return $tables;
-    }
-
-    /**
-     * @param Create|Alter $table
-     * @param string       $name
-     * @param string|null  $type
-     * @param string|null  $length
-     * @return \XF\Db\Schema\Column
-     * @throws \LogicException If table is unknown schema object
-     */
-    protected function addOrChangeColumn($table, $name, $type = null, $length = null)
-    {
-        if ($table instanceof Create)
-        {
-            $table->checkExists(true);
-
-            return $table->addColumn($name, $type, $length);
-        }
-        else if ($table instanceof Alter)
-        {
-            if ($table->getColumnDefinition($name))
-            {
-                return $table->changeColumn($name, $type, $length);
-            }
-
-            return $table->addColumn($name, $type, $length);
-        }
-        else
-        {
-            throw new \LogicException('Unknown schema DDL type ' . \get_class($table));
-        }
     }
 
     public function checkRequirements(&$errors = [], &$warnings = [])
