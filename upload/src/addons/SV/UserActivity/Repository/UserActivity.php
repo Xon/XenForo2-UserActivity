@@ -781,6 +781,7 @@ class UserActivity extends Repository
         }
 
         $visitor = \XF::visitor();
+        $visitor->cacheNodePermissions();
         $permissionSet = $visitor->PermissionSet;
         $filteredNodeIds = [];
         foreach ($nodeIds as $nodeId)
@@ -808,6 +809,7 @@ class UserActivity extends Repository
         }
 
         $visitor = \XF::visitor();
+        $visitor->cacheNodePermissions();
         $permissionSet = $visitor->PermissionSet;
         $filteredNodeIds = [];
         foreach ($nodeIds as $nodeId)
@@ -836,13 +838,16 @@ class UserActivity extends Repository
         $threads = $params[$key];
 
         $visitor = \XF::visitor();
+        $userId = $visitor->user_id;
+        $visitor->cacheNodePermissions();
         $permissionSet = $visitor->PermissionSet;
         $threadIds = [];
         foreach ($threads as $thread)
         {
             $nodeId = $thread->node_id;
             if ($permissionSet->hasContentPermission('node', $nodeId, 'view') &&
-                $permissionSet->hasContentPermission('node', $nodeId, 'viewContent'))
+                $permissionSet->hasContentPermission('node', $nodeId, 'viewContent') &&
+                ($permissionSet->hasContentPermission('node', $nodeId, 'viewContent') || ($userId && $thread->user_id === $userId)))
             {
                 $threadIds[] = $thread->thread_id;
             }
