@@ -34,7 +34,7 @@ class Watched extends XFCP_Watched
         /** @var AbstractCollection $watchedForums */
         if ($watchedForums = $response->getParam('watchedForums'))
         {
-            $nodeIds = \XF\Util\Arr::arrayColumn($watchedForums->toArray(), 'node_id');
+            $nodeIds = \array_column($watchedForums->toArray(), 'node_id');
         }
         else
         {
