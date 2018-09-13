@@ -2,8 +2,6 @@
 
 namespace SV\UserActivity\XF\Widget;
 
-
-
 use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\WidgetUserCountActivityInjector;
 

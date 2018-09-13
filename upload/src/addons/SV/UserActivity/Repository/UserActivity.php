@@ -841,7 +841,8 @@ class UserActivity extends Repository
         foreach ($threads as $thread)
         {
             $nodeId = $thread->node_id;
-            if ($permissionSet->hasContentPermission('node', $nodeId, 'viewContent'))
+            if ($permissionSet->hasContentPermission('node', $nodeId, 'view') &&
+                $permissionSet->hasContentPermission('node', $nodeId, 'viewContent'))
             {
                 $threadIds[] = $thread->thread_id;
             }
