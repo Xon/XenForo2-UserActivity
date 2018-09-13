@@ -12,5 +12,8 @@
     "require" : {
         "php": ["5.6.0", "PHP 5.6.0+"]
     },
+    "require-soft": {
+        "SV/RedisCache": [2000000, "Redis Cache v2.0.0"]
+    },
     "icon": ""
 }
