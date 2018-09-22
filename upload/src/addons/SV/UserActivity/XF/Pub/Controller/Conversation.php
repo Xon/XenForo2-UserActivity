@@ -23,7 +23,16 @@ class Conversation extends XFCP_Conversation
             return null;
         }
 
-        return $conversations->keys();
+        $conversationIds = $conversations->keys();
+
+        /** @var AbstractCollection $conversations */
+        $conversations = $response->getParam('stickyUserConvs');
+        if ($conversations &&$conversations->count())
+        {
+            $conversationIds = \array_merge($conversationIds, $conversations->keys());
+        }
+
+        return $conversationIds;
     }
 
     protected $countActivityInjector = [
