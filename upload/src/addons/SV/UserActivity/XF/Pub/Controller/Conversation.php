@@ -39,7 +39,7 @@ class Conversation extends XFCP_Conversation
         [
             'activeKey' => 'conversation',
             'type'      => 'conversation',
-            'actions'   => ['index'],
+            'actions'   => ['index', 'labeled'],
             'fetcher'   => 'conversationFetcher'
         ],
     ];
