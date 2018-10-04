@@ -32,7 +32,7 @@
 							<ul class="listInline listInline--comma">
 								<xf:foreach loop="$records.records" value="$user">
 									<li>
-										<xf:username user="$user" rich="true" class="{{ !$user.visible ? 'username--invisible' : '' }}" data-username="{$user.username|for_attr}" data-xf-init="{{ $lastSeenMode ? 'user-activity-last-seen' : ''}}" />
+										<xf:username user="$user" rich="true" class="{{ !$user.visible ? 'username--invisible' : '' }}" data-username="{$user.username|for_attr}" notooltip="{$lastSeenMode}" data-xf-init="{{ $lastSeenMode ? 'user-activity-last-seen' : ''}}" />
 										<xf:if is="$lastSeenMode">
 											<span class="uaLastSeenBlock">{{ date_dynamic($user.effective_last_activity) }}</span>
 										</xf:if>
@@ -43,7 +43,7 @@
 							<ul class="listHeap">
 								<xf:foreach loop="$records.records" value="$user">
 									<li>
-										<xf:avatar user="$user" size="s" img="true" data-username="{$user.username|for_attr}" data-xf-init="{{ $lastSeenMode ? 'user-activity-last-seen' : ''}}"/>
+										<xf:avatar user="$user" size="s" img="true" data-username="{$user.username|for_attr}" notooltip="{$lastSeenMode}" data-xf-init="{{ $lastSeenMode ? 'user-activity-last-seen' : ''}}"/>
 										<xf:if is="$lastSeenMode">
 											<span class="uaLastSeenBlock">{{ date_dynamic($user.effective_last_activity) }}</span>
 										</xf:if>
