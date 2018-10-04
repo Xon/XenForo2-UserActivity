@@ -13,40 +13,55 @@
 		  arg-records="!"
 		  >
 	<xf:if is="{$records}">
-		<xf:css src="UserActivity.less" />
-		<xf:if contentcheck="true">
-			<div class="block">
-				<div id="uaThreadViewContainer" class="block-container">
-					<h3 class="block-minorHeader">{{ phrase('UA_ViewingTitle', {'ContentType': $contentTypePhrase, 'users': $records.members, 'guests': $records.guests}) }}</h3>
-					<div class="block-body">
-						<div class="block-row block-row--minor">
-							<xf:contentcheck>
-								<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">
-									<ul class="listInline listInline--comma">
-										<xf:foreach loop="$records.records" value="$user"><xf:trim>
-											<li><xf:username user="$user" rich="true" class="{{ !$user.visible ? 'username--invisible' : '' }}" /></li>
-										</xf:trim></xf:foreach>
-									</ul>
-								<xf:elseif is="{$xf.options.RainDD_UA_ThreadViewType} == 1" />
-									<ul class="listHeap">
-										<xf:foreach loop="$records.records" value="$user">
-											<li><xf:avatar user="$user" size="s" img="true"/></li>
-										</xf:foreach>
-									</ul>
-								</xf:if>
-							</xf:contentcheck>
-							<xf:if is="{$records.recordsUnseen}">
-								<xf:if is="{$records.records}">
-									<li class="moreLink">{{ phrase('ellipsis_and_x_more', {'count': $records.recordsUnseen}) }}</li>
+		<xf:css src="UserActivity.less" />	
+		<xf:set var="$lastSeenMode" value="{{ property('svUserActivityLastSeen') ? true: false }}"/>
+		<xf:if is="$lastSeenMode">
+			<xf:js src="sv/useractivity/last_seen.js" addon="SV/UserActivity" min="1" />
+			<script class="js-extraPhrases" type="application/json">
+					{
+						"ua_x_was_last_seen": "{{ phrase('ua_x_was_last_seen')|escape('json') }}"
+					}
+			</script>
+		</xf:if>
+		<div class="block">
+			<div id="uaThreadViewContainer" class="block-container">
+				<h3 class="block-minorHeader">{{ phrase('UA_ViewingTitle', {'ContentType': $contentTypePhrase, 'users': $records.members, 'guests': $records.guests}) }}</h3>
+				<div class="block-body">
+					<div class="block-row block-row--minor">							
+						<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">									
+							<ul class="listInline listInline--comma">
+								<xf:foreach loop="$records.records" value="$user">
+									<li>
+										<xf:username user="$user" rich="true" class="{{ !$user.visible ? 'username--invisible' : '' }}" data-username="{$user.username|for_attr}" data-xf-init="{{ $lastSeenMode ? 'user-activity-last-seen' : ''}}" />
+										<xf:if is="$lastSeenMode">
+											<span class="uaLastSeenBlock">{{ date_dynamic($user.effective_last_activity) }}</span>
+										</xf:if>
+									</li>
+								</xf:foreach>
+							</ul>
+							<xf:elseif is="{$xf.options.RainDD_UA_ThreadViewType} == 1" />
+							<ul class="listHeap">
+								<xf:foreach loop="$records.records" value="$user">
+									<li>
+										<xf:avatar user="$user" size="s" img="true" data-username="{$user.username|for_attr}" data-xf-init="{{ $lastSeenMode ? 'user-activity-last-seen' : ''}}"/>
+										<xf:if is="$lastSeenMode">
+											<span class="uaLastSeenBlock">{{ date_dynamic($user.effective_last_activity) }}</span>
+										</xf:if>
+									</li>
+								</xf:foreach>
+							</ul>
+						</xf:if>
+						<xf:if is="{$records.recordsUnseen}">
+							<xf:if is="{$records.records}">
+								<li class="moreLink">{{ phrase('ellipsis_and_x_more', {'count': $records.recordsUnseen}) }}</li>
 								<xf:else />
-									<li></li>
-								</xf:if>
+								<li></li>
 							</xf:if>
-						</div>
+						</xf:if>
 					</div>
 				</div>
 			</div>
-		</xf:if>
+		</div>
 	</xf:if>
 </xf:macro>
 

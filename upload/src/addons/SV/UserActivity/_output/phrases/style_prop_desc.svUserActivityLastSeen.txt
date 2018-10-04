@@ -1,0 +1,1 @@
+Instead of the user card, show the user's last seen date

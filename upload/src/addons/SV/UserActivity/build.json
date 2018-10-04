@@ -1,5 +1,9 @@
 {
   "additional_files": [
-    "src/addons/SV/Utils/"
+    "src/addons/SV/Utils/",
+    "js/sv/useractivity/"
+  ],
+  "minify": [
+    "js/sv/useractivity/last_seen.js"
   ]
 }

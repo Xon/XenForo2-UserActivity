@@ -1,1 +1,1 @@
-{username} was last seen
+{username} was last seen: {date}

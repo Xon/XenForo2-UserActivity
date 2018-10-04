@@ -1,0 +1,13 @@
+{
+    "group_name": "raindd_ua_main",
+    "title": "On-hover - show last seen date",
+    "description": "Instead of the user card, show the user's last seen date",
+    "property_type": "value",
+    "css_components": [],
+    "value_type": "boolean",
+    "value_parameters": "",
+    "depends_on": "",
+    "value_group": "",
+    "property_value": 1,
+    "display_order": 0
+}

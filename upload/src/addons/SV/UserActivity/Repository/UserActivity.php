@@ -462,7 +462,22 @@ class UserActivity extends Repository
         $memberCount = $isGuest ? 0 : 1;
         $guestCount = 0;
         $robotCount = 0;
-        $records = $isGuest ? [] : [$viewingUser];
+        $records = [];
+        if (!$isGuest)
+        {
+            $rec = [];
+            $structure = $viewingUser->structure();
+            foreach(self::CacheKeys as $key)
+            {
+                if (isset($structure->columns[$key]))
+                {
+                    $rec[$key] = $viewingUser[$key];
+                }
+            }
+            // XF2 does not do effective_last_activity, so emulate it
+            $rec['effective_last_activity'] = \XF::$time;
+            $records[] = $rec;
+        }
 
         $app = $this->app();
         $options = $app->options();
