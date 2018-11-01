@@ -133,7 +133,7 @@ class UserActivity extends Repository
 
             $visitor = \XF::visitor();
             $session = \XF::session();
-            $isRobot = $session->isStarted() ? $session->get('robotId') : true;
+            $isRobot = $session->isStarted() ? $session->get('robot') : true;
             if ($isRobot || !$visitor->hasPermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers'))
             {
                 return;
@@ -738,7 +738,7 @@ class UserActivity extends Repository
         if ($robotKey === null)
         {
             $session = \XF::session();
-            $robotKey = $session->isStarted() ? $session->get('robotId') : true;
+            $robotKey = $session->isStarted() ? $session->get('robot') : true;
         }
         if ($viewingUser === null)
         {
@@ -894,7 +894,7 @@ class UserActivity extends Repository
         }
 
         $session = \XF::session();
-        $robotKey = $session->isStarted() ? $session->get('robotId') : true;
+        $robotKey = $session->isStarted() ? $session->get('robot') : true;
         if (!$options->SV_UA_TrackRobots && $robotKey)
         {
             return;
