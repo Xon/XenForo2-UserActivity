@@ -12,9 +12,8 @@
     "depends_on": "",
     "value_group": "",
     "property_value": {
-        "font-size": "12px",
-        "color": "@xf-paletteColor4",
-        "extra": "margin-bottom:5px;"
+        "font-size": "@xf-blockMinorHeader--size",
+        "color": "@xf-textColorMuted"
     },
     "display_order": 30
 }

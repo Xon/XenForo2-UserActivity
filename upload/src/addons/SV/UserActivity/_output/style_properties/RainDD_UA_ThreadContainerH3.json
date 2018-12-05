@@ -18,12 +18,8 @@
     "depends_on": "",
     "value_group": "",
     "property_value": {
-        "font-size": "12pt",
-        "color": "@xf-paletteColor4",
-        "border-bottom-width": "1px",
-        "border-bottom-color": "@xf-paletteColor2",
-        "padding-bottom": "2px",
-        "extra": "margin-bottom:5px;"
+        "font-size": "@xf-blockMinorHeader--size",
+        "color": "@xf-blockMinorHeader--color"
     },
     "display_order": 20
 }
