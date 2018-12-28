@@ -46,7 +46,7 @@ class Ratings extends XFCP_Ratings
      * @param $action
      * @param ParameterBag $params
      */
-    public function _preDispatch($action, ParameterBag $params)
+    public function preDispatch($action, ParameterBag $params)
     {
         $this->_params = $params;
         $this->preDispatchTrait($action, $params);
