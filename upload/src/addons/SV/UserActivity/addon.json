@@ -15,5 +15,5 @@
     "require-soft": {
         "SV/RedisCache": [2000000, "Redis Cache v2.0.0"]
     },
-    "icon": ""
+    "icon": "fa-heartbeat"
 }
