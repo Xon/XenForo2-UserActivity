@@ -44,7 +44,7 @@
 								<xf:foreach loop="$records.records" value="$user">
 									<li>
 										<xf:avatar user="$user" size="s" img="true" 
-												   defaultname="{$user.username}" 
+												   faux-user="1" 
 												   data-username="{$user.username|for_attr}" 
 												   notooltip="{$lastSeenMode}" 
 												   data-xf-init="{{ $lastSeenMode ? 'user-activity-last-seen' : ''}}"/>
