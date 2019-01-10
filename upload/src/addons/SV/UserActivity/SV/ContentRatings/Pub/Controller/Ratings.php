@@ -11,6 +11,7 @@ class Ratings extends XFCP_Ratings
         'controller' => 'SV\\ContentRatings\\Pub\\Controller\\Ratings',
         'type' => null,
         'id' => 'container_id',
+        'activeKey' => null,
         'actions' => ['like', 'list'],
     ];
     use UserActivityInjector
@@ -30,6 +31,7 @@ class Ratings extends XFCP_Ratings
             /** @var \XF\Mvc\Entity\Entity $container */
 
             $this->activityInjector['type'] = $container->getEntityContentType();
+            $this->activityInjector['activeKey'] = $container->getEntityContentType();
             $this->_params['container_id'] = $container->getEntityId();
             if ($this->activityInjector['type'])
             {
