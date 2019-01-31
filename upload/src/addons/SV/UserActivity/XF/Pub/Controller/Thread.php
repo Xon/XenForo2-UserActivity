@@ -34,12 +34,10 @@ class Thread extends XFCP_Thread
         if ($threads = $response->getParam('svSimilarThreads'))
         {
             $threadIds = [];
-            foreach ($threads as $content)
+            /** @var \XF\Entity\Thread $thread */
+            foreach ($threads as $thread)
             {
-                if ($content['content_type'] === 'thread')
-                {
-                    $threadIds[] = $content['content_id'];
-                }
+                $threadIds[] = $thread->thread_id;
             }
 
             return $threadIds;
