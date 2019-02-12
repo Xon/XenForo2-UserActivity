@@ -111,6 +111,7 @@ class Setup extends AbstractSetup
             $this->addOrChangeColumn($table, 'timestamp', 'int');
             $this->addOrChangeColumn($table, 'blob', 'varbinary', 255);
             $table->addUniqueKey(['content_type', 'content_id', 'blob'], 'content');
+            $table->addKey(['timestamp', 'content_id'], 'timestamp');
         };
 
         return $tables;
