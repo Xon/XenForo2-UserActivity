@@ -895,9 +895,19 @@ class UserActivity extends Repository
 
         $session = \XF::session();
         $robotKey = $session->isStarted() ? $session->get('robot') : true;
-        if (!$options->SV_UA_TrackRobots && $robotKey)
+        if ($robotKey)
         {
-            return;
+            if (empty($options->SV_UA_TrackRobots))
+            {
+                return;
+            }
+        }
+        else if (!\XF::visitor()->user_id)
+        {
+            if (empty($options->svUserActivityTrackGuests))
+            {
+                return;
+            }
         }
 
         $nodeTrackLimit = intval($options->svUAThreadNodeTrackLimit);

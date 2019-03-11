@@ -1,1 +1,1 @@
-Show/Hid robots from user activity
+Show/Hide robots from user activity
