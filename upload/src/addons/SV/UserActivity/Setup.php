@@ -57,12 +57,12 @@ class Setup extends AbstractSetup
         $this->applyGlobalPermissionByGroup('RainDD_UA_PermissionsMain','RainDD_UA_ThreadViewers', [User::GROUP_GUEST, User::GROUP_REG]);
     }
 
-    public function upgrade2020002Step1()
+    public function upgrade2040000Step1()
     {
         $this->installStep1();
     }
 
-    public function upgrade2020002Step2()
+    public function upgrade2040000Step2()
     {
         $this->installStep2();
     }
