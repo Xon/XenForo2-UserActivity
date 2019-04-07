@@ -167,6 +167,7 @@ class UserActivity extends Repository
     }
 
     /**
+     * @noinspection PhpDocMissingThrowsInspection
      * @param array        $data
      * @param integer|null $targetRunTime
      * @return array|bool
@@ -254,6 +255,7 @@ class UserActivity extends Repository
     const LUA_IFZADDEXPIRE_SH1 = 'dc1d76eefaca2f4ccf848a6ed7e80def200ac7b7';
 
     /**
+     * @noinspection PhpDocMissingThrowsInspection
      * @param array $updateSet
      * @param int   $time
      * @return void
