@@ -14,17 +14,22 @@ class Templater extends XFCP_Templater
         $fauxUser = $this->processAttributeToRaw($attributes, 'faux-user', '', true);
         if ($fauxUser && is_array($user))
         {
-            /** @var \XF\Entity\User $fauxUser */
-            $fauxUser = \XF::em()->create('XF:User');
-            foreach($user as $key => $value)
+            $em = \XF::em();
+            $fauxUser = $em->findCached('XF:User', $user['user_id']);
+            if (!$fauxUser)
             {
-                if ($fauxUser->offsetExists($key))
+                /** @var \XF\Entity\User $fauxUser */
+                $fauxUser = $em->instantiateEntity('XF:User', ['user_id' => $user['user_id'], 'language_id' => 0]);
+                foreach ($user as $key => $value)
                 {
-                    $fauxUser->setTrusted($key, $value);
+                    if ($fauxUser->offsetExists($key))
+                    {
+                        $fauxUser->setTrusted($key, $value);
+                    }
                 }
-            }
 
-            $fauxUser->setReadOnly(true);
+                $fauxUser->setReadOnly(true);
+            }
             $user = $fauxUser;
         }
 
