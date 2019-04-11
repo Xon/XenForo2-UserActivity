@@ -14,7 +14,7 @@ var SV = window.SV || {};
     SV.UserActivityLastSeen = XF.Element.newHandler({
         options: $.extend(true, {}, XF.TooltipOptions.base, {
             username: null,
-            textTarget: '.uaLastSeenBlock:first'
+            textTarget: '.uaLastSeenBlock'
         }),
 
         trigger: null,
@@ -25,17 +25,19 @@ var SV = window.SV || {};
             var tooltipOptions = XF.TooltipOptions.extractTooltip(this.options),
                 triggerOptions = XF.TooltipOptions.extractTrigger(this.options);
 
-            var $dateElemnt = this.$target.parent().find(this.options.textTarget);
-            $dateElemnt.remove();
-            this.dateHtml = $dateElemnt.html();
+            var $dateElement = this.$target.next(this.options.textTarget);
+            $dateElement.remove();
+            this.dateHtml = $dateElement.html();
 
-            var content = XF.phrase('ua_x_was_last_seen', {'{username}': this.options.username, '{date}':this.dateHtml});
-            tooltipOptions.html = true;
+            if (this.dateHtml) {
+                var content = XF.phrase('ua_x_was_last_seen', {'{username}': this.options.username, '{date}': this.dateHtml});
+                tooltipOptions.html = true;
 
-            this.tooltip = new XF.TooltipElement(content, tooltipOptions);
-            this.trigger = new XF.TooltipTrigger(this.$target, this.tooltip, triggerOptions);
+                this.tooltip = new XF.TooltipElement(content, tooltipOptions);
+                this.trigger = new XF.TooltipTrigger(this.$target, this.tooltip, triggerOptions);
 
-            this.trigger.init();
+                this.trigger.init();
+            }
         }
     });
 
