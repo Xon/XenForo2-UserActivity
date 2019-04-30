@@ -1,5 +1,5 @@
-Limits the number of node's view state touched by when a thread is viewed.<br/>
+Limits the number of forums/node's view state touched by when a thread is viewed.<br/>
 <br/>
-When a thread is viewed, the bread-crumb is traced to find each node above the thread to contribute the thread's view to.<br/>
+When a thread is viewed, the bread-crumb is traced to discover the thread's forum and any parents. These parent forums/nodes then have their activity record updated counting the thread's views<br/>
 0 to disable<br/>
 -1 for all
