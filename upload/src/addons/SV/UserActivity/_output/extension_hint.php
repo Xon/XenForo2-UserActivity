@@ -3,6 +3,11 @@
 // ################## THIS IS A GENERATED FILE ##################
 // DO NOT EDIT DIRECTLY. EDIT THE CLASS EXTENSIONS IN THE CONTROL PANEL.
 
+namespace SV\UserActivity\NF\Tickets\Pub\Controller
+{
+	class XFCP_Ticket extends \NF\Tickets\Pub\Controller\Ticket {}
+}
+
 namespace SV\UserActivity\SV\ContentRatings\Pub\Controller
 {
 	class XFCP_Ratings extends \SV\ContentRatings\Pub\Controller\Ratings {}

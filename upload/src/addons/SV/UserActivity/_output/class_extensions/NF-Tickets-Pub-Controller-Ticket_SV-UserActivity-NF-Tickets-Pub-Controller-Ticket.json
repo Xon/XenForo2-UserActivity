@@ -1,0 +1,6 @@
+{
+    "from_class": "NF\\Tickets\\Pub\\Controller\\Ticket",
+    "to_class": "SV\\UserActivity\\NF\\Tickets\\Pub\\Controller\\Ticket",
+    "execute_order": 10,
+    "active": true
+}
