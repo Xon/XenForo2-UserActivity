@@ -6,3 +6,4 @@ Supported content:
 - Threads
 - Conversations
 - Reports
+- NixFifty's Tickets
