@@ -1,0 +1,6 @@
+{
+    "from_class": "NF\\Calendar\\Pub\\Controller\\Event",
+    "to_class": "SV\\UserActivity\\NF\\Calendar\\Pub\\Controller\\Event",
+    "execute_order": 10,
+    "active": true
+}
