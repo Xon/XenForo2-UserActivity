@@ -6,7 +6,7 @@ use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserActivityInjector;
 
 /**
- * Extends \NF\Tickets\Pub\Controller\Event
+ * Extends \NF\Calendar\Pub\Controller\Event
  */
 class Event extends XFCP_Event
 {
