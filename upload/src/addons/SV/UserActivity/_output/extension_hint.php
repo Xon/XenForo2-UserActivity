@@ -3,14 +3,14 @@
 // ################## THIS IS A GENERATED FILE ##################
 // DO NOT EDIT DIRECTLY. EDIT THE CLASS EXTENSIONS IN THE CONTROL PANEL.
 
+namespace SV\UserActivity\NF\Calendar\Pub\Controller
+{
+	class XFCP_Event extends \NF\Calendar\Pub\Controller\Event {}
+}
+
 namespace SV\UserActivity\NF\Tickets\Pub\Controller
 {
 	class XFCP_Ticket extends \NF\Tickets\Pub\Controller\Ticket {}
-}
-
-namespace SV\UserActivity\NF\Calendar\Pub\Controller
-{
-    class XFCP_Event extends \NF\Calendar\Pub\Controller\Event {}
 }
 
 namespace SV\UserActivity\SV\ContentRatings\Pub\Controller
