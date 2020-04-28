@@ -18,7 +18,8 @@ trait UserCountActivityInjector
         /** @noinspection PhpUndefinedClassInspection */
         parent::postDispatchType($action, $params, $reply);
         if ($reply instanceof View &&
-            !empty($this->countActivityInjector))
+            !empty($this->countActivityInjector) &&
+            $reply->getResponseType() !== 'rss')
         {
             $this->_injectUserCountIntoResponse($reply, $action);
         }
