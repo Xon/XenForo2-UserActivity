@@ -3,8 +3,7 @@
 
 namespace SV\UserActivity;
 
-use SV\Utils\InstallerHelper;
-use SV\Utils\InstallerSoftRequire;
+use SV\StandardLib\InstallerHelper;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
 use XF\AddOn\StepRunnerUninstallTrait;
@@ -19,8 +18,9 @@ use XF\Entity\User;
  */
 class Setup extends AbstractSetup
 {
-    // from https://github.com/Xon/XenForo2-Utils cloned to src/addons/SV/Utils
-    use InstallerHelper;
+    use InstallerHelper {
+        checkRequirements as protected checkRequirementsTrait;
+    }
     use StepRunnerInstallTrait;
     use StepRunnerUpgradeTrait;
     use StepRunnerUninstallTrait;
@@ -134,14 +134,13 @@ class Setup extends AbstractSetup
         return $tables;
     }
 
-    use InstallerSoftRequire;
     /**
      * @param array $errors
      * @param array $warnings
      */
     public function checkRequirements(&$errors = [], &$warnings = [])
     {
-        $this->checkSoftRequires($errors,$warnings);
+        $this->checkRequirementsTrait($errors,$warnings);
         /** @var Redis $cache */
         $cache = \XF::app()->cache();
         if (!($cache instanceof Redis) || !($credis = $cache->getCredis(false)))
