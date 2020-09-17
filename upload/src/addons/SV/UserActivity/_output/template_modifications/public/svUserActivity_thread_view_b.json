@@ -4,6 +4,6 @@
     "execution_order": 10,
     "enabled": true,
     "action": "preg_replace",
-    "find": "#^<xf:widgetpos id=\"thread_view_below_messages\".*?\\/>$#sim",
+    "find": "#^<xf:ad position=\"thread_view_below_messages\".*?\\/>$#sim",
     "replace": "$0\n\n<xf:if is=\"{$xf.options.RainDD_UA_ThreadViewPos} == 2\">\n\t<xf:macro template=\"UA_ViewContainer_macros\" name=\"UserActivity\" arg-contentTypePhrase=\"{{ phrase('thread') }}\" arg-records=\"{$UA_Records}\"/>\n</xf:if>"
 }
