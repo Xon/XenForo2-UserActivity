@@ -29,15 +29,16 @@
 				<div class="block-body">
 					<div class="block-row block-row--minor">							
 						<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">									
-							<ul class="listInline listInline--comma">
-								<xf:foreach loop="$records.records" value="$user">
-									<li>
-										<xf:username user="$user" rich="true" class="{{ !$user.visible ? 'username--invisible' : '' }}" data-username="{$user.username|for_attr}" notooltip="{$lastSeenMode}" data-xf-init="{{ $lastSeenMode ? 'user-activity-last-seen' : ''}}" />
+							<ul class="listInline listInline--comma listInline--selfInline">
+								<xf:foreach loop="$records.records" value="$user"><xf:trim>
+									<li><xf:trim>
+										<xf:username user="$user" rich="true" class="{{ !$user.visible ? 'username--invisible' : '' }}" data-username="{$user.username|for_attr}" notooltip="{$lastSeenMode}" data-xf-init="{{ $lastSeenMode ? 'user-activity-last-seen' : ''}}" /><xf:trim>
+
 										<xf:if is="$lastSeenMode">
 											<span class="uaLastSeenBlock">{{ date_dynamic($user.effective_last_activity) }}</span>
 										</xf:if>
-									</li>
-								</xf:foreach>
+									</xf:trim></xf:trim></li>
+								</xf:trim></xf:foreach>
 							</ul>
 							<xf:elseif is="{$xf.options.RainDD_UA_ThreadViewType} == 1" />
 							<ul class="listHeap">
