@@ -1,1 +1,0 @@
-Adjust font properties for user and guest counts.

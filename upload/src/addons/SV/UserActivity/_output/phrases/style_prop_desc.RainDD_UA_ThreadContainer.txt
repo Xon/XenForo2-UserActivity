@@ -1,1 +1,0 @@
-Adjust container properties such as background, border, and default font size.
