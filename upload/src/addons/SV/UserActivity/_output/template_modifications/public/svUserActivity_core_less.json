@@ -1,0 +1,9 @@
+{
+    "template": "core.less",
+    "description": "Append svUserActivity_core.less to core.less",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "/$/",
+    "replace": "\n{{ include('svUserActivity_core.less.less') }}"
+}
