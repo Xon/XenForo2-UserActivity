@@ -1,1 +1,1 @@
-Users Who Are Viewing This {ContentType} <span class="footnote">(Users: {users}, Guests: {guests})</span>
+Users who are viewing this {ContentType} <span class="footnote">(Users: {users}, Guests: {guests})</span>

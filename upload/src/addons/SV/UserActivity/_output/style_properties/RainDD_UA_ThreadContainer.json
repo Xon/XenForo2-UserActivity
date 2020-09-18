@@ -1,6 +1,6 @@
 {
     "group_name": "raindd_ua_main",
-    "title": "Thread Container",
+    "title": "Thread container",
     "description": "Adjust container properties such as background, border, and default font size.",
     "property_type": "css",
     "css_components": [

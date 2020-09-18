@@ -1,1 +1,1 @@
-Requires the equivalent content type be tracked by the "Track User Activity" setting
+Requires the equivalent content type be tracked by the "Track user activity" setting

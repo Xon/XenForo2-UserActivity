@@ -1,6 +1,6 @@
 {
     "group_name": "raindd_ua_main",
-    "title": "Viewer Count",
+    "title": "Viewer count",
     "description": "Styling for viewer counts next to thread/forums/etc",
     "property_type": "css",
     "css_components": [
