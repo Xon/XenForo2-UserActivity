@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "preg_replace",
     "find": "/$/",
-    "replace": "\n{{ include('svUserActivity_core.less.less') }}"
+    "replace": "{{ include('svUserActivity_core.less') }}"
 }
