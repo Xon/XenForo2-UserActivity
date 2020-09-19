@@ -25,7 +25,7 @@
 		</xf:if>
 		<div class="block">
 			<div id="uaThreadViewContainer" class="block-container">
-				<h3 class="block-minorHeader">{{ phrase('UA_ViewingTitle', {'ContentType': $contentTypePhrase, 'users': $records.members, 'guests': $records.guests}) }}</h3>
+				<h3 class="block-minorHeader">{{ phrase('svUserActivity_users_who_are_viewing_this_x', {'content_type': $contentTypePhrase|to_lower}) }}</h3>
 				<div class="block-body">
 					<div class="block-row block-row--minor">							
 						<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">									
@@ -64,6 +64,13 @@
 							</xf:if>
 						</xf:if>
 					</div>
+				</div>
+				<div class="block-footer">
+					<span class="block-footer-counter">{{ phrase('online_now_x_members_y_guests_z',{
+						'total': number($records.total),
+						'members': number($records.members),
+						'guests': number($records.guests)})
+					}}</span>
 				</div>
 			</div>
 		</div>

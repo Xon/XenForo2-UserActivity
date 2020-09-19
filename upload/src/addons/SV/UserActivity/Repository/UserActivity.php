@@ -570,6 +570,7 @@ class UserActivity extends Repository
         }
 
         return [
+            'total'         => $memberCount + $guestCount,
             'members'       => $memberCount,
             'guests'        => $guestCount,
             'robots'        => $robotCount,
