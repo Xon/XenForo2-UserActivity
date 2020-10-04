@@ -13,7 +13,6 @@
 		  arg-records="!"
 		  >
 	<xf:if is="{$records}">
-		<xf:css src="UserActivity.less" />	
 		<xf:set var="$lastSeenMode" value="{{ property('svUserActivityLastSeen') ? true: false }}"/>
 		<xf:if is="$lastSeenMode">
 			<xf:js src="sv/useractivity/last_seen.js" addon="SV/UserActivity" min="1" />
@@ -78,7 +77,6 @@
 </xf:macro>
 
 <xf:macro name="viewerCounts" arg-recordCounts="!" arg-contentType="!" arg-contentId="!">
-	<xf:css src="UserActivity.less" />
 	<xf:set var="$activityCount" value="{$recordCounts.{$contentType}.{$contentId}}" />
 
 	<xf:if is="{$activityCount} == 1">
