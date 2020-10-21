@@ -274,16 +274,21 @@ class UserActivity extends Repository
             $sqlParts[] = '(?,?,?,?)';
         }
         $sql = implode(',', $sqlParts);
+        $sql = "-- XFDB=noForceAllWrite
+        INSERT INTO xf_sv_user_activity (content_type, content_id, `blob`, `timestamp`) VALUES 
+        {$sql}
+        ON DUPLICATE KEY UPDATE `timestamp` = values(`timestamp`)";
 
-        $db->query(
-            "-- XFDB=noForceAllWrite
-            INSERT INTO xf_sv_user_activity 
-            (content_type, content_id, `blob`, `timestamp`) 
-            VALUES 
-              {$sql}
-             ON DUPLICATE KEY UPDATE `timestamp` = values(`timestamp`)",
-            $sqlArgs
-        );
+        try
+        {
+            $db->query($sql, $sqlArgs);
+        }
+        /** @noinspection PhpRedundantCatchClauseInspection */
+        catch (\XF\Db\DeadlockException $e)
+        {
+            // deadlock detected, try rerunning once
+            $db->query($sql, $sqlArgs);
+        }
     }
 
     /**
