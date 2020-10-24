@@ -157,7 +157,7 @@ class UserActivity extends Repository
         }
         $app = $this->app();
         /** @var Redis $cache */
-        $cache = $app->cache();
+        $cache = $app->cache('userActivity');
         if (!($cache instanceof Redis) || !($credis = $cache->getCredis(false)))
         {
             return null;
@@ -202,7 +202,7 @@ class UserActivity extends Repository
         }
         $app = $this->app();
         /** @var Redis $cache */
-        $cache = $app->cache();
+        $cache = $app->cache('userActivity');
 
         $options = $app->options();
         $onlineStatusTimeout = $options->onlineStatusTimeout * 60;
@@ -377,7 +377,7 @@ class UserActivity extends Repository
             return;
         }
         /** @var Redis $cache */
-        $cache = $this->app()->cache();
+        $cache = $this->app()->cache('userActivity');
         $useLua = $cache->useLua();
 
         // record keeping
@@ -505,7 +505,7 @@ class UserActivity extends Repository
         else
         {
             /** @var Redis $cache */
-            $cache = $app->cache();
+            $cache = $app->cache('userActivity');
             $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
 
             $onlineRecords = $credis->zRevRangeByScore($key, $end, $start, ['withscores' => true]);
@@ -657,7 +657,7 @@ class UserActivity extends Repository
         else
         {
             /** @var Redis $cache */
-            $cache = $app->cache();
+            $cache = $app->cache('userActivity');
             $credis = $this->getCredis();
             /** @noinspection PhpUnusedLocalVariableInspection */
             $useLua = $cache->useLua();

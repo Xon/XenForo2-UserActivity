@@ -142,7 +142,7 @@ class Setup extends AbstractSetup
     {
         $this->checkRequirementsTrait($errors,$warnings);
         /** @var Redis $cache */
-        $cache = \XF::app()->cache();
+        $cache = \XF::app()->cache('userActivity');
         if (!($cache instanceof Redis) || !($credis = $cache->getCredis(false)))
         {
             $warnings[] = 'It is recommended that Redis Cache to be installed and configured, but a MySQL fallback is supported';
