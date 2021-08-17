@@ -55,9 +55,7 @@ class Post extends XFCP_Post
             $post = $this->em()->findCached('XF:Post', $postId);
             if ($post instanceof \XF\Entity\Post)
             {
-                $threadId = $post->thread_id;
-                $this->request->set('thread_id', $threadId);
-                $params['thread_id'] = $threadId;
+                $this->request->set('thread_id', $post->thread_id);
 
                 return;
             }
@@ -68,7 +66,6 @@ class Post extends XFCP_Post
         if ($threadId !== 0)
         {
             $this->request->set('thread_id', $threadId);
-            $params['thread_id'] = $threadId;
 
             return;
         }
@@ -78,7 +75,6 @@ class Post extends XFCP_Post
         if ($threadId !== 0)
         {
             $this->request->set('thread_id', $threadId);
-            $params['thread_id'] = $threadId;
         }
     }
 
