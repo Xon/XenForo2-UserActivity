@@ -22,21 +22,22 @@ class Post extends XFCP_Post
     /** @noinspection PhpMissingReturnTypeInspection */
     protected function canUpdateSessionActivity($action, ParameterBag $params, AbstractReply &$reply, &$viewState)
     {
-        if ($reply instanceof ViewReply)
+        if ($reply instanceof ViewReply && $reply->getResponseCode() < 400)
         {
             $actionL = \strtolower($action);
             switch ($actionL)
             {
-                case 'like':
-                case 'likes':
+                case 'react':
+                case 'reactions':
                 case 'threadmark':
                     $viewState = 'valid';
 
-                    if (($threadId = $this->request->get('thread_id')) &&
-                        ($thread = $this->em()->findCached('XF:Thread', $threadId)))
+                    // note; these are often ajax operation that we still want to consider as valid
+                    // $this->request is used and not $params as this requires less data to be logged into the xf_session_activity table
+                    $threadId = $this->request->get('thread_id', 0);
+                    $thread = $threadId ? $this->em()->findCached('XF:Thread', $threadId) : null;
+                    if ($thread instanceof \XF\Entity\Thread)
                     {
-
-                        /** @var \XF\Entity\Thread $thread */
                         $this->getUserActivityRepo()->pushViewUsageToParent($reply, $thread->Forum->Node);
                     }
 
