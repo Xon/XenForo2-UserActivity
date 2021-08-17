@@ -6,7 +6,6 @@ namespace SV\UserActivity\XF\Pub\Controller;
 use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\Entity\AbstractCollection;
-use XF\Mvc\Reply\View;
 use XF\Mvc\Reply\View as ViewReply;
 
 /**

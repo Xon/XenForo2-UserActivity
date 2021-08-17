@@ -5,7 +5,6 @@ namespace SV\UserActivity\NF\Tickets\Pub\Controller;
 
 use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserActivityInjector;
-use XF\Mvc\Reply\View;
 use XF\Mvc\Reply\View as ViewReply;
 
 /**

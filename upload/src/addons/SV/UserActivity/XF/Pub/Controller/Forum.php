@@ -6,7 +6,6 @@ use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\ParameterBag;
-use XF\Mvc\Reply\View;
 use XF\Mvc\Reply\View as ViewReply;
 
 /**
@@ -19,7 +18,7 @@ class Forum extends XFCP_Forum
         $response = parent::actionForum($params);
         // alias forum => node, limitations of activity tracking
 
-        if ($response instanceof View &&
+        if ($response instanceof ViewReply &&
             $this->responseType !== 'rss')
         {
             $forum = $response->getParam('forum');

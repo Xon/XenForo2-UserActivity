@@ -6,7 +6,7 @@ use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserActivityInjector;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
-use XF\Mvc\Reply\View;
+use XF\Mvc\Reply\View as ViewReply;
 
 class Post extends XFCP_Post
 {
@@ -22,7 +22,7 @@ class Post extends XFCP_Post
     /** @noinspection PhpMissingReturnTypeInspection */
     protected function canUpdateSessionActivity($action, ParameterBag $params, AbstractReply &$reply, &$viewState)
     {
-        if ($reply instanceof View)
+        if ($reply instanceof ViewReply)
         {
             $actionL = \strtolower($action);
             switch ($actionL)
@@ -48,7 +48,7 @@ class Post extends XFCP_Post
 
     protected function updateSessionActivity($action, ParameterBag $params, AbstractReply &$reply)
     {
-        if ($reply instanceof View &&
+        if ($reply instanceof ViewReply &&
             $this->request->get('thread_id') === false &&
             ($postId = $params->get('post_id')))
         {
