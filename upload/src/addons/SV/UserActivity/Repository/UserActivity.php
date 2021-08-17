@@ -18,40 +18,36 @@ class UserActivity extends Repository
     protected $logging       = true;
     protected $forceFallback = false;
 
-    /**
-     * @return int
-     */
-    public function getSampleInterval()
+    public function getSampleInterval(): int
     {
         return 30;
     }
 
+    /** @noinspection SpellCheckingInspection */
     public function supressLogging()
     {
         $this->logging = false;
     }
 
-    /**
-     * @return bool
-     */
-    public function isLogging()
+    public function isLogging(): bool
     {
         return $this->logging;
     }
 
     /**
      * @param array $handler
-     * @return array
+     * @return array{controller: string, id: int, type: string, actions: array<string>, activeKey: string}
      */
-    protected function validateHandler(array $handler)
+    protected function validateHandler(array $handler): array
     {
-        if (empty($handler['controller']) ||
-            empty($handler['id']) ||
-            !isset($handler['type']) || // Content Rating support rewrites the content type key as required
-            (!isset($handler['actions']) && !\is_array($handler['actions'])) ||
-            empty($handler['activeKey']))
+        if (!\array_key_exists('controller', $handler) ||
+            !\array_key_exists('id', $handler) ||
+            !\array_key_exists('type', $handler) || // Content Rating support rewrites the content type key as required
+            !\array_key_exists('actions', $handler) ||
+            !\is_array($handler['actions']) ||
+            !\array_key_exists('activeKey', $handler))
         {
-            $error = "activityInjector is not configured properly, expecting ['controller' => ..., 'id' => ..., 'type' => ..., 'actions' => ..., 'activeKey' => ..., ] ";
+            $error = "activityInjector is not configured properly, expecting array{controller: string, id: int, type: string, actions: array<string>, activeKey: string} ";
             if (\XF::$debugMode)
             {
                 throw new \LogicException($error);
@@ -67,18 +63,19 @@ class UserActivity extends Repository
 
     /**
      * @param string $controllerName
-     * @param array  $handler
+     * @param array{controller: string, id: int, type: string, actions: array<string>, activeKey: string}  $handler
+     * @return void
      */
-    public function registerHandler($controllerName, array $handler)
+    public function registerHandler(string $controllerName, array $handler)
     {
         $this->handlers[$controllerName] = $this->validateHandler($handler);
     }
 
     /**
      * @param string $controllerName
-     * @return array
+     * @return array{controller: string, id: int, type: string, actions: array<string>, activeKey: string}
      */
-    public function getHandler($controllerName)
+    public function getHandler(string $controllerName): array
     {
         if (empty($this->handlers[$controllerName]))
         {
@@ -91,6 +88,7 @@ class UserActivity extends Repository
     /**
      * @param AbstractReply|\XF\Widget\WidgetRenderer $response
      * @param array         $fetchData
+     * @return void
      */
     public function insertBulkUserActivityIntoViewResponse(&$response, array $fetchData)
     {
@@ -113,32 +111,34 @@ class UserActivity extends Repository
     /**
      * @param string        $controllerName
      * @param AbstractReply $response
+     * @return void
      */
-    public function insertUserActivityIntoViewResponse($controllerName, &$response)
+    public function insertUserActivityIntoViewResponse(string $controllerName, AbstractReply &$response)
     {
         if ($response instanceof View)
         {
             $handler = $this->getHandler($controllerName);
-            if (empty($handler))
+            if ($handler === null)
             {
                 return;
             }
             $contentType = $handler['type'];
             $contentIdField = $handler['id'];
             $content = $response->getParam($contentType);
-            if (empty($content[$contentIdField]))
+            $contentId = $content[$contentIdField] ?? null;
+            if ($contentId === null)
             {
                 return;
             }
 
             $visitor = \XF::visitor();
             $session = \XF::session();
-            $isRobot = $session->isStarted() ? $session->get('robot') : true;
+            $isRobot = !$session->isStarted() || $session->get('robot');
             if ($isRobot || !$visitor->hasPermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers'))
             {
                 return;
             }
-            $records = $this->getUsersViewing($contentType, $content[$contentIdField], $visitor);
+            $records = $this->getUsersViewing($contentType, $contentId, $visitor);
             if (!empty($records))
             {
                 $response->setParam('UA_Records', $records);
@@ -167,33 +167,32 @@ class UserActivity extends Repository
     }
 
     /**
-     * @noinspection PhpDocMissingThrowsInspection
      * @param array        $data
      * @param integer|null $targetRunTime
-     * @return array|bool
+     * @return array|null
+     * @noinspection PhpUnusedParameterInspection
      */
-    protected function _garbageCollectActivityFallback(/** @noinspection PhpUnusedParameterInspection */
-        array $data, $targetRunTime = null)
+    protected function _garbageCollectActivityFallback(array $data, int $targetRunTime = null)
     {
         $app = $this->app();
         $options = $app->options();
-        $onlineStatusTimeout = $options->onlineStatusTimeout * 60;
+        $onlineStatusTimeout = (int)($options->onlineStatusTimeout ?? 15) * 60;
         $end = \XF::$time - $onlineStatusTimeout;
         $end = $end - ($end % $this->getSampleInterval());
 
         $db = $this->db();
         $db->query('DELETE FROM `xf_sv_user_activity` WHERE `timestamp` < ?', $end);
 
-        return false;
+        return null;
     }
 
 
     /**
      * @param array $data
-     * @param null  $targetRunTime
-     * @return array|bool
+     * @param int|null  $targetRunTime
+     * @return array|null
      */
-    public function garbageCollectActivity(array $data, $targetRunTime = null)
+    public function garbageCollectActivity(array $data, int $targetRunTime = null)
     {
         $credis = $this->getCredis();
         if (!$credis)
@@ -205,11 +204,11 @@ class UserActivity extends Repository
         $cache = $app->cache('userActivity');
 
         $options = $app->options();
-        $onlineStatusTimeout = $options->onlineStatusTimeout * 60;
+        $onlineStatusTimeout = (int)($options->onlineStatusTimeout ?? 15) * 60;
         // we need to manually expire records out of the per content hash set if they are kept alive with activity
         $dataKey = $cache->getNamespacedId('activity_');
 
-        $end = $app->time - $onlineStatusTimeout;
+        $end = \XF::$time - $onlineStatusTimeout;
         $end = $end - ($end % $this->getSampleInterval());
 
         $dbSize = $credis->dbsize() ?: 100000;
@@ -232,7 +231,7 @@ class UserActivity extends Repository
             // the actual prune operation
             foreach ($keys as $key)
             {
-                $credis->zremrangebyscore($key, 0, $end);
+                $credis->zRemRangeByScore($key, 0, $end);
             }
 
             $runTime = \microtime(true) - $s;
@@ -246,7 +245,7 @@ class UserActivity extends Repository
 
         if (empty($cursor))
         {
-            return false;
+            return null;
         }
 
         return $data;
@@ -255,12 +254,11 @@ class UserActivity extends Repository
     const LUA_IFZADDEXPIRE_SH1 = 'dc1d76eefaca2f4ccf848a6ed7e80def200ac7b7';
 
     /**
-     * @noinspection PhpDocMissingThrowsInspection
      * @param array $updateSet
      * @param int   $time
      * @return void
      */
-    protected function _updateSessionActivityFallback($updateSet, $time)
+    protected function _updateSessionActivityFallback(array $updateSet, int $time)
     {
         $db = $this->db();
 
@@ -283,7 +281,6 @@ class UserActivity extends Repository
         {
             $db->query($sql, $sqlArgs);
         }
-        /** @noinspection PhpRedundantCatchClauseInspection */
         catch (\XF\Db\DeadlockException $e)
         {
             // deadlock detected, try rerunning once
@@ -292,13 +289,13 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param int $threadViewType
+     * @param int    $threadViewType
      * @param string $ip
      * @param string $robotKey
      * @param User   $viewingUser
-     * @return array
+     * @return array{user_id: int, username: string, visible: bool, robot: ?int, display_style_group_id: int, avatar_date: int, gravatar: string, ip: string }
      */
-    protected function buildSessionActivityBlob($threadViewType, $ip, $robotKey, User $viewingUser)
+    protected function buildSessionActivityBlob(int $threadViewType, string $ip, string $robotKey, User $viewingUser): array
     {
         $userId = $viewingUser->user_id;
         $data = [
@@ -312,14 +309,9 @@ class UserActivity extends Repository
             'ip'                     => null,
         ];
 
-        if ($userId)
+        if ($userId !== 0)
         {
-            if (!isset($threadViewType))
-            {
-                // add-on not fully installed
-                return [];
-            }
-            else if ($threadViewType === 0)
+            if ($threadViewType === 0)
             {
                 $data['display_style_group_id'] = $viewingUser->display_style_group_id;
             }
@@ -327,10 +319,6 @@ class UserActivity extends Repository
             {
                 $data['avatar_date'] = $viewingUser->avatar_date;
                 $data['gravatar'] = $viewingUser->gravatar;
-            }
-            else
-            {
-                return null;
             }
         }
         else
@@ -341,12 +329,7 @@ class UserActivity extends Repository
         return $data;
     }
 
-    /**
-     * @param array $trackBuffer
-     * @param array $updateBlob
-     * @return array
-     */
-    protected function buildSessionActivityUpdateSet(array $trackBuffer, array $updateBlob)
+    protected function buildSessionActivityUpdateSet(array $trackBuffer, array $updateBlob): array
     {
         // encode the data
         $raw = \implode("\n", $updateBlob);
@@ -364,8 +347,9 @@ class UserActivity extends Repository
 
     /**
      * @param array $updateSet
+     * @return void
      */
-    protected function updateSessionActivity($updateSet)
+    protected function updateSessionActivity(array $updateSet)
     {
         $score = \XF::$time - (\XF::$time % $this->getSampleInterval());
 
@@ -434,19 +418,21 @@ class UserActivity extends Repository
 
     /**
      * @param string  $contentType
-     * @param integer $contentId
-     * @param integer $start
-     * @param integer $end
+     * @param int $contentId
+     * @param int $start
+     * @param int $end
      * @return array
+     * @noinspection PhpUnusedParameterInspection
      */
-    protected function _getUsersViewingFallback(/** @noinspection PhpUnusedParameterInspection */
-        $contentType, $contentId, $start, $end)
+    protected function _getUsersViewingFallback(string $contentType, int $contentId, int $start, int $end): array
     {
         $db = $this->db();
-        $raw = $db->fetchAll(
-            'SELECT * FROM xf_sv_user_activity WHERE content_type = ? AND content_id = ? AND `timestamp` >= ? ORDER BY `timestamp` DESC',
-            [$contentType, $contentId, $start]
-        );
+        $raw = $db->fetchAll('
+            SELECT * 
+            FROM xf_sv_user_activity 
+            WHERE content_type = ? AND content_id = ? AND `timestamp` >= ? 
+            ORDER BY `timestamp` DESC
+        ', [$contentType, $contentId, $start]);
 
         $records = [];
         foreach ($raw as $row)
@@ -457,17 +443,26 @@ class UserActivity extends Repository
         return $records;
     }
 
+    //records: array{user_id: int, username: string, visible: bool, robot: ?int, display_style_group_id: int, avatar_date: int, gravatar: string, ip: string }
     /**
      * @param string $contentType
      * @param int    $contentId
      * @param User   $viewingUser
-     * @return array|null
+     * @return array{total: int, members: int, guests: int, robots: int, recordsUnseen: int, records: array}
      */
-    protected function getUsersViewing($contentType, $contentId, User $viewingUser)
+    protected function getUsersViewing(string $contentType, int $contentId, User $viewingUser): array
     {
-        $isGuest = $viewingUser->user_id ? false : true;
-        $memberCount = $isGuest ? 0 : 1;
-        $guestCount = 0;
+        $isGuest = $viewingUser->user_id === 0;
+        if ($isGuest)
+        {
+            $memberCount = 0;
+            $guestCount = 1;
+        }
+        else
+        {
+            $memberCount = 1;
+            $guestCount = 0;
+        }
         $robotCount = 0;
         $records = [];
         if (!$isGuest)
@@ -488,16 +483,17 @@ class UserActivity extends Repository
 
         $app = $this->app();
         $options = $app->options();
-        $start = \XF::$time - $options->onlineStatusTimeout * 60;
+        $start = \XF::$time - (int)($options->onlineStatusTimeout ?? 15) * 60;
         $start = $start - ($start % $this->getSampleInterval());
         $end = \XF::$time + 1;
+        $pruneChance = (float)($options->UA_pruneChance ?? 0.1);
 
         $credis = $this->getCredis();
         if (!$credis)
         {
             $onlineRecords = $this->_getUsersViewingFallback($contentType, $contentId, $start, $end);
             // check if the activity counter needs pruning
-            if ($options->UA_pruneChance > 0 && mt_rand() < $options->UA_pruneChance)
+            if ($pruneChance > 0 && \mt_rand() < $pruneChance)
             {
                 $this->_garbageCollectActivityFallback([]);
             }
@@ -510,10 +506,11 @@ class UserActivity extends Repository
 
             $onlineRecords = $credis->zRevRangeByScore($key, $end, $start, ['withscores' => true]);
             // check if the activity counter needs pruning
-            if (\mt_rand() < $options->UA_pruneChance)
+            if ($pruneChance > 0 && \mt_rand() < $pruneChance)
             {
+                $fillFactor = (float)($options->UA_fillFactor ?? 1.2);
                 $credis = $cache->getCredis(false);
-                if ($credis->zCard($key) >= \count($onlineRecords) * $options->UA_fillFactor)
+                if ($credis->zCard($key) >= \count($onlineRecords) * $fillFactor)
                 {
                     // O(log(N)+M) with N being the number of elements in the sorted set and M the number of elements removed by the operation.
                     $credis->zRemRangeByScore($key, 0, $start - 1);
@@ -521,7 +518,7 @@ class UserActivity extends Repository
             }
         }
 
-        $cutoff = $options->SV_UA_Cutoff;
+        $cutoff = (int)($options->SV_UA_Cutoff ?? 250);
         $memberVisibleCount = $isGuest ? 0 : 1;
         $recordsUnseen = 0;
 
@@ -589,9 +586,9 @@ class UserActivity extends Repository
      * @param int   $start
      * @param int   $end
      * @return array
+     * @noinspection PhpUnusedParameterInspection
      */
-    protected function _getUsersViewingCountFallback(/** @noinspection PhpUnusedParameterInspection */
-        $fetchData, $start, $end)
+    protected function _getUsersViewingCountFallback(array $fetchData, int $start, int $end): array
     {
         $db = $this->db();
 
@@ -634,7 +631,7 @@ class UserActivity extends Repository
      * @param array $fetchData
      * @return array
      */
-    protected function getUsersViewingCount($fetchData)
+    protected function getUsersViewingCount(array $fetchData): array
     {
         $app = $this->app();
         $options = $app->options();
@@ -643,13 +640,12 @@ class UserActivity extends Repository
         $end = \XF::$time + 1;
 
         $credis = $this->getCredis();
-        /** @noinspection PhpUndefinedFieldInspection */
-        $pruneChance = $options->UA_pruneChance;
+        $pruneChance = (float)($options->UA_pruneChance ?? 0.1);
         if (!$credis)
         {
             $onlineRecords = $this->_getUsersViewingCountFallback($fetchData, $start, $end);
             // check if the activity counter needs pruning
-            if ($pruneChance > 0 && mt_rand() < $pruneChance)
+            if ($pruneChance > 0 && \mt_rand() < $pruneChance)
             {
                 $this->_garbageCollectActivityFallback([]);
             }
@@ -673,6 +669,7 @@ class UserActivity extends Repository
                 }
             }
 
+            /** @noinspection PhpStatementHasEmptyBodyInspection */
             if (false) //$useLua
             {
                 /*
@@ -690,7 +687,7 @@ class UserActivity extends Repository
                 foreach ($args as $row)
                 {
                     $key = $cache->getNamespacedId("activity_{$row[0]}_{$row[1]}");
-                    $credis->zcount($key, $start, $end);
+                    $credis->zCount($key, $start, $end);
                 }
                 $ret = $credis->exec();
                 foreach ($args as $i => $row)
@@ -713,12 +710,13 @@ class UserActivity extends Repository
      * @param string $contentType
      * @param int    $contentId
      * @param string $activeKey
+     * @return void
      */
-    public function bufferTrackViewerUsage($contentType, $contentId, $activeKey)
+    public function bufferTrackViewerUsage(string $contentType, int $contentId, string $activeKey)
     {
-        if (!$contentType ||
-            !$contentId ||
-            !$activeKey ||
+        if (\strlen($contentType) === 0 ||
+            $contentId === 0 ||
+            \strlen($activeKey) === 0 ||
             !$this->isLogging())
         {
             return;
@@ -735,10 +733,11 @@ class UserActivity extends Repository
      * @param string|null $ip
      * @param string|null $robotKey
      * @param User|null   $viewingUser
+     * @return void
      */
-    public function flushTrackViewerUsageBuffer($ip = null, $robotKey = null, User $viewingUser = null)
+    public function flushTrackViewerUsageBuffer(string $ip = null, string $robotKey = null, User $viewingUser = null)
     {
-        if (!$this->isLogging() && !$this->trackBuffer)
+        if (!$this->isLogging() || \count($this->trackBuffer) === 0)
         {
             return;
         }
@@ -754,9 +753,9 @@ class UserActivity extends Repository
         }
         $options = \XF::options();
 
-        if (empty($robotKey) || $options->SV_UA_TrackRobots)
+        if (empty($robotKey) || ($options->SV_UA_TrackRobots ?? false))
         {
-            $threadViewType = $options->RainDD_UA_ThreadViewType;
+            $threadViewType = (int)($options->RainDD_UA_ThreadViewType ?? 0);
             $blob = $this->buildSessionActivityBlob($threadViewType, $ip, $robotKey, $viewingUser);
             if (!$blob)
             {
@@ -772,12 +771,7 @@ class UserActivity extends Repository
         }
     }
 
-    /**
-     * @param Tree $tree
-     * @param int  $depth
-     * @return array
-     */
-    public function flattenTreeToDepth(Tree $tree, $depth)
+    public function flattenTreeToDepth(Tree $tree, int $depth): array
     {
         $nodes = [];
         $flattenedNodeList = $tree->getFlattened();
@@ -796,9 +790,9 @@ class UserActivity extends Repository
      * @param int[] $nodeIds
      * @return int[]
      */
-    public function getFilteredForumNodeIds(array $nodeIds)
+    public function getFilteredForumNodeIds(array $nodeIds): array
     {
-        if (!$nodeIds)
+        if (\count($nodeIds) === 0)
         {
             return [];
         }
@@ -824,7 +818,7 @@ class UserActivity extends Repository
      * @param int[] $nodeIds
      * @return int[]
      */
-    public function getFilteredCategoryNodeIds(array $nodeIds)
+    public function getFilteredCategoryNodeIds(array $nodeIds): array
     {
         if (!$nodeIds)
         {
@@ -847,11 +841,11 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param array     $params
-     * @param string    $key
+     * @param array  $params
+     * @param string $key
      * @return int[]
      */
-    public function getFilteredThreadIds(array $params, $key)
+    public function getFilteredThreadIds(array $params, string $key): array
     {
         if (empty($params[$key]))
         {
@@ -884,8 +878,9 @@ class UserActivity extends Repository
      * @param Node     $node
      * @param bool     $pushToNode
      * @param string[] $keys
+     * @return void
      */
-    public function pushViewUsageToParent(View $response, Node $node, $pushToNode = false, $keys = ['forum'])
+    public function pushViewUsageToParent(View $response, Node $node, bool $pushToNode = false, array $keys = ['forum'])
     {
         $options = \XF::options();
         foreach($keys as $key)
@@ -902,23 +897,23 @@ class UserActivity extends Repository
         }
 
         $session = \XF::session();
-        $robotKey = $session->isStarted() ? $session->get('robot') : true;
-        if ($robotKey)
+        $isRobot = !$session->isStarted() || $session->get('robot');
+        if ($isRobot)
         {
-            if (empty($options->SV_UA_TrackRobots))
+            if (!($options->SV_UA_TrackRobots ?? false))
             {
                 return;
             }
         }
-        else if (!\XF::visitor()->user_id)
+        else if (\XF::visitor()->user_id === 0)
         {
-            if (empty($options->svUserActivityTrackGuests))
+            if (!($options->svUserActivityTrackGuests ?? false))
             {
                 return;
             }
         }
 
-        $nodeTrackLimit = \intval($options->svUAThreadNodeTrackLimit);
+        $nodeTrackLimit = (int)($options->svUAThreadNodeTrackLimit ?? 1);
         $nodeTrackLimit = $nodeTrackLimit < 0 ? PHP_INT_MAX : $nodeTrackLimit;
 
         /** @var  UserActivity $repo */
