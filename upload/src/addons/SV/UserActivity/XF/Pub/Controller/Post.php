@@ -39,6 +39,7 @@ class Post extends XFCP_Post
                         /** @var \XF\Entity\Thread $thread */
                         $this->getUserActivityRepo()->pushViewUsageToParent($reply, $thread->Forum->Node);
                     }
+
                     return true;
             }
         }
@@ -46,29 +47,47 @@ class Post extends XFCP_Post
         return parent::canUpdateSessionActivity($action, $params, $reply, $viewState);
     }
 
+    protected function svInjectThreadIdIntoRequest(ViewReply $reply, ParameterBag $params)
+    {
+        $postId = (int)$params->get('post_id', 0);
+        if ($postId !== 0)
+        {
+            $post = $this->em()->findCached('XF:Post', $postId);
+            if ($post instanceof \XF\Entity\Post)
+            {
+                $this->request->set('thread_id', $post->thread_id);
+
+                return;
+            }
+        }
+
+        $post = $reply->getParam('post');
+        $threadId = (int)($post['thread_id'] ?? 0);
+        if ($threadId !== 0)
+        {
+            $this->request->set('thread_id', $threadId);
+
+            return;
+        }
+
+        $thread = $reply->getParam('thread');
+        $threadId = (int)($thread['thread_id'] ?? 0);
+        if ($threadId !== 0)
+        {
+            $this->request->set('thread_id', $threadId);
+        }
+    }
+
     protected function updateSessionActivity($action, ParameterBag $params, AbstractReply &$reply)
     {
         if ($reply instanceof ViewReply &&
-            $this->request->get('thread_id') === false &&
-            ($postId = $params->get('post_id')))
+            $this->request->get('thread_id') === false)
         {
             // $reply should be Error if they don't have permission.
-            // if the entity is cached, then this request returned something useful,
-            /** \XF\Entity\Post */
-            $post = $this->em()->findCached('XF:Post', $postId);
-            if ($post)
-            {
-                $this->request->set('thread_id', $post['thread_id']);
-            }
-            else if ($post = $reply->getParam('post') && isset($post['thread_id']))
-            {
-                $this->request->set('thread_id', $post['thread_id']);
-            }
-            else if ($thread = $reply->getParam('thread') && isset($thread['thread_id']))
-            {
-                $this->request->set('thread_id', $thread['thread_id']);
-            }
+            // if the entity is cached, then this request returned something useful
+            $this->svInjectThreadIdIntoRequest($reply, $params);
         }
+
         parent::updateSessionActivity($action, $params, $reply);
     }
 
