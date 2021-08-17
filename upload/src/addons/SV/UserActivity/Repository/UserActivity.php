@@ -292,7 +292,7 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param string $threadViewType
+     * @param int $threadViewType
      * @param string $ip
      * @param string $robotKey
      * @param User   $viewingUser
@@ -319,11 +319,11 @@ class UserActivity extends Repository
                 // add-on not fully installed
                 return [];
             }
-            else if ($threadViewType == 0)
+            else if ($threadViewType === 0)
             {
                 $data['display_style_group_id'] = $viewingUser->display_style_group_id;
             }
-            else if ($threadViewType == 1)
+            else if ($threadViewType === 1)
             {
                 $data['avatar_date'] = $viewingUser->avatar_date;
                 $data['gravatar'] = $viewingUser->gravatar;

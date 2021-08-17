@@ -18,7 +18,7 @@ class SessionActivity extends XFCP_SessionActivity
         /** @var \SV\UserActivity\Repository\UserActivity $userActivityRepo */
         $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');
         $visitor = \XF::visitor();
-        if ($userActivityRepo->isLogging() && $viewState == 'valid' && $userId === $visitor->user_id)
+        if ($userActivityRepo->isLogging() && $viewState === 'valid' && $userId === $visitor->user_id)
         {
             $handler = $userActivityRepo->getHandler($controller);
             if (!empty($handler))

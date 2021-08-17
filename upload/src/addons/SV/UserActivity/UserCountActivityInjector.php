@@ -40,7 +40,7 @@ trait UserCountActivityInjector
             {
                 continue;
             }
-            if (!\in_array($actionL, $config['actions']))
+            if (!\in_array($actionL, $config['actions'], true))
             {
                 continue;
             }
