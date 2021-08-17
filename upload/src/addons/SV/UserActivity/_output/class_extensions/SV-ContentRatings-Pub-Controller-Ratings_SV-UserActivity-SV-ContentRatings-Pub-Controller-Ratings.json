@@ -1,6 +1,0 @@
-{
-    "from_class": "SV\\ContentRatings\\Pub\\Controller\\Ratings",
-    "to_class": "SV\\UserActivity\\SV\\ContentRatings\\Pub\\Controller\\Ratings",
-    "execute_order": 5567,
-    "active": true
-}

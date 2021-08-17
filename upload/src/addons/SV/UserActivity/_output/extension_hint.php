@@ -13,11 +13,6 @@ namespace SV\UserActivity\NF\Tickets\Pub\Controller
 	class XFCP_Ticket extends \NF\Tickets\Pub\Controller\Ticket {}
 }
 
-namespace SV\UserActivity\SV\ContentRatings\Pub\Controller
-{
-	class XFCP_Ratings extends \SV\ContentRatings\Pub\Controller\Ratings {}
-}
-
 namespace SV\UserActivity\XF\Pub\Controller
 {
 	class XFCP_Category extends \XF\Pub\Controller\Category {}
