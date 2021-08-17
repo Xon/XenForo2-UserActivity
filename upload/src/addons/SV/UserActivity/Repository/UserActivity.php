@@ -9,7 +9,7 @@ use XF\Entity\Thread;
 use XF\Entity\User;
 use XF\Mvc\Entity\Repository;
 use XF\Mvc\Reply\AbstractReply;
-use XF\Mvc\Reply\View;
+use XF\Mvc\Reply\View as ViewReply;
 use XF\Tree;
 
 class UserActivity extends Repository
@@ -63,7 +63,7 @@ class UserActivity extends Repository
 
     /**
      * @param string $controllerName
-     * @param array{controller: string, id: int, type: string, actions: array<string>, activeKey: string}  $handler
+     * @param array{controller: string, id: string, type: string, actions: array<string>, activeKey: string}  $handler
      * @return void
      */
     public function registerHandler(string $controllerName, array $handler)
@@ -98,7 +98,7 @@ class UserActivity extends Repository
             return;
         }
 
-        if ($response instanceof View)
+        if ($response instanceof ViewReply)
         {
             $response->setParam('UA_RecordCounts', $this->getUsersViewingCount($fetchData));
         }
@@ -115,7 +115,7 @@ class UserActivity extends Repository
      */
     public function insertUserActivityIntoViewResponse(string $controllerName, AbstractReply &$response)
     {
-        if ($response instanceof View)
+        if ($response instanceof ViewReply)
         {
             $handler = $this->getHandler($controllerName);
             if ($handler === null)
@@ -874,13 +874,13 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param View     $response
-     * @param Node     $node
-     * @param bool     $pushToNode
-     * @param string[] $keys
+     * @param ViewReply $response
+     * @param Node      $node
+     * @param bool      $pushToNode
+     * @param string[]  $keys
      * @return void
      */
-    public function pushViewUsageToParent(View $response, Node $node, bool $pushToNode = false, array $keys = ['forum'])
+    public function pushViewUsageToParent(ViewReply $response, Node $node, bool $pushToNode = false, array $keys = ['forum'])
     {
         $options = \XF::options();
         foreach($keys as $key)

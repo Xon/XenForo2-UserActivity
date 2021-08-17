@@ -7,6 +7,7 @@ use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\View;
+use XF\Mvc\Reply\View as ViewReply;
 
 /**
  * Extends \XF\Pub\Controller\Forum
@@ -19,29 +20,28 @@ class Forum extends XFCP_Forum
         // alias forum => node, limitations of activity tracking
 
         if ($response instanceof View &&
-            $this->responseType !== 'rss' &&
-            ($forum = $response->getParam('forum')))
+            $this->responseType !== 'rss')
         {
-            /** @var \XF\Entity\Forum $forum */
-            $this->getUserActivityRepo()->pushViewUsageToParent($response, $forum->Node);
+            $forum = $response->getParam('forum');
+            if ($forum instanceof \XF\Entity\Forum)
+            {
+                $this->getUserActivityRepo()->pushViewUsageToParent($response, $forum->Node);
+            }
         }
 
         return $response;
     }
 
-    protected function forumFetcher(
-        /** @noinspection PhpUnusedParameterInspection */
-        View $response,
-        $action,
-        array $config)
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function forumFetcher(ViewReply $response, string $action, array $config): array
     {
-        /** @var \XF\Entity\Forum $forum */
-        if ($forum = $response->getParam('forum'))
+        $forum = $response->getParam('forum');
+        if ($forum instanceof \XF\Entity\Forum)
         {
-            return $forum->node_id;
+            return [$forum->node_id];
         }
 
-        return null;
+        return [];
     }
 
     /**
@@ -50,7 +50,7 @@ class Forum extends XFCP_Forum
      * @param \XF\Tree $nodeTree
      * @return int[]
      */
-    protected function nodeListFetcher($typeFilter, $depth, \XF\Tree $nodeTree = null)
+    protected function nodeListFetcher(string $typeFilter, int $depth, \XF\Tree $nodeTree = null): array
     {
         $nodeIds = [];
         $flattenedNodeList = $nodeTree ? $nodeTree->getFlattened() : [];
@@ -65,12 +65,8 @@ class Forum extends XFCP_Forum
         return $nodeIds;
     }
 
-    protected function forumListFetcher(
-        /** @noinspection PhpUnusedParameterInspection */
-        View $response,
-        $action,
-        array $config)
-
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function forumListFetcher(ViewReply $response, string $action, array $config): array
     {
         $repo = $this->getUserActivityRepo();
         $depth = $action === 'list' ? 1 : 0;
@@ -79,12 +75,8 @@ class Forum extends XFCP_Forum
         return $repo->getFilteredForumNodeIds($this->nodeListFetcher('Forum', $depth, $nodeTree));
     }
 
-    protected function categoryListFetcher(
-        /** @noinspection PhpUnusedParameterInspection */
-        View $response,
-        $action,
-        array $config)
-
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function categoryListFetcher(ViewReply $response, string $action, array $config): array
     {
         $repo = $this->getUserActivityRepo();
         $depth = $action === 'list' ? 1 : 0;
@@ -93,22 +85,14 @@ class Forum extends XFCP_Forum
         return $repo->getFilteredCategoryNodeIds($this->nodeListFetcher('Category', $depth, $nodeTree));
     }
 
-    protected function threadFetcher(
-        /** @noinspection PhpUnusedParameterInspection */
-        View $response,
-        $action,
-        array $config)
-
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function threadFetcher(ViewReply $response, string $action, array $config): array
     {
         return $this->getUserActivityRepo()->getFilteredThreadIds($response->getParams(),'threads');
     }
 
-    protected function stickyThreadFetcher(
-        /** @noinspection PhpUnusedParameterInspection */
-        View $response,
-        $action,
-        array $config)
-
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function stickyThreadFetcher(ViewReply $response, string $action, array $config): array
     {
         return $this->getUserActivityRepo()->getFilteredThreadIds($response->getParams(),'stickyThreads');
     }

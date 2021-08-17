@@ -19,6 +19,7 @@ class Post extends XFCP_Post
     ];
     use UserActivityInjector;
 
+    /** @noinspection PhpMissingReturnTypeInspection */
     protected function canUpdateSessionActivity($action, ParameterBag $params, AbstractReply &$reply, &$viewState)
     {
         if ($reply instanceof View)

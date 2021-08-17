@@ -7,32 +7,25 @@ use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Reply\View;
+use XF\Mvc\Reply\View as ViewReply;
 
 /**
  * Extends \XF\Pub\Controller\Watched
  */
 class Watched extends XFCP_Watched
 {
-    protected function threadFetcher(
-        /** @noinspection PhpUnusedParameterInspection */
-        View $response,
-        $action,
-        array $config)
-
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function threadFetcher(ViewReply $response, string $action, array $config): array
     {
         return $this->getUserActivityRepo()->getFilteredThreadIds($response->getParams(),'threads');
     }
 
-    protected function forumListFetcher(
-        /** @noinspection PhpUnusedParameterInspection */
-        View $response,
-        $action,
-        array $config)
-
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function forumListFetcher(ViewReply $response, string $action, array $config): array
     {
         /** @var int[] $nodeIds */
-        /** @var AbstractCollection $watchedForums */
-        if ($watchedForums = $response->getParam('watchedForums'))
+        $watchedForums = $response->getParam('watchedForums');
+        if ($watchedForums instanceof AbstractCollection)
         {
             $nodeIds = \array_column($watchedForums->toArray(), 'node_id');
         }

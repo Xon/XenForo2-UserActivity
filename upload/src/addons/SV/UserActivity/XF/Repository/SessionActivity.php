@@ -6,12 +6,13 @@ class SessionActivity extends XFCP_SessionActivity
 {
     /**
      * @param int $userId
-     * @param $ip
+     * @param mixed $ip
      * @param string $controller
      * @param string $action
      * @param array $params
      * @param string $viewState enum('valid','error')
      * @param string $robotKey
+     * @return void
      */
     public function updateSessionActivity($userId, $ip, $controller, $action, array $params, $viewState, $robotKey)
     {
@@ -32,6 +33,7 @@ class SessionActivity extends XFCP_SessionActivity
 
             $userActivityRepo->flushTrackViewerUsageBuffer($ip, $robotKey, $visitor);
         }
-        return parent::updateSessionActivity($userId, $ip, $controller, $action, $params, $viewState, $robotKey);
+
+        parent::updateSessionActivity($userId, $ip, $controller, $action, $params, $viewState, $robotKey);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace SV\UserActivity\NF\Calendar\Pub\Controller;
 
-use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserActivityInjector;
 
 /**

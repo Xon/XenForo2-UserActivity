@@ -5,18 +5,15 @@ namespace SV\UserActivity\XF\Pub\Controller;
 use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\Reply\View;
+use XF\Mvc\Reply\View as ViewReply;
 
 /**
  * Extends \XF\Pub\Controller\WhatsNewPost
  */
 class WhatsNewPost extends XFCP_WhatsNewPost
 {
-    protected function threadFetcher(
-        /** @noinspection PhpUnusedParameterInspection */
-        View $response,
-        $action,
-        array $config)
-
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function threadFetcher(ViewReply $response, string $action, array $config): array
     {
         return $this->getUserActivityRepo()->getFilteredThreadIds($response->getParams(),'threads');
     }

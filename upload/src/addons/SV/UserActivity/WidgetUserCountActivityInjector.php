@@ -1,11 +1,15 @@
 <?php
+/**
+ * @noinspection PhpMultipleClassDeclarationsInspection
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\UserActivity;
 
 use SV\UserActivity\Repository\UserActivity;
 
 /**
- * @property array $options
+ * @property array{userActivity: bool} $options
  * @property array $widgetCountActivityInjector
  */
 trait WidgetUserCountActivityInjector
@@ -20,8 +24,8 @@ trait WidgetUserCountActivityInjector
      */
     protected function setupOptions(array $options)
     {
-        /** @noinspection PhpUndefinedClassInspection */
         $options = parent::setupOptions($options);
+
         return \array_replace($this->svUserActivityDefaultOptions, $options);
     }
 
@@ -33,7 +37,6 @@ trait WidgetUserCountActivityInjector
      */
     public function verifyOptions(\XF\Http\Request $request, array &$options, &$error = null)
     {
-        /** @noinspection PhpUndefinedClassInspection */
         $result = parent::verifyOptions($request, $options, $error);
 
         $options['userActivity'] = $request->filter('userActivity', 'bool');
@@ -46,7 +49,6 @@ trait WidgetUserCountActivityInjector
      */
     public function render()
     {
-        /** @noinspection PhpUndefinedClassInspection */
         return $this->_injectUserCountIntoResponse(parent::render());
     }
 
@@ -75,7 +77,13 @@ trait WidgetUserCountActivityInjector
                 continue;
             }
             */
-            $callback = $config['fetcher'];
+            /** @var array{type:string, fetcher: string|callable} $config */
+            $type = $config['type'] ?? null;
+            if ($type === null)
+            {
+                continue;
+            }
+            $callback = $config['fetcher'] ?? null;
             if (\is_string($callback))
             {
                 $callback = [$this, $callback];
@@ -96,7 +104,6 @@ trait WidgetUserCountActivityInjector
                 $output = [$output];
             }
 
-            $type = $config['type'];
             if (!isset($fetchData[$type]))
             {
                 $fetchData[$type] = [];
@@ -107,7 +114,7 @@ trait WidgetUserCountActivityInjector
 
         if ($fetchData)
         {
-            /** @var  UserActivity $repo */
+            /** @var UserActivity $repo */
             $repo = \XF::repository('SV\UserActivity:UserActivity');
             $repo->insertBulkUserActivityIntoViewResponse($renderer, $fetchData);
         }

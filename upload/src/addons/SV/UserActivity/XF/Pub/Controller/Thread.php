@@ -6,7 +6,7 @@ use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\ParameterBag;
-use XF\Mvc\Reply\View;
+use XF\Mvc\Reply\View as ViewReply;
 
 class Thread extends XFCP_Thread
 {
@@ -14,52 +14,45 @@ class Thread extends XFCP_Thread
     {
         $response = parent::actionIndex($params);
 
-        if ($response instanceof view &&
-            ($thread = $response->getParam('thread')))
+        if ($response instanceof ViewReply)
         {
-            /** @var \XF\Entity\Thread $thread */
-            $this->getUserActivityRepo()->pushViewUsageToParent($response, $thread->Forum->Node, true);
+            $thread = $response->getParam('thread');
+            if ($thread instanceof \XF\Entity\Thread)
+            {
+                $this->getUserActivityRepo()->pushViewUsageToParent($response, $thread->Forum->Node, true);
+            }
         }
 
         return $response;
     }
 
-    protected function similarThreadFetcher(
-        /** @noinspection PhpUnusedParameterInspection */
-        View $response,
-        $action,
-        array $config)
-
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function similarThreadFetcher(ViewReply $response, string $action, array $config): array
     {
-        if ($threads = $response->getParam('svSimilarThreads'))
+        $threadIds = [];
+        $threads = $response->getParam('svSimilarThreads');
+        if ($threads)
         {
-            $threadIds = [];
             /** @var \XF\Entity\Thread $thread */
             foreach ($threads as $thread)
             {
                 $threadIds[] = $thread->thread_id;
             }
-
-            return $threadIds;
         }
 
-        return null;
+        return $threadIds;
     }
 
-    protected function threadFetcher(
-        /** @noinspection PhpUnusedParameterInspection */
-        View $response,
-        $action,
-        array $config)
-
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function threadFetcher(ViewReply $response, string $action, array $config): array
     {
-        /** @var \XF\Entity\Thread $thread */
-        if ($thread = $response->getParam('thread'))
+        $thread = $response->getParam('thread');
+        if ($thread instanceof \XF\Entity\Thread )
         {
             return [$thread->thread_id];
         }
 
-        return null;
+        return [];
     }
 
     protected $countActivityInjector = [

@@ -5,8 +5,8 @@ namespace SV\UserActivity\NF\Tickets\Pub\Controller;
 
 use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserActivityInjector;
-use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\View;
+use XF\Mvc\Reply\View as ViewReply;
 
 /**
  * Extends \NF\Tickets\Pub\Controller\Ticket
@@ -28,20 +28,16 @@ class Ticket extends XFCP_Ticket
 //    }
 
 
-    protected function ticketFetcher(
-        /** @noinspection PhpUnusedParameterInspection */
-        View $response,
-        $action,
-        array $config)
-
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function ticketFetcher(ViewReply $response, string $action, array $config): array
     {
-        /** @var \NF\Tickets\Entity\Ticket $ticket */
-        if ($ticket = $response->getParam('ticket'))
+        $ticket = $response->getParam('ticket');
+        if ($ticket instanceof \NF\Tickets\Entity\Ticket)
         {
             return [$ticket->ticket_id];
         }
 
-        return null;
+        return [];
     }
 
     protected $activityInjector = [

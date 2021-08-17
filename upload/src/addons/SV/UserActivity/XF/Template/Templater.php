@@ -9,6 +9,7 @@ namespace SV\UserActivity\XF\Template;
  */
 class Templater extends XFCP_Templater
 {
+    /** @noinspection PhpMissingReturnTypeInspection */
     public function fnAvatar($templater, &$escape, $user, $size, $canonical = false, $attributes = [])
     {
         $fauxUser = $this->processAttributeToRaw($attributes, 'faux-user', '', true);

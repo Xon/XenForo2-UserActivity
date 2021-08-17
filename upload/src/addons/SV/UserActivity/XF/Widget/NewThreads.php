@@ -10,19 +10,16 @@ use SV\UserActivity\WidgetUserCountActivityInjector;
  */
 class NewThreads extends XFCP_NewThreads
 {
-    protected function threadFetcher(
-        /** @noinspection PhpUnusedParameterInspection */
-        \XF\Widget\WidgetRenderer $renderer,
-        array $config)
-
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function threadFetcher(\XF\Widget\WidgetRenderer $renderer, array $config): array
     {
         return $this->getUserActivityRepo()->getFilteredThreadIds($renderer->getViewParams(), 'threads');
     }
 
     protected $widgetCountActivityInjector = [
         [
-            'type'      => 'thread',
-            'fetcher'   => 'threadFetcher'
+            'type'    => 'thread',
+            'fetcher' => 'threadFetcher'
         ],
     ];
     use WidgetUserCountActivityInjector;

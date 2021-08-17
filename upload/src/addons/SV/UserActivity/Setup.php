@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @noinspection PhpUnnecessaryLocalVariableInspection
+ */
 
 namespace SV\UserActivity;
 
@@ -96,10 +98,7 @@ class Setup extends AbstractSetup
         }
     }
 
-    /**
-     * @return array
-     */
-    protected function getTables()
+    protected function getTables(): array
     {
         $tables = [];
 
@@ -117,17 +116,14 @@ class Setup extends AbstractSetup
         return $tables;
     }
 
-    /**
-     * @return array
-     */
-    protected function getAlterTables()
+    protected function getAlterTables(): array
     {
         $tables = [];
 
         return $tables;
     }
 
-    protected function getRemoveAlterTables()
+    protected function getRemoveAlterTables(): array
     {
         $tables = [];
 
@@ -143,7 +139,7 @@ class Setup extends AbstractSetup
         $this->checkRequirementsTrait($errors,$warnings);
         /** @var Redis $cache */
         $cache = \XF::app()->cache('userActivity');
-        if (!($cache instanceof Redis) || !($credis = $cache->getCredis(false)))
+        if (!($cache instanceof Redis) || $cache->getCredis(false) === null)
         {
             $warnings[] = 'It is recommended that Redis Cache to be installed and configured, but a MySQL fallback is supported';
         }

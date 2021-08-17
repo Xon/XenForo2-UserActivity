@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMultipleClassDeclarationsInspection
+ */
 
 namespace SV\UserActivity;
 
@@ -6,20 +9,16 @@ use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 
 /**
- * @property array activityInjector
+ * @property array{controller: string, id: string, type: string, actions: array<string>, activeKey: ?string} activityInjector
  */
 trait UserActivityInjector
 {
-    /**
-     * @param bool $display
-     * @return array
-     */
-    protected function getSvActivityInjector($display)
+    protected function getSvActivityInjector(bool $display): array
     {
         if (empty($this->activityInjector['controller']) ||
             empty($this->activityInjector['activeKey']))
         {
-            return null;
+            return [];
         }
 
         $key = $this->activityInjector['activeKey'];
@@ -28,14 +27,14 @@ trait UserActivityInjector
         {
             if (empty($options->svUADisplayUsers[$key]))
             {
-                return null;
+                return [];
             }
         }
         else
         {
             if (empty($options->svUAPopulateUsers[$key]))
             {
-                return null;
+                return [];
             }
         }
 
@@ -48,9 +47,9 @@ trait UserActivityInjector
      */
     public function preDispatch($action, ParameterBag $params)
     {
-        /** @noinspection PhpUndefinedClassInspection */
         parent::preDispatch($action, $params);
-        if ($activityInjector = $this->getSvActivityInjector(false))
+        $activityInjector = $this->getSvActivityInjector(false);
+        if (\count($activityInjector) !== 0)
         {
             /** @var \SV\UserActivity\Repository\UserActivity $userActivityRepo */
             $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');
@@ -59,15 +58,15 @@ trait UserActivityInjector
     }
 
     /**
-     * @param $action
+     * @param string $action
      * @param ParameterBag $params
      * @param AbstractReply $reply
      */
     public function postDispatch($action, ParameterBag $params, AbstractReply &$reply)
     {
-        /** @noinspection PhpUndefinedClassInspection */
         parent::postDispatch($action, $params, $reply);
-        if (($activityInjector = $this->getSvActivityInjector(true)) &&
+        $activityInjector = $this->getSvActivityInjector(true);
+        if (\count($activityInjector) !== 0 &&
             !empty($activityInjector['actions']))
         {
             $actionL = \strtolower($action);
