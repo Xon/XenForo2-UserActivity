@@ -23,7 +23,7 @@ class Post extends XFCP_Post
     {
         if ($reply instanceof View)
         {
-            $actionL = strtolower($action);
+            $actionL = \strtolower($action);
             switch ($actionL)
             {
                 case 'like':

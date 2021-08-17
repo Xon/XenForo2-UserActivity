@@ -33,23 +33,23 @@ trait UserCountActivityInjector
     {
         $fetchData = [];
         $options = \XF::options();
-        $actionL = strtolower($action);
+        $actionL = \strtolower($action);
         foreach ($this->countActivityInjector as $config)
         {
             if (empty($options->svUADisplayCounts[$config['activeKey']]))
             {
                 continue;
             }
-            if (!in_array($actionL, $config['actions']))
+            if (!\in_array($actionL, $config['actions']))
             {
                 continue;
             }
             $callback = $config['fetcher'];
-            if (is_string($callback))
+            if (\is_string($callback))
             {
                 $callback = [$this, $callback];
             }
-            if (!is_callable($callback))
+            if (!\is_callable($callback))
             {
                 continue;
             }
@@ -60,7 +60,7 @@ trait UserCountActivityInjector
                 continue;
             }
 
-            if (!is_array($output))
+            if (!\is_array($output))
             {
                 $output = [$output];
             }
@@ -71,7 +71,7 @@ trait UserCountActivityInjector
                 $fetchData[$type] = [];
             }
 
-            $fetchData[$type] = array_merge($fetchData[$type], $output);
+            $fetchData[$type] = \array_merge($fetchData[$type], $output);
         }
 
         if ($fetchData)

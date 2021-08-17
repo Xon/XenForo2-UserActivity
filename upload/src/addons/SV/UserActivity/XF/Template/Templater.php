@@ -12,7 +12,7 @@ class Templater extends XFCP_Templater
     public function fnAvatar($templater, &$escape, $user, $size, $canonical = false, $attributes = [])
     {
         $fauxUser = $this->processAttributeToRaw($attributes, 'faux-user', '', true);
-        if ($fauxUser && is_array($user))
+        if ($fauxUser && \is_array($user))
         {
             $em = \XF::em();
             $fauxUser = $em->findCached('XF:User', $user['user_id']);

@@ -48,7 +48,7 @@ class UserActivity extends Repository
         if (empty($handler['controller']) ||
             empty($handler['id']) ||
             !isset($handler['type']) || // Content Rating support rewrites the content type key as required
-            (!isset($handler['actions']) && !is_array($handler['actions'])) ||
+            (!isset($handler['actions']) && !\is_array($handler['actions'])) ||
             empty($handler['activeKey']))
         {
             $error = "activityInjector is not configured properly, expecting ['controller' => ..., 'id' => ..., 'type' => ..., 'actions' => ..., 'activeKey' => ..., ] ";
@@ -218,7 +218,7 @@ class UserActivity extends Repository
         $loopGuard = ($dbSize / $count) + 10;
         // only valid values for cursor are null (the stack turns it into a 0) or whatever scan return
         $cursor = $data['cursor'] ?? null;
-        $s = microtime(true);
+        $s = \microtime(true);
         do
         {
             $keys = $credis->scan($cursor, $dataKey . "*", $count);
@@ -235,7 +235,7 @@ class UserActivity extends Repository
                 $credis->zremrangebyscore($key, 0, $end);
             }
 
-            $runTime = microtime(true) - $s;
+            $runTime = \microtime(true) - $s;
             if ($targetRunTime && $runTime > $targetRunTime)
             {
                 break;
@@ -273,7 +273,7 @@ class UserActivity extends Repository
             $sqlArgs[] = $time;
             $sqlParts[] = '(?,?,?,?)';
         }
-        $sql = implode(',', $sqlParts);
+        $sql = \implode(',', $sqlParts);
         $sql = "-- XFDB=noForceAllWrite
         INSERT INTO xf_sv_user_activity (content_type, content_id, `blob`, `timestamp`) VALUES 
         {$sql}
@@ -349,7 +349,7 @@ class UserActivity extends Repository
     protected function buildSessionActivityUpdateSet(array $trackBuffer, array $updateBlob)
     {
         // encode the data
-        $raw = implode("\n", $updateBlob);
+        $raw = \implode("\n", $updateBlob);
         $outputSet = [];
         foreach ($trackBuffer as $contentType => $contentIds)
         {
@@ -382,7 +382,7 @@ class UserActivity extends Repository
 
         // record keeping
         $options = \XF::options();
-        $onlineStatusTimeout = max(60, intval($options->onlineStatusTimeout) * 60);
+        $onlineStatusTimeout = \max(60, \intval($options->onlineStatusTimeout) * 60);
 
         // not ideal, but fairly cheap
         // cluster support requires that each `key` potentially be on a separate host
@@ -510,10 +510,10 @@ class UserActivity extends Repository
 
             $onlineRecords = $credis->zRevRangeByScore($key, $end, $start, ['withscores' => true]);
             // check if the activity counter needs pruning
-            if (mt_rand() < $options->UA_pruneChance)
+            if (\mt_rand() < $options->UA_pruneChance)
             {
                 $credis = $cache->getCredis(false);
-                if ($credis->zCard($key) >= count($onlineRecords) * $options->UA_fillFactor)
+                if ($credis->zCard($key) >= \count($onlineRecords) * $options->UA_fillFactor)
                 {
                     // O(log(N)+M) with N being the number of elements in the sorted set and M the number of elements removed by the operation.
                     $credis->zRemRangeByScore($key, 0, $start - 1);
@@ -525,7 +525,7 @@ class UserActivity extends Repository
         $memberVisibleCount = $isGuest ? 0 : 1;
         $recordsUnseen = 0;
 
-        if (is_array($onlineRecords))
+        if (\is_array($onlineRecords))
         {
             $seen = [$viewingUser->user_id => true];
             $bypassUserPrivacy = $viewingUser->canBypassUserPrivacy();
@@ -533,8 +533,8 @@ class UserActivity extends Repository
 
             foreach ($onlineRecords as $rec => $score)
             {
-                $data = explode("\n", $rec);
-                $rec = @array_combine(self::CacheKeys, $data);
+                $data = \explode("\n", $rec);
+                $rec = @\array_combine(self::CacheKeys, $data);
                 if (empty($rec))
                 {
                     continue;
@@ -599,7 +599,7 @@ class UserActivity extends Repository
         $sql = [];
         foreach ($fetchData as $contentType => $list)
         {
-            $list = array_filter(array_map('intval', array_unique($list)));
+            $list = \array_filter(\array_map('\intval', \array_unique($list)));
             if ($list)
             {
                 $sql[] = "\n(content_type = " . $db->quote($contentType) . " AND content_id in (" . $db->quote($list) . "))";
@@ -666,7 +666,7 @@ class UserActivity extends Repository
             $args = [];
             foreach ($fetchData as $contentType => $list)
             {
-                $list = array_filter(array_map('intval', array_unique($list)));
+                $list = \array_filter(\array_map('\intval', \array_unique($list)));
                 foreach ($list as $contentId)
                 {
                     $args[] = [$contentType, $contentId];
@@ -695,7 +695,7 @@ class UserActivity extends Repository
                 $ret = $credis->exec();
                 foreach ($args as $i => $row)
                 {
-                    $val = intval($ret[$i]);
+                    $val = \intval($ret[$i]);
                     if ($val)
                     {
                         $onlineRecords[$row[0]][$row[1]] = $val;
@@ -918,7 +918,7 @@ class UserActivity extends Repository
             }
         }
 
-        $nodeTrackLimit = intval($options->svUAThreadNodeTrackLimit);
+        $nodeTrackLimit = \intval($options->svUAThreadNodeTrackLimit);
         $nodeTrackLimit = $nodeTrackLimit < 0 ? PHP_INT_MAX : $nodeTrackLimit;
 
         /** @var  UserActivity $repo */

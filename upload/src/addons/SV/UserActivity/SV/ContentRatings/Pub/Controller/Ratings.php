@@ -26,7 +26,7 @@ class Ratings extends XFCP_Ratings
     {
         $content = parent::assertViewableContent($likeHandler, $contentType, $contentId);
         /** @noinspection PhpUndefinedMethodInspection */
-        if ($this->_params !== null && is_callable([$content, 'getContainer']) && ($container = $content->getContainer()))
+        if ($this->_params !== null && \is_callable([$content, 'getContainer']) && ($container = $content->getContainer()))
         {
             /** @var \XF\Mvc\Entity\Entity $container */
 

@@ -70,8 +70,8 @@ trait UserActivityInjector
         if (($activityInjector = $this->getSvActivityInjector(true)) &&
             !empty($activityInjector['actions']))
         {
-            $actionL = strtolower($action);
-            if (in_array($actionL, $this->activityInjector['actions'], true))
+            $actionL = \strtolower($action);
+            if (\in_array($actionL, $this->activityInjector['actions'], true))
             {
                 /** @var \SV\UserActivity\Repository\UserActivity $userActivityRepo */
                 $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');

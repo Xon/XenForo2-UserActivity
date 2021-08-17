@@ -22,7 +22,7 @@ trait WidgetUserCountActivityInjector
     {
         /** @noinspection PhpUndefinedClassInspection */
         $options = parent::setupOptions($options);
-        return array_replace($this->svUserActivityDefaultOptions, $options);
+        return \array_replace($this->svUserActivityDefaultOptions, $options);
     }
 
     /**
@@ -70,17 +70,17 @@ trait WidgetUserCountActivityInjector
             {
                 continue;
             }
-            if (!in_array($actionL, $config['actions']))
+            if (!\in_array($actionL, $config['actions']))
             {
                 continue;
             }
             */
             $callback = $config['fetcher'];
-            if (is_string($callback))
+            if (\is_string($callback))
             {
                 $callback = [$this, $callback];
             }
-            if (!is_callable($callback))
+            if (!\is_callable($callback))
             {
                 continue;
             }
@@ -91,7 +91,7 @@ trait WidgetUserCountActivityInjector
                 continue;
             }
 
-            if (!is_array($output))
+            if (!\is_array($output))
             {
                 $output = [$output];
             }
@@ -102,7 +102,7 @@ trait WidgetUserCountActivityInjector
                 $fetchData[$type] = [];
             }
 
-            $fetchData[$type] = array_merge($fetchData[$type], $output);
+            $fetchData[$type] = \array_merge($fetchData[$type], $output);
         }
 
         if ($fetchData)
