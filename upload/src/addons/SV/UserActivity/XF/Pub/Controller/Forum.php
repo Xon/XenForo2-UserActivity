@@ -6,6 +6,7 @@ use SV\UserActivity\Repository\UserActivity;
 use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\ParameterBag;
+use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View as ViewReply;
 
 /**
@@ -144,6 +145,21 @@ class Forum extends XFCP_Forum
         'activeKey'  => 'forum',
     ];
     use UserActivityInjector;
+
+    protected function updateSessionActivity($action, ParameterBag $params, AbstractReply &$reply)
+    {
+        if ($reply instanceof ViewReply &&
+            $params->get('node_id') === null)
+        {
+            $node = $reply->getParam('node');
+            if ($node instanceof \XF\Entity\Node)
+            {
+                $params['node_id'] = $node->node_id;
+            }
+        }
+
+        parent::updateSessionActivity($action, $params, $reply);
+    }
 
     /**
      * @return \XF\Mvc\Entity\Repository|UserActivity
