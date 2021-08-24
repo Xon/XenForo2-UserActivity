@@ -1,0 +1,13 @@
+{
+    "edit_format": "select",
+    "edit_format_params": "0={{ phrase('RainDD_UA_Disabled') }}\n1={{ phrase('RainDD_UA_PositionAbovePageNav') }}\n2={{ phrase('RainDD_UA_PositionUnderPageNav') }}",
+    "data_type": "integer",
+    "sub_options": [],
+    "validation_class": "",
+    "validation_method": "",
+    "advanced": false,
+    "default_value": "2",
+    "relations": {
+        "SV_UA_Options": 105
+    }
+}

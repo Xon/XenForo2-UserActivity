@@ -1,0 +1,1 @@
+Enable and choose where in the thread view the container for Viewing Forum will appear.

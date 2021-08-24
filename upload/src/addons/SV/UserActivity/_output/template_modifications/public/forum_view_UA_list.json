@@ -3,7 +3,7 @@
     "description": "Adds activity containers (list)",
     "execution_order": 10,
     "enabled": true,
-    "action": "str_replace",
-    "find": "<xf:ad position=\"forum_view_above_thread_list",
-    "replace": "<xf:macro template=\"UA_ViewContainer_macros\" \n\t\t  name=\"UserActivity\" \n\t\t  arg-headerPhrase=\"{{ phrase('svUserActivity_users_who_are_viewing_this_forum') }}\" \n\t\t  arg-records=\"{$UA_Records}\"/>\n$0"
+    "action": "preg_replace",
+    "find": "#(<xf:ad position=\"forum_view_above_thread_list.*?)(<xf:ad position=\"forum_view_below_thread_list)#si",
+    "replace": "<xf:if is=\"$xf.options.RainDD_UA_ForumViewPos == 1\">\n<xf:macro template=\"UA_ViewContainer_macros\" \n\t\t  name=\"UserActivity\" \n\t\t  arg-headerPhrase=\"{{ phrase('svUserActivity_users_who_are_viewing_this_forum') }}\" \n\t\t  arg-records=\"{$UA_Records}\"/>\n</xf:if>\n$1\n<xf:if is=\"$xf.options.RainDD_UA_ForumViewPos >= 2\">\n<xf:macro template=\"UA_ViewContainer_macros\" \n\t\t  name=\"UserActivity\" \n\t\t  arg-headerPhrase=\"{{ phrase('svUserActivity_users_who_are_viewing_this_forum') }}\" \n\t\t  arg-records=\"{$UA_Records}\"/>\n</xf:if>\n$2"
 }
