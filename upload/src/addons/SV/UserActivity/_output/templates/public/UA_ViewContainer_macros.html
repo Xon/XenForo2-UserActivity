@@ -9,7 +9,7 @@
 </xf:macro>
 
 <xf:macro name="UserActivity"
-		  arg-contentTypePhrase="!"
+		  arg-headerPhrase="!"
 		  arg-records="!"
 		  >
 	<xf:if is="{$records}">
@@ -24,7 +24,7 @@
 		</xf:if>
 		<div class="block">
 			<div id="uaThreadViewContainer" class="block-container">
-				<h3 class="block-minorHeader">{{ phrase('svUserActivity_users_who_are_viewing_this_x', {'content_type': $contentTypePhrase|to_lower}) }}</h3>
+				<h3 class="block-minorHeader">{$headerPhrase}</h3>
 				<div class="block-body">
 					<div class="block-row block-row--minor">							
 						<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">									
