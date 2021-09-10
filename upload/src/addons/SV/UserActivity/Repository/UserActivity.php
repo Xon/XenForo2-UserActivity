@@ -122,8 +122,12 @@ class UserActivity extends Repository
             {
                 return;
             }
-            $contentType = $handler['type'];
-            $contentIdField = $handler['id'];
+            $contentType = $handler['type'] ?? null;
+            $contentIdField = $handler['id'] ?? null;
+            if ($contentType === null || $contentIdField === null)
+            {
+                return;
+            }
             $content = $response->getParam($contentType);
             $contentId = $content[$contentIdField] ?? null;
             if ($contentId === null)
