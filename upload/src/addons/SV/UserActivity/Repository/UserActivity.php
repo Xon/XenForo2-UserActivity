@@ -535,7 +535,14 @@ class UserActivity extends Repository
             foreach ($onlineRecords as $rec => $score)
             {
                 $data = \explode("\n", $rec);
-                $rec = @\array_combine(self::CacheKeys, $data);
+                try
+                {
+                    $rec = @\array_combine(self::CacheKeys, $data);
+                }
+                catch(\ValueError $e)
+                {
+                    $rec = null;
+                }
                 if (empty($rec))
                 {
                     continue;
