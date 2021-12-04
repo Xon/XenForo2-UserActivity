@@ -172,11 +172,11 @@ class UserActivity extends Repository
 
     /**
      * @param array        $data
-     * @param integer|null $targetRunTime
+     * @param float|null $targetRunTime
      * @return array|null
      * @noinspection PhpUnusedParameterInspection
      */
-    protected function _garbageCollectActivityFallback(array $data, int $targetRunTime = null)
+    protected function _garbageCollectActivityFallback(array $data, float $targetRunTime = null)
     {
         $app = $this->app();
         $options = $app->options();
@@ -193,10 +193,10 @@ class UserActivity extends Repository
 
     /**
      * @param array $data
-     * @param int|null  $targetRunTime
+     * @param float|null  $targetRunTime
      * @return array|null
      */
-    public function garbageCollectActivity(array $data, int $targetRunTime = null)
+    public function garbageCollectActivity(array $data, float $targetRunTime = null)
     {
         $credis = $this->getCredis();
         if (!$credis)
