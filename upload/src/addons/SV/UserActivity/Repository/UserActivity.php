@@ -118,10 +118,6 @@ class UserActivity extends Repository
         if ($response instanceof ViewReply)
         {
             $handler = $this->getHandler($controllerName);
-            if ($handler === null)
-            {
-                return;
-            }
             $contentType = $handler['type'] ?? null;
             $contentIdField = $handler['id'] ?? null;
             if ($contentType === null || $contentIdField === null)
