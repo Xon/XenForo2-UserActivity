@@ -13,6 +13,11 @@ namespace SV\UserActivity\NF\Tickets\Pub\Controller
 	class XFCP_Ticket extends \NF\Tickets\Pub\Controller\Ticket {}
 }
 
+namespace SV\UserActivity\SV\StandardLib
+{
+	class XFCP_TemplaterHelper extends \SV\StandardLib\TemplaterHelper {}
+}
+
 namespace SV\UserActivity\XF\Pub\Controller
 {
 	class XFCP_Category extends \XF\Pub\Controller\Category {}

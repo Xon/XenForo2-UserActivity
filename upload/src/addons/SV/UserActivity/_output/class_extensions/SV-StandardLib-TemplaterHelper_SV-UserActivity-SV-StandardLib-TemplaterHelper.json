@@ -1,0 +1,6 @@
+{
+    "from_class": "SV\\StandardLib\\TemplaterHelper",
+    "to_class": "SV\\UserActivity\\SV\\StandardLib\\TemplaterHelper",
+    "execute_order": 10,
+    "active": true
+}
