@@ -7,7 +7,7 @@ use SV\UserActivity\UserActivityInjector;
 class Report extends XFCP_Report
 {
     protected $activityInjector = [
-        'controller' => 'XF\Pub\Controller\Report',
+        'controller' => \XF\Pub\Controller\Report::Class,
         'type'       => 'report',
         'id'         => 'report_id',
         'actions'    => ['view'],

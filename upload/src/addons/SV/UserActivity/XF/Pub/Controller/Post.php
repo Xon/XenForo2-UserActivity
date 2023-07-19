@@ -11,7 +11,7 @@ use XF\Mvc\Reply\View as ViewReply;
 class Post extends XFCP_Post
 {
     protected $activityInjector = [
-        'controller' => 'XF\Pub\Controller\Post',
+        'controller' => \XF\Pub\Controller\Post::Class,
         'type'       => 'thread',
         'id'         => 'thread_id',
         'actions'    => [],

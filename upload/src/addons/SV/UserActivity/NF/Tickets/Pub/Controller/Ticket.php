@@ -40,7 +40,7 @@ class Ticket extends XFCP_Ticket
     }
 
     protected $activityInjector = [
-        'controller' => 'NF\Tickets\Pub\Controller\Ticket',
+        'controller' => \NF\Tickets\Pub\Controller\Ticket::Class,
         'type'       => 'ticket',
         'id'         => 'ticket_id',
         'actions'    => ['view'],

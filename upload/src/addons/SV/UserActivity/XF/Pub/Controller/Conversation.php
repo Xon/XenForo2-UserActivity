@@ -42,7 +42,7 @@ class Conversation extends XFCP_Conversation
     use UserCountActivityInjector;
 
     protected $activityInjector = [
-        'controller' => 'XF\Pub\Controller\Conversation',
+        'controller' => \XF\Pub\Controller\Conversation::Class,
         'type'       => 'conversation',
         'id'         => 'conversation_id',
         'actions'    => ['view'],

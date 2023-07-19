@@ -10,7 +10,7 @@ use SV\UserActivity\UserActivityInjector;
 class Event extends XFCP_Event
 {
     protected $activityInjector = [
-        'controller' => 'NF\Calendar\Pub\Controller\Event',
+        'controller' => \NF\Calendar\Pub\Controller\Event::Class,
         'type'       => 'event',
         'id'         => 'event_id',
         'actions'    => ['view'],
