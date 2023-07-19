@@ -34,8 +34,9 @@
             "NixFifty's Tickets v2.0.0"
         ],
         "SV/RedisCache": [
-            "2.2.0",
-            "Redis Cache v2.0.0"
+            "2.14.0",
+            "Redis Cache v2.14.0",
+            true
         ]
     },
     "icon": "fa-heartbeat"

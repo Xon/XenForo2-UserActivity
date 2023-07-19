@@ -199,54 +199,30 @@ class UserActivity extends Repository
         {
             return $this->_garbageCollectActivityFallback($data, $targetRunTime);
         }
-        $app = $this->app();
+
         /** @var Redis $cache */
-        $cache = $app->cache('userActivity');
+        $cache = $this->app()->cache('userActivity');
 
-        $options = $app->options();
-        $onlineStatusTimeout = (int)($options->onlineStatusTimeout ?? 15) * 60;
-        // we need to manually expire records out of the per content hash set if they are kept alive with activity
-        $dataKey = $cache->getNamespacedId('activity_');
-
+        $onlineStatusTimeout = (int)(($options->onlineStatusTimeout ?? 15) * 60);
         $end = \XF::$time - $onlineStatusTimeout;
         $end = $end - ($end % $this->getSampleInterval());
 
-        $dbSize = $credis->dbsize() ?: 100000;
-        // indicate to the redis instance would like to process X items at a time. This is before the pattern match is applied!
-        $count = 1000;
-        $loopGuard = ($dbSize / $count) + 10;
-        // only valid values for cursor are null (the stack turns it into a 0) or whatever scan return
         $cursor = $data['cursor'] ?? null;
-        $s = \microtime(true);
-        do
-        {
-            $keys = $credis->scan($cursor, $dataKey . "*", $count);
-            $loopGuard--;
-            if ($keys === false)
-            {
-                break;
-            }
-            $data['cursor'] = $cursor;
+        \SV\RedisCache\Repository\Redis::instance()->visitCacheByPattern('activity_', $cursor, $targetRunTime ?? 0,
+            function(\Credis_Client $credis, array $keys) use ($end) {
 
-            // the actual prune operation
             foreach ($keys as $key)
             {
                 $credis->zRemRangeByScore($key, 0, $end);
             }
 
-            $runTime = \microtime(true) - $s;
-            if ($targetRunTime && $runTime > $targetRunTime)
-            {
-                break;
-            }
-            $loopGuard--;
-        }
-        while ($loopGuard > 0 && !empty($cursor));
-
-        if (empty($cursor))
+        }, 1000, $cache);
+        if (!$cursor)
         {
             return null;
         }
+
+        $data['cursor'] = $cursor;
 
         return $data;
     }
