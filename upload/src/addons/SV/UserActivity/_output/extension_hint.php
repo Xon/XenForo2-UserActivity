@@ -1,5 +1,6 @@
 <?php
 
+/** @noinspection PhpIllegalPsrClassPathInspection */
 // ################## THIS IS A GENERATED FILE ##################
 // DO NOT EDIT DIRECTLY. EDIT THE CLASS EXTENSIONS IN THE CONTROL PANEL.
 
@@ -33,11 +34,6 @@ namespace SV\UserActivity\XF\Pub\Controller
 namespace SV\UserActivity\XF\Repository
 {
 	class XFCP_SessionActivity extends \XF\Repository\SessionActivity {}
-}
-
-namespace SV\UserActivity\XF\Template
-{
-	class XFCP_Templater extends \XF\Template\Templater {}
 }
 
 namespace SV\UserActivity\XF\Widget
