@@ -1,1 +1,1 @@
-Track guests
+User activity tracks guests

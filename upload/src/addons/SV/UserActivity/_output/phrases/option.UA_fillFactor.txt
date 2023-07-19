@@ -1,1 +1,1 @@
-Fill factor
+User activity fill factor (redis)

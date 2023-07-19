@@ -1,1 +1,1 @@
-Prune chance
+User activity prune chance
