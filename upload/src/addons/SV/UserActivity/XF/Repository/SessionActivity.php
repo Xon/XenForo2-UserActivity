@@ -2,6 +2,8 @@
 
 namespace SV\UserActivity\XF\Repository;
 
+use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
+
 class SessionActivity extends XFCP_SessionActivity
 {
     /**
@@ -16,7 +18,7 @@ class SessionActivity extends XFCP_SessionActivity
      */
     public function updateSessionActivity($userId, $ip, $controller, $action, array $params, $viewState, $robotKey)
     {
-        /** @var \SV\UserActivity\Repository\UserActivity $userActivityRepo */
+        /** @var UserActivityRepo $userActivityRepo */
         $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');
         $visitor = \XF::visitor();
         if ($userActivityRepo->isLogging() && $viewState === 'valid' && $userId === $visitor->user_id)

@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpUnnecessaryLocalVariableInspection
- */
 
 namespace SV\UserActivity;
 
@@ -27,10 +24,7 @@ class Setup extends AbstractSetup
     use StepRunnerUpgradeTrait;
     use StepRunnerUninstallTrait;
 
-    /**
-     * Creates add-on tables.
-     */
-    public function installStep1()
+    public function installStep1(): void
     {
         $sm = $this->schemaManager();
 
@@ -41,10 +35,7 @@ class Setup extends AbstractSetup
         }
     }
 
-    /**
-     * Alters core tables.
-     */
-    public function installStep2()
+    public function installStep2(): void
     {
         $sm = $this->schemaManager();
 
@@ -54,25 +45,22 @@ class Setup extends AbstractSetup
         }
     }
 
-    public function installStep3()
+    public function installStep3(): void
     {
         $this->applyGlobalPermissionByGroup('RainDD_UA_PermissionsMain','RainDD_UA_ThreadViewers', [User::GROUP_GUEST, User::GROUP_REG]);
     }
 
-    public function upgrade2040000Step1()
+    public function upgrade2040000Step1(): void
     {
         $this->installStep1();
     }
 
-    public function upgrade2040000Step2()
+    public function upgrade2040000Step2(): void
     {
         $this->installStep2();
     }
 
-    /**
-     * Drops add-on tables.
-     */
-    public function uninstallStep1()
+    public function uninstallStep1(): void
     {
         $sm = $this->schemaManager();
 
@@ -82,10 +70,7 @@ class Setup extends AbstractSetup
         }
     }
 
-    /**
-     * Drops columns from core tables.
-     */
-    public function uninstallStep2()
+    public function uninstallStep2(): void
     {
         $sm = $this->schemaManager();
 
@@ -100,41 +85,36 @@ class Setup extends AbstractSetup
 
     protected function getTables(): array
     {
-        $tables = [];
-
-        $tables['xf_sv_user_activity'] = function ($table) {
-            /** @var Create|Alter $table */
-            $this->addOrChangeColumn($table, 'id', 'int')->autoIncrement()->primaryKey();
-            $this->addOrChangeColumn($table, 'content_type', 'varbinary', 25);
-            $this->addOrChangeColumn($table, 'content_id', 'int');
-            $this->addOrChangeColumn($table, 'timestamp', 'int');
-            $this->addOrChangeColumn($table, 'blob', 'varbinary', 255);
-            $table->addUniqueKey(['content_type', 'content_id', 'blob'], 'content');
-            $table->addKey(['timestamp', 'content_id'], 'timestamp');
-        };
-
-        return $tables;
+        return [
+            'xf_sv_user_activity' => function ($table) {
+                /** @var Create|Alter $table */
+                $this->addOrChangeColumn($table, 'id', 'int')->autoIncrement()->primaryKey();
+                $this->addOrChangeColumn($table, 'content_type', 'varbinary', 25);
+                $this->addOrChangeColumn($table, 'content_id', 'int');
+                $this->addOrChangeColumn($table, 'timestamp', 'int');
+                $this->addOrChangeColumn($table, 'blob', 'varbinary', 255);
+                $table->addUniqueKey(['content_type', 'content_id', 'blob'], 'content');
+                $table->addKey(['timestamp', 'content_id'], 'timestamp');
+            }
+        ];
     }
 
     protected function getAlterTables(): array
     {
-        $tables = [];
-
-        return $tables;
+        return [];
     }
 
     protected function getRemoveAlterTables(): array
     {
-        $tables = [];
-
-        return $tables;
+        return [];
     }
 
     /**
      * @param array $errors
      * @param array $warnings
+     * @noinspection PhpMissingParentCallCommonInspection
      */
-    public function checkRequirements(&$errors = [], &$warnings = [])
+    public function checkRequirements(&$errors = [], &$warnings = []): void
     {
         $this->checkRequirementsTrait($errors,$warnings);
         /** @var Redis $cache */

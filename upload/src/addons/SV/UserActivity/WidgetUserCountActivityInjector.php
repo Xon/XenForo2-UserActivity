@@ -6,7 +6,13 @@
 
 namespace SV\UserActivity;
 
-use SV\UserActivity\Repository\UserActivity;
+use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
+use XF\Http\Request;
+use XF\Widget\WidgetRenderer;
+use function array_replace;
+use function is_array;
+use function is_callable;
+use function is_string;
 
 /**
  * @property array{userActivity: bool} $options
@@ -26,16 +32,16 @@ trait WidgetUserCountActivityInjector
     {
         $options = parent::setupOptions($options);
 
-        return \array_replace($this->svUserActivityDefaultOptions, $options);
+        return array_replace($this->svUserActivityDefaultOptions, $options);
     }
 
     /**
-     * @param \XF\Http\Request $request
+     * @param Request $request
      * @param array            $options
      * @param string|null      $error
      * @return bool
      */
-    public function verifyOptions(\XF\Http\Request $request, array &$options, &$error = null)
+    public function verifyOptions(Request $request, array &$options, &$error = null)
     {
         $result = parent::verifyOptions($request, $options, $error);
 
@@ -45,18 +51,14 @@ trait WidgetUserCountActivityInjector
     }
 
     /**
-     * @return \XF\Widget\WidgetRenderer
+     * @return WidgetRenderer
      */
     public function render()
     {
         return $this->_injectUserCountIntoResponse(parent::render());
     }
 
-    /**
-     * @param \XF\Widget\WidgetRenderer $renderer
-     * @return \XF\Widget\WidgetRenderer
-     */
-    protected function _injectUserCountIntoResponse(\XF\Widget\WidgetRenderer $renderer)
+    protected function _injectUserCountIntoResponse(WidgetRenderer $renderer): WidgetRenderer
     {
         if (empty($this->widgetCountActivityInjector) || empty($this->options['userActivity']))
         {
@@ -84,11 +86,11 @@ trait WidgetUserCountActivityInjector
                 continue;
             }
             $callback = $config['fetcher'] ?? null;
-            if (\is_string($callback))
+            if (is_string($callback))
             {
                 $callback = [$this, $callback];
             }
-            if (!\is_callable($callback))
+            if (!is_callable($callback))
             {
                 continue;
             }
@@ -99,7 +101,7 @@ trait WidgetUserCountActivityInjector
                 continue;
             }
 
-            if (!\is_array($output))
+            if (!is_array($output))
             {
                 $output = [$output];
             }
@@ -114,7 +116,7 @@ trait WidgetUserCountActivityInjector
 
         if ($fetchData)
         {
-            /** @var UserActivity $repo */
+            /** @var UserActivityRepo $repo */
             $repo = \XF::repository('SV\UserActivity:UserActivity');
             $repo->insertBulkUserActivityIntoViewResponse($renderer, $fetchData);
         }

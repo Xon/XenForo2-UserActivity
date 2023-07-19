@@ -2,7 +2,7 @@
 
 namespace SV\UserActivity\XF\Pub\Controller;
 
-use SV\UserActivity\Repository\UserActivity;
+use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\ParameterBag;
@@ -80,11 +80,9 @@ class Thread extends XFCP_Thread
     ];
     use UserActivityInjector;
 
-    /**
-     * @return \XF\Mvc\Entity\Repository|UserActivity
-     */
-    protected function getUserActivityRepo()
+    protected function getUserActivityRepo(): UserActivityRepo
     {
-        return \XF::repository('SV\UserActivity:UserActivity');
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->repository('SV\UserActivity:UserActivity');
     }
 }

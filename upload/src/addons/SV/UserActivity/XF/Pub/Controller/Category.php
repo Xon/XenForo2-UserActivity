@@ -2,10 +2,11 @@
 
 namespace SV\UserActivity\XF\Pub\Controller;
 
-use SV\UserActivity\Repository\UserActivity;
+use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\View as ViewReply;
+use XF\Tree;
 
 /**
  * Extends \XF\Pub\Controller\Category
@@ -42,12 +43,12 @@ class Category extends XFCP_Category
     }
 
     /**
-     * @param string   $typeFilter
-     * @param int      $depth
-     * @param \XF\Tree $nodeTree
+     * @param string    $typeFilter
+     * @param int       $depth
+     * @param Tree|null $nodeTree
      * @return int[]
      */
-    protected function nodeListFetcher(string $typeFilter, int $depth, \XF\Tree $nodeTree = null): array
+    protected function nodeListFetcher(string $typeFilter, int $depth, Tree $nodeTree = null): array
     {
         $nodeIds = [];
         $flattenedNodeList = $nodeTree ? $nodeTree->getFlattened() : [];
@@ -67,7 +68,7 @@ class Category extends XFCP_Category
     {
         $repo = $this->getUserActivityRepo();
         $depth = $action === 'list' ? 1 : 0;
-        /** @var \XF\Tree $nodeTree */
+        /** @var Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
 
         return $repo->getFilteredForumNodeIds($this->nodeListFetcher('Forum', $depth, $nodeTree));
@@ -78,7 +79,7 @@ class Category extends XFCP_Category
     {
         $repo = $this->getUserActivityRepo();
         $depth = $action === 'list' ? 1 : 0;
-        /** @var \XF\Tree $nodeTree */
+        /** @var Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
 
         return $repo->getFilteredCategoryNodeIds($this->nodeListFetcher('Category', $depth, $nodeTree));
@@ -106,11 +107,9 @@ class Category extends XFCP_Category
     ];
     use UserCountActivityInjector;
 
-    /**
-     * @return \XF\Mvc\Entity\Repository|UserActivity
-     */
-    protected function getUserActivityRepo()
+    protected function getUserActivityRepo(): UserActivityRepo
     {
-        return \XF::repository('SV\UserActivity:UserActivity');
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->repository('SV\UserActivity:UserActivity');
     }
 }

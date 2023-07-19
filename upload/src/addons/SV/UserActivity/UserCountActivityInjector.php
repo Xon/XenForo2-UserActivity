@@ -5,7 +5,7 @@
 
 namespace SV\UserActivity;
 
-use SV\UserActivity\Repository\UserActivity;
+use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View as ViewReply;
@@ -27,7 +27,7 @@ trait UserCountActivityInjector
         }
     }
 
-    protected function _injectUserCountIntoResponse(ViewReply $response, string $action)
+    protected function _injectUserCountIntoResponse(ViewReply $response, string $action): void
     {
         $fetchData = [];
         $options = \XF::options();
@@ -80,7 +80,7 @@ trait UserCountActivityInjector
 
         if ($fetchData)
         {
-            /** @var UserActivity $repo */
+            /** @var UserActivityRepo $repo */
             $repo = \XF::repository('SV\UserActivity:UserActivity');
             $repo->insertBulkUserActivityIntoViewResponse($response, $fetchData);
         }

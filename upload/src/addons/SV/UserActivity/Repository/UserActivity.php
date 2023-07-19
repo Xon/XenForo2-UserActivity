@@ -5,6 +5,7 @@ namespace SV\UserActivity\Repository;
 use Credis_Client;
 use SV\RedisCache\Redis;
 use SV\RedisCache\Repository\Redis as RedisRepo;
+use XF\Db\DeadlockException;
 use XF\Entity\Node;
 use XF\Entity\Thread;
 use XF\Entity\User;
@@ -12,6 +13,7 @@ use XF\Mvc\Entity\Repository;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View as ViewReply;
 use XF\Tree;
+use XF\Widget\WidgetRenderer;
 
 class UserActivity extends Repository
 {
@@ -48,7 +50,7 @@ class UserActivity extends Repository
             !\is_array($handler['actions']) ||
             !\array_key_exists('activeKey', $handler))
         {
-            $error = "activityInjector is not configured properly, expecting array{controller: string, id: int, type: string, actions: array<string>, activeKey: string} ";
+            $error = 'activityInjector is not configured properly, expecting array{controller: string, id: int, type: string, actions: array<string>, activeKey: string} ';
             if (\XF::$debugMode)
             {
                 throw new \LogicException($error);
@@ -67,7 +69,7 @@ class UserActivity extends Repository
      * @param array{controller: string, id: string, type: string, actions: array<string>, activeKey: string}  $handler
      * @return void
      */
-    public function registerHandler(string $controllerName, array $handler)
+    public function registerHandler(string $controllerName, array $handler): void
     {
         $this->handlers[$controllerName] = $this->validateHandler($handler);
     }
@@ -87,11 +89,11 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param AbstractReply|\XF\Widget\WidgetRenderer $response
-     * @param array         $fetchData
+     * @param AbstractReply|WidgetRenderer $response
+     * @param array                        $fetchData
      * @return void
      */
-    public function insertBulkUserActivityIntoViewResponse(&$response, array $fetchData)
+    public function insertBulkUserActivityIntoViewResponse(&$response, array $fetchData): void
     {
         $visitor = \XF::visitor();
         if (!$visitor->hasPermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers'))
@@ -103,7 +105,7 @@ class UserActivity extends Repository
         {
             $response->setParam('UA_RecordCounts', $this->getUsersViewingCount($fetchData));
         }
-        else if ($response instanceof \XF\Widget\WidgetRenderer)
+        else if ($response instanceof WidgetRenderer)
         {
             $response->setViewParam('UA_RecordCounts', $this->getUsersViewingCount($fetchData));
         }
@@ -114,7 +116,7 @@ class UserActivity extends Repository
      * @param AbstractReply $response
      * @return void
      */
-    public function insertUserActivityIntoViewResponse(string $controllerName, AbstractReply &$response)
+    public function insertUserActivityIntoViewResponse(string $controllerName, AbstractReply &$response): void
     {
         if ($response instanceof ViewReply)
         {
@@ -147,10 +149,7 @@ class UserActivity extends Repository
         }
     }
 
-    /**
-     * @return Credis_Client|null
-     */
-    protected function getCredis()
+    protected function getCredis(): ?Credis_Client
     {
         if ($this->forceFallback)
         {
@@ -173,7 +172,7 @@ class UserActivity extends Repository
      * @return array|null
      * @noinspection PhpUnusedParameterInspection
      */
-    protected function _garbageCollectActivityFallback(array $data, float $targetRunTime = null)
+    protected function _garbageCollectActivityFallback(array $data, float $targetRunTime = null): ?array
     {
         $app = $this->app();
         $options = $app->options();
@@ -193,7 +192,7 @@ class UserActivity extends Repository
      * @param float|null  $targetRunTime
      * @return array|null
      */
-    public function garbageCollectActivity(array $data, float $targetRunTime = null)
+    public function garbageCollectActivity(array $data, float $targetRunTime = null): ?array
     {
         $credis = $this->getCredis();
         if (!$credis)
@@ -210,7 +209,7 @@ class UserActivity extends Repository
 
         $cursor = $data['cursor'] ?? null;
         RedisRepo::instance()->visitCacheByPattern('activity_', $cursor, $targetRunTime ?? 0,
-            function (\Credis_Client $credis, array $keys) use ($end) {
+            function (Credis_Client $credis, array $keys) use ($end) {
                 $credis->pipeline();
                 foreach ($keys as $key)
                 {
@@ -228,14 +227,14 @@ class UserActivity extends Repository
         return $data;
     }
 
-    const LUA_IFZADDEXPIRE_SH1 = 'dc1d76eefaca2f4ccf848a6ed7e80def200ac7b7';
+    protected const LUA_IFZADDEXPIRE_SH1 = 'dc1d76eefaca2f4ccf848a6ed7e80def200ac7b7';
 
     /**
      * @param array $updateSet
      * @param int   $time
      * @return void
      */
-    protected function _updateSessionActivityFallback(array $updateSet, int $time)
+    protected function _updateSessionActivityFallback(array $updateSet, int $time): void
     {
         $db = $this->db();
 
@@ -258,7 +257,7 @@ class UserActivity extends Repository
         {
             $db->query($sql, $sqlArgs);
         }
-        catch (\XF\Db\DeadlockException $e)
+        catch (DeadlockException $e)
         {
             // deadlock detected, try rerunning once
             $db->query($sql, $sqlArgs);
@@ -326,7 +325,7 @@ class UserActivity extends Repository
      * @param array $updateSet
      * @return void
      */
-    protected function updateSessionActivity(array $updateSet)
+    protected function updateSessionActivity(array $updateSet): void
     {
         $score = \XF::$time - (\XF::$time % $this->getSampleInterval());
 
@@ -359,13 +358,13 @@ class UserActivity extends Repository
                 {
                     $script =
                         "local c = tonumber(redis.call('zscore', KEYS[1], ARGV[2])) " .
-                        "local n = tonumber(ARGV[1]) " .
-                        "local retVal = 0 " .
-                        "if c == nil or n > c then " .
+                        'local n = tonumber(ARGV[1]) ' .
+                        'local retVal = 0 ' .
+                        'if c == nil or n > c then ' .
                         "retVal = redis.call('ZADD', KEYS[1], n, ARGV[2]) " .
-                        "end " .
+                        'end ' .
                         "redis.call('EXPIRE', KEYS[1], ARGV[3]) " .
-                        "return retVal ";
+                        'return retVal ';
                     /** @noinspection PhpUnusedLocalVariableInspection */
                     $ret = $credis->eval($script, [$key], [$score, $raw, $onlineStatusTimeout]);
                 }
@@ -382,7 +381,7 @@ class UserActivity extends Repository
         }
     }
 
-    const CacheKeys = [
+    protected const CacheKeys = [
         'user_id',
         'username',
         'visible',
@@ -583,7 +582,7 @@ class UserActivity extends Repository
             $list = \array_filter(\array_map('\intval', \array_unique($list)));
             if ($list)
             {
-                $sql[] = "\n(content_type = " . $db->quote($contentType) . " AND content_id in (" . $db->quote($list) . "))";
+                $sql[] = "\n(content_type = " . $db->quote($contentType) . ' AND content_id in (' . $db->quote($list) . '))';
             }
         }
 
@@ -696,7 +695,7 @@ class UserActivity extends Repository
      * @param string $activeKey
      * @return void
      */
-    public function bufferTrackViewerUsage(string $contentType, int $contentId, string $activeKey)
+    public function bufferTrackViewerUsage(string $contentType, int $contentId, string $activeKey): void
     {
         if (\strlen($contentType) === 0 ||
             $contentId === 0 ||
@@ -719,7 +718,7 @@ class UserActivity extends Repository
      * @param User|null   $viewingUser
      * @return void
      */
-    public function flushTrackViewerUsageBuffer(string $ip = null, string $robotKey = null, User $viewingUser = null)
+    public function flushTrackViewerUsageBuffer(string $ip = null, string $robotKey = null, User $viewingUser = null): void
     {
         if (!$this->isLogging() || \count($this->trackBuffer) === 0)
         {

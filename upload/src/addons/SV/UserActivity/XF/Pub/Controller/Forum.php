@@ -2,12 +2,14 @@
 
 namespace SV\UserActivity\XF\Pub\Controller;
 
-use SV\UserActivity\Repository\UserActivity;
+use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
+use XF\Entity\Node as NodeEntity;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View as ViewReply;
+use XF\Tree;
 
 /**
  * Extends \XF\Pub\Controller\Forum
@@ -45,12 +47,12 @@ class Forum extends XFCP_Forum
     }
 
     /**
-     * @param string   $typeFilter
-     * @param int      $depth
-     * @param \XF\Tree $nodeTree
+     * @param string    $typeFilter
+     * @param int       $depth
+     * @param Tree|null $nodeTree
      * @return int[]
      */
-    protected function nodeListFetcher(string $typeFilter, int $depth, \XF\Tree $nodeTree = null): array
+    protected function nodeListFetcher(string $typeFilter, int $depth, Tree $nodeTree = null): array
     {
         $nodeIds = [];
         $flattenedNodeList = $nodeTree ? $nodeTree->getFlattened() : [];
@@ -70,7 +72,7 @@ class Forum extends XFCP_Forum
     {
         $repo = $this->getUserActivityRepo();
         $depth = $action === 'list' ? 1 : 0;
-        /** @var \XF\Tree $nodeTree */
+        /** @var Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
         return $repo->getFilteredForumNodeIds($this->nodeListFetcher('Forum', $depth, $nodeTree));
     }
@@ -80,7 +82,7 @@ class Forum extends XFCP_Forum
     {
         $repo = $this->getUserActivityRepo();
         $depth = $action === 'list' ? 1 : 0;
-        /** @var \XF\Tree $nodeTree */
+        /** @var Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
         return $repo->getFilteredCategoryNodeIds($this->nodeListFetcher('Category', $depth, $nodeTree));
     }
@@ -152,7 +154,7 @@ class Forum extends XFCP_Forum
             $params->get('node_id') === null)
         {
             $node = $reply->getParam('node');
-            if ($node instanceof \XF\Entity\Node)
+            if ($node instanceof NodeEntity)
             {
                 $params['node_id'] = $node->node_id;
             }
@@ -161,11 +163,9 @@ class Forum extends XFCP_Forum
         parent::updateSessionActivity($action, $params, $reply);
     }
 
-    /**
-     * @return \XF\Mvc\Entity\Repository|UserActivity
-     */
-    protected function getUserActivityRepo()
+    protected function getUserActivityRepo(): UserActivityRepo
     {
-        return \XF::repository('SV\UserActivity:UserActivity');
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->repository('SV\UserActivity:UserActivity');
     }
 }

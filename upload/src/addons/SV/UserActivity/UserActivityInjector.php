@@ -5,6 +5,7 @@
 
 namespace SV\UserActivity;
 
+use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 
@@ -51,7 +52,7 @@ trait UserActivityInjector
         $activityInjector = $this->getSvActivityInjector(false);
         if (\count($activityInjector) !== 0)
         {
-            /** @var \SV\UserActivity\Repository\UserActivity $userActivityRepo */
+            /** @var UserActivityRepo $userActivityRepo */
             $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');
             $userActivityRepo->registerHandler($this->activityInjector['controller'], $this->activityInjector);
         }
@@ -72,7 +73,7 @@ trait UserActivityInjector
             $actionL = \strtolower($action);
             if (\in_array($actionL, $this->activityInjector['actions'], true))
             {
-                /** @var \SV\UserActivity\Repository\UserActivity $userActivityRepo */
+                /** @var UserActivityRepo $userActivityRepo */
                 $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');
                 $userActivityRepo->insertUserActivityIntoViewResponse($this->activityInjector['controller'], $reply);
             }

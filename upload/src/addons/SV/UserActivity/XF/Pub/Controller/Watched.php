@@ -2,8 +2,7 @@
 
 namespace SV\UserActivity\XF\Pub\Controller;
 
-
-use SV\UserActivity\Repository\UserActivity;
+use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Reply\View as ViewReply;
@@ -52,11 +51,9 @@ class Watched extends XFCP_Watched
     ];
     use UserCountActivityInjector;
 
-    /**
-     * @return \XF\Mvc\Entity\Repository|UserActivity
-     */
-    protected function getUserActivityRepo()
+    protected function getUserActivityRepo(): UserActivityRepo
     {
-        return \XF::repository('SV\UserActivity:UserActivity');
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->repository('SV\UserActivity:UserActivity');
     }
 }

@@ -2,8 +2,9 @@
 
 namespace SV\UserActivity\XF\Widget;
 
-use SV\UserActivity\Repository\UserActivity;
+use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use SV\UserActivity\WidgetUserCountActivityInjector;
+use XF\Widget\WidgetRenderer;
 
 /**
  * Extends \XF\Widget\NewThreads
@@ -11,7 +12,7 @@ use SV\UserActivity\WidgetUserCountActivityInjector;
 class NewThreads extends XFCP_NewThreads
 {
     /** @noinspection PhpUnusedParameterInspection */
-    protected function threadFetcher(\XF\Widget\WidgetRenderer $renderer, array $config): array
+    protected function threadFetcher(WidgetRenderer $renderer, array $config): array
     {
         return $this->getUserActivityRepo()->getFilteredThreadIds($renderer->getViewParams(), 'threads');
     }
@@ -24,11 +25,9 @@ class NewThreads extends XFCP_NewThreads
     ];
     use WidgetUserCountActivityInjector;
 
-    /**
-     * @return \XF\Mvc\Entity\Repository|UserActivity
-     */
-    protected function getUserActivityRepo()
+    protected function getUserActivityRepo(): UserActivityRepo
     {
-        return \XF::repository('SV\UserActivity:UserActivity');
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->repository('SV\UserActivity:UserActivity');
     }
 }

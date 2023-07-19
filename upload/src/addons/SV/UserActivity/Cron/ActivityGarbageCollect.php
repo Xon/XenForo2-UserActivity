@@ -4,7 +4,7 @@ namespace SV\UserActivity\Cron;
 
 class ActivityGarbageCollect
 {
-    public static function run()
+    public static function run(): void
     {
 		$jobManager = \XF::app()->jobManager();
 		if (!$jobManager->getUniqueJob('ActivityGarbageCollect'))

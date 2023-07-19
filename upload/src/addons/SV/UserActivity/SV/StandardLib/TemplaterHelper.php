@@ -2,6 +2,8 @@
 
 namespace SV\UserActivity\SV\StandardLib;
 
+use XF\Entity\User as UserEntity;
+
 /**
  * Extends \SV\StandardLib\TemplaterHelper
  */
@@ -32,7 +34,7 @@ class TemplaterHelper extends XFCP_TemplaterHelper
             $fauxUser = $em->findCached('XF:User', $user['user_id']);
             if (!$fauxUser)
             {
-                /** @var \XF\Entity\User $fauxUser */
+                /** @var UserEntity $fauxUser */
                 $fauxUser = $em->instantiateEntity('XF:User', ['user_id' => $user['user_id'], 'language_id' => 0]);
                 foreach ($user as $key => $value)
                 {
