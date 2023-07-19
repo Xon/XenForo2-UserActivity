@@ -4,6 +4,7 @@ namespace SV\UserActivity\Repository;
 
 use Credis_Client;
 use SV\RedisCache\Redis;
+use SV\RedisCache\Repository\Redis as RedisRepo;
 use XF\Entity\Node;
 use XF\Entity\Thread;
 use XF\Entity\User;
@@ -208,15 +209,15 @@ class UserActivity extends Repository
         $end = $end - ($end % $this->getSampleInterval());
 
         $cursor = $data['cursor'] ?? null;
-        \SV\RedisCache\Repository\Redis::instance()->visitCacheByPattern('activity_', $cursor, $targetRunTime ?? 0,
-            function(\Credis_Client $credis, array $keys) use ($end) {
-
-            foreach ($keys as $key)
-            {
-                $credis->zRemRangeByScore($key, 0, $end);
-            }
-
-        }, 1000, $cache);
+        RedisRepo::instance()->visitCacheByPattern('activity_', $cursor, $targetRunTime ?? 0,
+            function (\Credis_Client $credis, array $keys) use ($end) {
+                $credis->pipeline();
+                foreach ($keys as $key)
+                {
+                    $credis->zRemRangeByScore($key, 0, $end);
+                }
+                $credis->exec();
+            }, 1000, $cache);
         if (!$cursor)
         {
             return null;
@@ -349,7 +350,7 @@ class UserActivity extends Repository
         foreach ($updateSet as &$record)
         {
             // $record has the format; [content_type, content_id, `blob`]
-            list($contentType, $contentId, $raw) = $record;
+            [$contentType, $contentId, $raw] = $record;
             if ($useLua)
             {
                 $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
