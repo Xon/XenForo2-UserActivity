@@ -1,0 +1,9 @@
+{
+    "template": "report_list_macros",
+    "description": "Adds activity containers (count)",
+    "execution_order": 9,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "{$report.title}",
+    "replace": "$0\n<xf:macro template=\"UA_ViewContainer_macros\" name=\"viewerCounts\"\n\t\t\targ-recordCounts=\"{$__globals.UA_RecordCounts}\" \n\t\t\targ-contentType=\"report\"\n\t\t\targ-contentId=\"{$report.report_id}\"\n\t\t\t/>"
+}
