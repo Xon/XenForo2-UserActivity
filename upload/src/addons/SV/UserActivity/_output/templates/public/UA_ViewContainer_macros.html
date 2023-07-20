@@ -26,8 +26,14 @@
 			<div id="uaThreadViewContainer" class="block-container">
 				<h3 class="block-minorHeader">{$headerPhrase}</h3>
 				<div class="block-body">
-					<div class="block-row block-row--minor">							
-						<xf:if is="{$xf.options.RainDD_UA_ThreadViewType} == 0">									
+					<div class="block-row block-row--minor">
+						<xf:if is="$records.membersCutOff === -1">
+							<xf:if contentcheck="true">
+								<span class="empty-list">
+									<xf:contentcheck>{{ phrase('svUserActivity_viewing_users_are_empty') }}</xf:contentcheck>
+								</span>
+							</xf:if>
+						<xf:elseif is="$xf.options.RainDD_UA_ThreadViewType == 0" />									
 							<ul class="listInline listInline--comma listInline--selfInline">
 								<xf:foreach loop="$records.records" value="$user"><xf:trim>
 									<li><xf:trim>
@@ -39,7 +45,7 @@
 									</xf:trim></xf:trim></li>
 								</xf:trim></xf:foreach>
 							</ul>
-							<xf:elseif is="{$xf.options.RainDD_UA_ThreadViewType} == 1" />
+							<xf:elseif is="$xf.options.RainDD_UA_ThreadViewType == 1" />
 							<ul class="listHeap">
 								<xf:foreach loop="$records.records" value="$user">
 									<li>

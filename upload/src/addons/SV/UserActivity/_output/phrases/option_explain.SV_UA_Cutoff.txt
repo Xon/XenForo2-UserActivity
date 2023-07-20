@@ -1,4 +1,8 @@
 Maximum number of users to display before it is displays as "...and X others".<br/><br />
 Use <code>0</code> to show all usernames always.<br/>
 Use <code>-1</code> to not show any usernames.<br/>
-Note: <i>View user activity counters</i> permission can override if usernames are displayed
+Notes:<br/>
+<i>View user names/avatars in activity block</i> permission can override if usernames are displayed.<br/>
+<br/>
+The phrase <i>svUserActivity_viewing_users_are_empty</i> is displayed when either the above permission is missing or the cut-of value is -1.<br/>
+This can be styled with the css selector <i>#uaThreadViewContainer .empty-list</i>

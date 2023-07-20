@@ -24,6 +24,7 @@ use function count;
 use function explode;
 use function implode;
 use function is_array;
+use function min;
 use function strlen;
 
 class UserActivity extends Repository
@@ -448,6 +449,12 @@ class UserActivity extends Repository
      */
     protected function getUsersViewing(string $contentType, int $contentId, User $viewingUser, bool $fetchUserList): array
     {
+        $cutoff = (int)(min(-1, $options->SV_UA_Cutoff ?? 250));
+        if (!$fetchUserList)
+        {
+            $cutoff = -1;
+        }
+
         $isGuest = $viewingUser->user_id === 0;
         if ($isGuest)
         {
@@ -461,7 +468,7 @@ class UserActivity extends Repository
         }
         $robotCount = 0;
         $records = [];
-        if (!$isGuest)
+        if (!$isGuest && $cutoff !== -1)
         {
             $rec = [];
             $structure = $viewingUser->structure();
@@ -514,11 +521,6 @@ class UserActivity extends Repository
             }
         }
 
-        $cutoff = (int)(min(-1, $options->SV_UA_Cutoff ?? 250));
-        if (!$fetchUserList)
-        {
-            $cutoff = -1;
-        }
         $memberVisibleCount = $isGuest ? 0 : 1;
         $recordsUnseen = 0;
 
@@ -595,6 +597,7 @@ class UserActivity extends Repository
             'robots'        => $robotCount,
             'records'       => $records,
             'recordsUnseen' => $recordsUnseen,
+            'membersCutOff' => $cutoff,
         ];
     }
 
