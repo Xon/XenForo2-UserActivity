@@ -10,6 +10,6 @@
     "advanced": false,
     "default_value": "{\"thread\":true,\"conversation\":true,\"report\":true,\"nf_ticket\":true,\"nf_calendar\":true}",
     "relations": {
-        "SV_UA_Options": 320
+        "svUserActivity": 320
     }
 }

@@ -8,6 +8,6 @@
     "advanced": false,
     "default_value": "0.1",
     "relations": {
-        "SV_UA_Options": 20
+        "svUserActivity": 20
     }
 }

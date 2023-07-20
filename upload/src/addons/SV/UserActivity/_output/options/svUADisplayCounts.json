@@ -10,6 +10,6 @@
     "advanced": false,
     "default_value": "[]",
     "relations": {
-        "SV_UA_Options": 300
+        "svUserActivity": 300
     }
 }
