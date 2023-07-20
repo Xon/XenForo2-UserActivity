@@ -42,13 +42,13 @@ trait UserCountActivityInjector
     protected function _injectUserCountIntoResponse(ViewReply $response, string $action): void
     {
         $fetchData = [];
-        $options = \XF::options();
+        $displayOptions = \XF::options()->svUADisplayCounts ?? [];
         $actionL = strtolower($action);
         foreach ($this->countActivityInjector as $config)
         {
             /** @var array{activeKey: string, type: string, actions: array, fetcher: string} $config */
             $key = $config['activeKey'] ?? null;
-            if ($key === null || empty($options->svUADisplayCounts[$key]))
+            if ($key === null || empty($displayOptions[$key]))
             {
                 continue;
             }
@@ -82,15 +82,10 @@ trait UserCountActivityInjector
                 $output = [$output];
             }
 
-            if (!isset($fetchData[$type]))
-            {
-                $fetchData[$type] = [];
-            }
-
-            $fetchData[$type] = array_merge($fetchData[$type], $output);
+            $fetchData[$type] = array_merge($fetchData[$type] ?? [], $output);
         }
 
-        if ($fetchData)
+        if (count($fetchData) !== 0)
         {
             /** @var UserActivityRepo $repo */
             $repo = \XF::repository('SV\UserActivity:UserActivity');

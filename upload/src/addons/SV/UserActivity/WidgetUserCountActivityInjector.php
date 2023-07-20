@@ -107,15 +107,10 @@ trait WidgetUserCountActivityInjector
                 $output = [$output];
             }
 
-            if (!isset($fetchData[$type]))
-            {
-                $fetchData[$type] = [];
-            }
-
-            $fetchData[$type] = array_merge($fetchData[$type], $output);
+            $fetchData[$type] = array_merge($fetchData[$type] ?? [], $output);
         }
 
-        if ($fetchData)
+        if (count($fetchData) !== 0)
         {
             /** @var UserActivityRepo $repo */
             $repo = \XF::repository('SV\UserActivity:UserActivity');
