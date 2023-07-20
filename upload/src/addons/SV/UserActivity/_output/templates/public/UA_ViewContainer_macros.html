@@ -27,13 +27,13 @@
 				<h3 class="block-minorHeader">{$headerPhrase}</h3>
 				<div class="block-body">
 					<div class="block-row block-row--minor">
-						<xf:if is="$records.membersCutOff === -1">
+						<xf:if is="$records.membersCutOff === -1 && ($records.total > 1 || $xf.visitor.user_id)">
 							<xf:if contentcheck="true">
 								<span class="empty-list">
 									<xf:contentcheck>{{ phrase('svUserActivity_viewing_users_are_empty') }}</xf:contentcheck>
 								</span>
 							</xf:if>
-						<xf:elseif is="$xf.options.RainDD_UA_ThreadViewType == 0" />									
+						<xf:elseif is="$xf.options.RainDD_UA_ThreadViewType == 0" />
 							<ul class="listInline listInline--comma listInline--selfInline">
 								<xf:foreach loop="$records.records" value="$user"><xf:trim>
 									<li><xf:trim>
@@ -49,10 +49,10 @@
 							<ul class="listHeap">
 								<xf:foreach loop="$records.records" value="$user">
 									<li>
-										<xf:avatar user="$user" size="s" img="true" 
-												   faux-user="1" 
-												   data-username="{$user.username|for_attr}" 
-												   notooltip="{$lastSeenMode}" 
+										<xf:avatar user="$user" size="s" img="true"
+												   faux-user="1"
+												   data-username="{$user.username|for_attr}"
+												   notooltip="{$lastSeenMode}"
 												   data-xf-init="{{ $lastSeenMode ? 'user-activity-last-seen' : ''}}"/>
 										<xf:if is="$lastSeenMode">
 											<span class="uaLastSeenBlock">{{ date_dynamic($user.effective_last_activity) }}</span>
@@ -84,7 +84,6 @@
 
 <xf:macro name="viewerCounts" arg-recordCounts="!" arg-contentType="!" arg-contentId="!">
 	<xf:set var="$activityCount" value="{$recordCounts.{$contentType}.{$contentId}}" />
-
 	<xf:if is="{$activityCount} == 1">
 		<span class="sv-user-activity--viewer-count">{{ phrase('ua_node_view_count_single', {'count': {$activityCount|number}}) }}</span>
 	<xf:elseif is="{$activityCount}"/>
