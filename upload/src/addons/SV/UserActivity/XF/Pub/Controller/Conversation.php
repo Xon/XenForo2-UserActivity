@@ -6,6 +6,7 @@ use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Reply\View as ViewReply;
+use function array_merge;
 
 class Conversation extends XFCP_Conversation
 {
@@ -25,7 +26,7 @@ class Conversation extends XFCP_Conversation
         $conversations = $response->getParam('stickyUserConvs');
         if ($conversations && $conversations->count())
         {
-            $conversationIds = \array_merge($conversationIds, $conversations->keys());
+            $conversationIds = array_merge($conversationIds, $conversations->keys());
         }
 
         return $conversationIds;

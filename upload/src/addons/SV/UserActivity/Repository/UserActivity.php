@@ -14,6 +14,17 @@ use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View as ViewReply;
 use XF\Tree;
 use XF\Widget\WidgetRenderer;
+use function array_combine;
+use function array_filter;
+use function array_key_exists;
+use function array_map;
+use function array_merge;
+use function array_unique;
+use function count;
+use function explode;
+use function implode;
+use function is_array;
+use function strlen;
 
 class UserActivity extends Repository
 {
@@ -43,12 +54,12 @@ class UserActivity extends Repository
      */
     protected function validateHandler(array $handler): array
     {
-        if (!\array_key_exists('controller', $handler) ||
-            !\array_key_exists('id', $handler) ||
-            !\array_key_exists('type', $handler) || // Content Rating support rewrites the content type key as required
-            !\array_key_exists('actions', $handler) ||
-            !\is_array($handler['actions']) ||
-            !\array_key_exists('activeKey', $handler))
+        if (!array_key_exists('controller', $handler) ||
+            !array_key_exists('id', $handler) ||
+            !array_key_exists('type', $handler) || // Content Rating support rewrites the content type key as required
+            !array_key_exists('actions', $handler) ||
+            !is_array($handler['actions']) ||
+            !array_key_exists('activeKey', $handler))
         {
             $error = 'activityInjector is not configured properly, expecting array{controller: string, id: int, type: string, actions: array<string>, activeKey: string} ';
             if (\XF::$debugMode)
@@ -243,11 +254,11 @@ class UserActivity extends Repository
         foreach ($updateSet as $record)
         {
             // $record has the format; [content_type, content_id, `blob`]
-            $sqlArgs = \array_merge($sqlArgs, $record);
+            $sqlArgs = array_merge($sqlArgs, $record);
             $sqlArgs[] = $time;
             $sqlParts[] = '(?,?,?,?)';
         }
-        $sql = \implode(',', $sqlParts);
+        $sql = implode(',', $sqlParts);
         $sql = "-- XFDB=noForceAllWrite
         INSERT INTO xf_sv_user_activity (content_type, content_id, `blob`, `timestamp`) VALUES 
         {$sql}
@@ -308,7 +319,7 @@ class UserActivity extends Repository
     protected function buildSessionActivityUpdateSet(array $trackBuffer, array $updateBlob): array
     {
         // encode the data
-        $raw = \implode("\n", $updateBlob);
+        $raw = implode("\n", $updateBlob);
         $outputSet = [];
         foreach ($trackBuffer as $contentType => $contentIds)
         {
@@ -342,7 +353,7 @@ class UserActivity extends Repository
 
         // record keeping
         $options = \XF::options();
-        $onlineStatusTimeout = \max(60, \intval($options->onlineStatusTimeout) * 60);
+        $onlineStatusTimeout = (int)max(60, $options->onlineStatusTimeout * 60);
 
         // not ideal, but fairly cheap
         // cluster support requires that each `key` potentially be on a separate host
@@ -486,7 +497,7 @@ class UserActivity extends Repository
             {
                 $fillFactor = (float)($options->UA_fillFactor ?? 1.2);
                 $credis = $cache->getCredis(false);
-                if ($credis->zCard($key) >= \count($onlineRecords) * $fillFactor)
+                if ($credis->zCard($key) >= count($onlineRecords) * $fillFactor)
                 {
                     // O(log(N)+M) with N being the number of elements in the sorted set and M the number of elements removed by the operation.
                     $credis->zRemRangeByScore($key, 0, $start - 1);
@@ -498,7 +509,7 @@ class UserActivity extends Repository
         $memberVisibleCount = $isGuest ? 0 : 1;
         $recordsUnseen = 0;
 
-        if (\is_array($onlineRecords))
+        if (is_array($onlineRecords))
         {
             $seen = [$viewingUser->user_id => true];
             $bypassUserPrivacy = $viewingUser->canBypassUserPrivacy();
@@ -506,10 +517,10 @@ class UserActivity extends Repository
 
             foreach ($onlineRecords as $rec => $score)
             {
-                $data = \explode("\n", $rec);
+                $data = explode("\n", $rec);
                 try
                 {
-                    $rec = @\array_combine(self::CacheKeys, $data);
+                    $rec = @array_combine(self::CacheKeys, $data);
                 }
                 catch(\ValueError $e)
                 {
@@ -579,8 +590,8 @@ class UserActivity extends Repository
         $sql = [];
         foreach ($fetchData as $contentType => $list)
         {
-            $list = \array_filter(\array_map('\intval', \array_unique($list)));
-            if ($list)
+            $list = array_filter(array_map('\intval', array_unique($list)));
+            if (count($list) !== 0)
             {
                 $sql[] = "\n(content_type = " . $db->quote($contentType) . ' AND content_id in (' . $db->quote($list) . '))';
             }
@@ -645,7 +656,7 @@ class UserActivity extends Repository
             $args = [];
             foreach ($fetchData as $contentType => $list)
             {
-                $list = \array_filter(\array_map('\intval', \array_unique($list)));
+                $list = array_filter(array_map('\intval', array_unique($list)));
                 foreach ($list as $contentId)
                 {
                     $args[] = [$contentType, $contentId];
@@ -675,8 +686,8 @@ class UserActivity extends Repository
                 $ret = $credis->exec();
                 foreach ($args as $i => $row)
                 {
-                    $val = \intval($ret[$i]);
-                    if ($val)
+                    $val = (int)$ret[$i];
+                    if ($val !== 0)
                     {
                         $onlineRecords[$row[0]][$row[1]] = $val;
                     }
@@ -697,9 +708,9 @@ class UserActivity extends Repository
      */
     public function bufferTrackViewerUsage(string $contentType, int $contentId, string $activeKey): void
     {
-        if (\strlen($contentType) === 0 ||
+        if (strlen($contentType) === 0 ||
             $contentId === 0 ||
-            \strlen($activeKey) === 0 ||
+            strlen($activeKey) === 0 ||
             !$this->isLogging())
         {
             return;
@@ -720,7 +731,7 @@ class UserActivity extends Repository
      */
     public function flushTrackViewerUsageBuffer(string $ip = null, string $robotKey = null, User $viewingUser = null): void
     {
-        if (!$this->isLogging() || \count($this->trackBuffer) === 0)
+        if (!$this->isLogging() || count($this->trackBuffer) === 0)
         {
             return;
         }
@@ -775,7 +786,7 @@ class UserActivity extends Repository
      */
     public function getFilteredForumNodeIds(array $nodeIds): array
     {
-        if (\count($nodeIds) === 0)
+        if (count($nodeIds) === 0)
         {
             return [];
         }

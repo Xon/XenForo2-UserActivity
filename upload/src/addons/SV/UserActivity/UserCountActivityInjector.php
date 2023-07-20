@@ -9,6 +9,12 @@ use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View as ViewReply;
+use function array_merge;
+use function in_array;
+use function is_array;
+use function is_callable;
+use function is_string;
+use function strtolower;
 
 /**
  * @property array countActivityInjector
@@ -31,7 +37,7 @@ trait UserCountActivityInjector
     {
         $fetchData = [];
         $options = \XF::options();
-        $actionL = \strtolower($action);
+        $actionL = strtolower($action);
         foreach ($this->countActivityInjector as $config)
         {
             /** @var array{activeKey: string, type: string, actions: array, fetcher: string} $config */
@@ -40,7 +46,7 @@ trait UserCountActivityInjector
             {
                 continue;
             }
-            if (!\in_array($actionL, $config['actions'] ?? [], true))
+            if (!in_array($actionL, $config['actions'] ?? [], true))
             {
                 continue;
             }
@@ -50,11 +56,11 @@ trait UserCountActivityInjector
                 continue;
             }
             $callback = $config['fetcher'] ?? null;
-            if (\is_string($callback))
+            if (is_string($callback))
             {
                 $callback = [$this, $callback];
             }
-            if (!\is_callable($callback))
+            if (!is_callable($callback))
             {
                 continue;
             }
@@ -65,7 +71,7 @@ trait UserCountActivityInjector
                 continue;
             }
 
-            if (!\is_array($output))
+            if (!is_array($output))
             {
                 $output = [$output];
             }
@@ -75,7 +81,7 @@ trait UserCountActivityInjector
                 $fetchData[$type] = [];
             }
 
-            $fetchData[$type] = \array_merge($fetchData[$type], $output);
+            $fetchData[$type] = array_merge($fetchData[$type], $output);
         }
 
         if ($fetchData)

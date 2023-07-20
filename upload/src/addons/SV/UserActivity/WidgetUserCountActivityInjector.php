@@ -9,6 +9,7 @@ namespace SV\UserActivity;
 use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use XF\Http\Request;
 use XF\Widget\WidgetRenderer;
+use function array_merge;
 use function array_replace;
 use function is_array;
 use function is_callable;
@@ -74,7 +75,7 @@ trait WidgetUserCountActivityInjector
             {
                 continue;
             }
-            if (!\in_array($actionL, $config['actions'], true))
+            if (!in_array($actionL, $config['actions'], true))
             {
                 continue;
             }
@@ -111,7 +112,7 @@ trait WidgetUserCountActivityInjector
                 $fetchData[$type] = [];
             }
 
-            $fetchData[$type] = \array_merge($fetchData[$type], $output);
+            $fetchData[$type] = array_merge($fetchData[$type], $output);
         }
 
         if ($fetchData)

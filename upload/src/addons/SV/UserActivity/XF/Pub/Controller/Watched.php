@@ -6,6 +6,7 @@ use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Reply\View as ViewReply;
+use function array_column;
 
 /**
  * Extends \XF\Pub\Controller\Watched
@@ -25,7 +26,7 @@ class Watched extends XFCP_Watched
         $watchedForums = $response->getParam('watchedForums');
         if ($watchedForums instanceof AbstractCollection)
         {
-            $nodeIds = \array_column($watchedForums->toArray(), 'node_id');
+            $nodeIds = array_column($watchedForums->toArray(), 'node_id');
         }
         else
         {

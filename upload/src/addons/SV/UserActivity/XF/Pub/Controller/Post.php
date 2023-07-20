@@ -7,6 +7,7 @@ use SV\UserActivity\UserActivityInjector;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View as ViewReply;
+use function strtolower;
 
 class Post extends XFCP_Post
 {
@@ -24,7 +25,7 @@ class Post extends XFCP_Post
     {
         if ($reply instanceof ViewReply && $reply->getResponseCode() < 400)
         {
-            $actionL = \strtolower($action);
+            $actionL = strtolower($action);
             switch ($actionL)
             {
                 case 'react':

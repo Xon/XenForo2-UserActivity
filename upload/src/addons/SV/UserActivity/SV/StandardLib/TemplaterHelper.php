@@ -3,6 +3,7 @@
 namespace SV\UserActivity\SV\StandardLib;
 
 use XF\Entity\User as UserEntity;
+use function is_array;
 
 /**
  * Extends \SV\StandardLib\TemplaterHelper
@@ -28,7 +29,7 @@ class TemplaterHelper extends XFCP_TemplaterHelper
     public function fnArrayAvatar($templater, &$escape, $user, $size, $canonical = false, $attributes = [])
     {
         $fauxUser = $this->templater->processAttributeToRaw($attributes, 'faux-user', '', true);
-        if ($fauxUser && \is_array($user))
+        if ($fauxUser && is_array($user))
         {
             $em = \XF::em();
             $fauxUser = $em->findCached('XF:User', $user['user_id']);

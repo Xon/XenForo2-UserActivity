@@ -8,6 +8,9 @@ namespace SV\UserActivity;
 use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
+use function count;
+use function in_array;
+use function strtolower;
 
 /**
  * @property array{controller: string, id: string, type: string, actions: array<string>, activeKey: ?string} activityInjector
@@ -50,7 +53,7 @@ trait UserActivityInjector
     {
         parent::preDispatch($action, $params);
         $activityInjector = $this->getSvActivityInjector(false);
-        if (\count($activityInjector) !== 0)
+        if (count($activityInjector) !== 0)
         {
             /** @var UserActivityRepo $userActivityRepo */
             $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');
@@ -67,11 +70,11 @@ trait UserActivityInjector
     {
         parent::postDispatch($action, $params, $reply);
         $activityInjector = $this->getSvActivityInjector(true);
-        if (\count($activityInjector) !== 0 &&
+        if (count($activityInjector) !== 0 &&
             !empty($activityInjector['actions']))
         {
-            $actionL = \strtolower($action);
-            if (\in_array($actionL, $this->activityInjector['actions'], true))
+            $actionL = strtolower($action);
+            if (in_array($actionL, $this->activityInjector['actions'], true))
             {
                 /** @var UserActivityRepo $userActivityRepo */
                 $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');
