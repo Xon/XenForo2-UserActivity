@@ -24,7 +24,7 @@ use function count;
 use function explode;
 use function implode;
 use function is_array;
-use function min;
+use function max;
 use function strlen;
 
 class UserActivity extends Repository
@@ -449,7 +449,7 @@ class UserActivity extends Repository
      */
     protected function getUsersViewing(string $contentType, int $contentId, User $viewingUser, bool $fetchUserList): array
     {
-        $cutoff = (int)(min(-1, $options->SV_UA_Cutoff ?? 250));
+        $cutoff = (int)(max(-1, $options->SV_UA_Cutoff ?? 250));
         if (!$fetchUserList)
         {
             $cutoff = -1;
