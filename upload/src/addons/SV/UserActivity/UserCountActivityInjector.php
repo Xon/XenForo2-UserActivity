@@ -25,6 +25,12 @@ trait UserCountActivityInjector
     {
         // this updates the session, and occurs after postDispatchController
         parent::postDispatchType($action, $params, $reply);
+        $visitor = \XF::visitor();
+        if (!$visitor->hasPermission('svUserActivity', 'viewCounters'))
+        {
+            return;
+        }
+
         if ($reply instanceof ViewReply &&
             !empty($this->countActivityInjector) &&
             $reply->getResponseType() !== 'rss')

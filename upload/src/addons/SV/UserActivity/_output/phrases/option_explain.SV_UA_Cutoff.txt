@@ -1,2 +1,4 @@
 Maximum number of users to display before it is displays as "...and X others".<br/><br />
-Use <code>0</code> to show all usernames always.
+Use <code>0</code> to show all usernames always.<br/>
+Use <code>-1</code> to not show any usernames.<br/>
+Note: <i>View user activity counters</i> permission can override if usernames are displayed

@@ -107,7 +107,7 @@ class UserActivity extends Repository
     public function insertBulkUserActivityIntoViewResponse(&$response, array $fetchData): void
     {
         $visitor = \XF::visitor();
-        if (!$visitor->hasPermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers'))
+        if (!$visitor->hasPermission('svUserActivity', 'viewActivity'))
         {
             return;
         }
@@ -131,6 +131,12 @@ class UserActivity extends Repository
     {
         if ($response instanceof ViewReply)
         {
+            $visitor = \XF::visitor();
+            if (!$visitor->hasPermission('svUserActivity', 'viewActivity'))
+            {
+                return;
+            }
+
             $handler = $this->getHandler($controllerName);
             $contentType = $handler['type'] ?? null;
             $contentIdField = $handler['id'] ?? null;
@@ -145,14 +151,15 @@ class UserActivity extends Repository
                 return;
             }
 
-            $visitor = \XF::visitor();
             $session = \XF::session();
             $isRobot = !$session->isStarted() || $session->get('robot');
-            if ($isRobot || !$visitor->hasPermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers'))
+            if ($isRobot)
             {
                 return;
             }
-            $records = $this->getUsersViewing($contentType, $contentId, $visitor);
+            $fetchUserList = (bool)$visitor->hasPermission('svUserActivity', 'viewUsers');
+
+            $records = $this->getUsersViewing($contentType, $contentId, $visitor, $fetchUserList);
             if (!empty($records))
             {
                 $response->setParam('UA_Records', $records);
@@ -431,13 +438,15 @@ class UserActivity extends Repository
     }
 
     //records: array{user_id: int, username: string, visible: bool, robot: ?int, display_style_group_id: int, avatar_date: int, gravatar: string, ip: string }
+
     /**
      * @param string $contentType
      * @param int    $contentId
      * @param User   $viewingUser
+     * @param bool   $fetchUserList
      * @return array{total: int, members: int, guests: int, robots: int, recordsUnseen: int, records: array}
      */
-    protected function getUsersViewing(string $contentType, int $contentId, User $viewingUser): array
+    protected function getUsersViewing(string $contentType, int $contentId, User $viewingUser, bool $fetchUserList): array
     {
         $isGuest = $viewingUser->user_id === 0;
         if ($isGuest)
@@ -505,7 +514,11 @@ class UserActivity extends Repository
             }
         }
 
-        $cutoff = (int)($options->SV_UA_Cutoff ?? 250);
+        $cutoff = (int)(min(-1, $options->SV_UA_Cutoff ?? 250));
+        if (!$fetchUserList)
+        {
+            $cutoff = -1;
+        }
         $memberVisibleCount = $isGuest ? 0 : 1;
         $recordsUnseen = 0;
 
@@ -530,20 +543,30 @@ class UserActivity extends Repository
                 {
                     continue;
                 }
-                if ($rec['user_id'])
+                $userId = $rec['user_id'];
+                if ($userId !== 0)
                 {
-                    if (empty($seen[$rec['user_id']]))
+                    if (empty($seen[$userId]))
                     {
-                        $seen[$rec['user_id']] = true;
+                        $seen[$userId] = true;
                         $memberCount += 1;
                         if (!empty($rec['visible']) || $bypassUserPrivacy)
                         {
-                            $memberVisibleCount += 1;
-                            if ($cutoff > 0 && $memberVisibleCount > $cutoff)
+                            if ($cutoff === -1)
                             {
                                 $recordsUnseen += 1;
                                 continue;
                             }
+                            else
+                            {
+                                $memberVisibleCount += 1;
+                                if ($cutoff !== 0 && $memberVisibleCount > $cutoff)
+                                {
+                                    $recordsUnseen += 1;
+                                    continue;
+                                }
+                            }
+
                             $score = $score - ($score % $sampleInterval);
                             $rec['effective_last_activity'] = $score;
                             $records[] = $rec;

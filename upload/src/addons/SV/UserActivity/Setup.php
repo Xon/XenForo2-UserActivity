@@ -47,7 +47,7 @@ class Setup extends AbstractSetup
 
     public function installStep3(): void
     {
-        $this->applyGlobalPermissionByGroup('RainDD_UA_PermissionsMain','RainDD_UA_ThreadViewers', [User::GROUP_GUEST, User::GROUP_REG]);
+        $this->applyDefaultPermissions();
     }
 
     public function upgrade2040000Step1(): void
@@ -58,6 +58,16 @@ class Setup extends AbstractSetup
     public function upgrade2040000Step2(): void
     {
         $this->installStep2();
+    }
+
+    public function upgrade1689797931Step1(): void
+    {
+        $this->renamePermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers', 'svUserActivity', 'viewActivity');
+    }
+
+    public function upgrade1689797931Step2(): void
+    {
+        $this->applyDefaultPermissions(1689797931);
     }
 
     public function uninstallStep1(): void
@@ -107,6 +117,26 @@ class Setup extends AbstractSetup
     protected function getRemoveAlterTables(): array
     {
         return [];
+    }
+
+    protected function applyDefaultPermissions(int $previousVersion = 0): bool
+    {
+        $applied = false;
+
+        if ($previousVersion === 0)
+        {
+            $this->applyGlobalPermissionByGroup('svUserActivity','viewActivity', [User::GROUP_GUEST, User::GROUP_REG]);
+            $applied = true;
+        }
+
+        if ($previousVersion < 1689797931)
+        {
+            $this->applyGlobalPermission('svUserActivity','viewCounters', 'svUserActivity','viewActivity');
+            $this->applyGlobalPermission('svUserActivity','viewUsers', 'svUserActivity','viewActivity');
+            $applied = true;
+        }
+
+        return $applied;
     }
 
     /**

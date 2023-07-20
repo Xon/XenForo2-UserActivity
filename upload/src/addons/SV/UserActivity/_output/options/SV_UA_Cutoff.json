@@ -1,13 +1,13 @@
 {
     "edit_format": "spinbox",
-    "edit_format_params": "",
-    "data_type": "unsigned_integer",
+    "edit_format_params": "min=-1",
+    "data_type": "integer",
     "sub_options": [],
     "validation_class": "",
     "validation_method": "",
     "advanced": false,
     "default_value": "250",
     "relations": {
-        "SV_UA_Options": 130
+        "svUserActivity": 130
     }
 }
