@@ -1,0 +1,1 @@
+Enable and choose where in the report view the container for Viewing Report will appear.

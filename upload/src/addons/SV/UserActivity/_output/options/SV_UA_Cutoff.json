@@ -8,6 +8,6 @@
     "advanced": false,
     "default_value": "250",
     "relations": {
-        "svUserActivity": 130
+        "svUserActivity": 210
     }
 }
