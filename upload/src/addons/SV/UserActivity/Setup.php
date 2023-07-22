@@ -60,14 +60,14 @@ class Setup extends AbstractSetup
         $this->installStep2();
     }
 
-    public function upgrade1689797931Step1(): void
+    public function upgrade1690049433Step1(): void
     {
         $this->renamePermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers', 'svUserActivity', 'viewActivity');
     }
 
-    public function upgrade1689797931Step2(): void
+    public function upgrade1690049433Step2(): void
     {
-        $this->applyDefaultPermissions(1689797931);
+        $this->applyDefaultPermissions(1690049433);
     }
 
     public function uninstallStep1(): void
@@ -129,7 +129,7 @@ class Setup extends AbstractSetup
             $applied = true;
         }
 
-        if ($previousVersion < 1689797931)
+        if ($previousVersion < 1690049432)
         {
             $this->applyGlobalPermission('svUserActivity','viewCounters', 'svUserActivity','viewActivity');
             $this->applyGlobalPermission('svUserActivity','viewUsers', 'svUserActivity','viewActivity');
