@@ -545,7 +545,7 @@ class UserActivity extends Repository
                 {
                     continue;
                 }
-                $userId = $rec['user_id'];
+                $rec['user_id'] = $userId = (int)$rec['user_id'];
                 if ($userId !== 0)
                 {
                     if (empty($seen[$userId]))
