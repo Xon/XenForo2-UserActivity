@@ -174,10 +174,8 @@ class UserActivity extends Repository
         {
             return null;
         }
-        $app = $this->app();
-        /** @var Redis $cache */
-        $cache = $app->cache('userActivity');
-        if (!($cache instanceof Redis) || !($credis = $cache->getCredis(false)))
+        $cache = \XF::isAddOnActive('SV/RedisCache') ? RedisRepo::get()->getRedisConnector('userActivity') : null;
+        if ($cache === null || !($credis = $cache->getCredis()))
         {
             return null;
         }
@@ -227,7 +225,7 @@ class UserActivity extends Repository
         $end = $end - ($end % $this->getSampleInterval());
 
         $cursor = $data['cursor'] ?? null;
-        RedisRepo::instance()->visitCacheByPattern('activity_', $cursor, $targetRunTime ?? 0,
+        RedisRepo::get()->visitCacheByPattern('activity_', $cursor, $targetRunTime ?? 0,
             function (Credis_Client $credis, array $keys) use ($end) {
                 $credis->pipeline();
                 foreach ($keys as $key)

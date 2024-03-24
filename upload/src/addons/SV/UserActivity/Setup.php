@@ -2,6 +2,7 @@
 
 namespace SV\UserActivity;
 
+use SV\RedisCache\Repository\Redis as RedisRepo;
 use SV\StandardLib\InstallerHelper;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
@@ -147,9 +148,9 @@ class Setup extends AbstractSetup
     public function checkRequirements(&$errors = [], &$warnings = []): void
     {
         $this->checkRequirementsTrait($errors,$warnings);
-        /** @var Redis $cache */
-        $cache = \XF::app()->cache('userActivity');
-        if (!($cache instanceof Redis) || $cache->getCredis(false) === null)
+
+        $cache = \XF::isAddOnActive('SV/RedisCache') ? RedisRepo::get()->getRedisConnector('userActivity') : null;
+        if ($cache === null || !$cache->getCredis())
         {
             $warnings[] = 'It is recommended that Redis Cache to be installed and configured, but a MySQL fallback is supported';
         }
