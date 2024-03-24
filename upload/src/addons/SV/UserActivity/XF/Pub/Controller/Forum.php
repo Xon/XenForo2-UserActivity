@@ -27,7 +27,7 @@ class Forum extends XFCP_Forum
             $forum = $response->getParam('forum');
             if ($forum instanceof \XF\Entity\Forum)
             {
-                $this->getUserActivityRepo()->pushViewUsageToParent($response, $forum->Node);
+                UserActivityRepo::get()->pushViewUsageToParent($response, $forum->Node);
             }
         }
 
@@ -70,7 +70,7 @@ class Forum extends XFCP_Forum
     /** @noinspection PhpUnusedParameterInspection */
     protected function forumListFetcher(ViewReply $response, string $action, array $config): array
     {
-        $repo = $this->getUserActivityRepo();
+        $repo = UserActivityRepo::get();
         $depth = $action === 'list' ? 1 : 0;
         /** @var Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
@@ -80,7 +80,7 @@ class Forum extends XFCP_Forum
     /** @noinspection PhpUnusedParameterInspection */
     protected function categoryListFetcher(ViewReply $response, string $action, array $config): array
     {
-        $repo = $this->getUserActivityRepo();
+        $repo = UserActivityRepo::get();
         $depth = $action === 'list' ? 1 : 0;
         /** @var Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
@@ -90,13 +90,13 @@ class Forum extends XFCP_Forum
     /** @noinspection PhpUnusedParameterInspection */
     protected function threadFetcher(ViewReply $response, string $action, array $config): array
     {
-        return $this->getUserActivityRepo()->getFilteredThreadIds($response->getParams(),'threads');
+        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(),'threads');
     }
 
     /** @noinspection PhpUnusedParameterInspection */
     protected function stickyThreadFetcher(ViewReply $response, string $action, array $config): array
     {
-        return $this->getUserActivityRepo()->getFilteredThreadIds($response->getParams(),'stickyThreads');
+        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(),'stickyThreads');
     }
 
     protected $countActivityInjector = [
@@ -161,11 +161,5 @@ class Forum extends XFCP_Forum
         }
 
         parent::updateSessionActivity($action, $params, $reply);
-    }
-
-    protected function getUserActivityRepo(): UserActivityRepo
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->repository('SV\UserActivity:UserActivity');
     }
 }

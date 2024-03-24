@@ -14,7 +14,7 @@ class NewThreads extends XFCP_NewThreads
     /** @noinspection PhpUnusedParameterInspection */
     protected function threadFetcher(WidgetRenderer $renderer, array $config): array
     {
-        return $this->getUserActivityRepo()->getFilteredThreadIds($renderer->getViewParams(), 'threads');
+        return UserActivityRepo::get()->getFilteredThreadIds($renderer->getViewParams(), 'threads');
     }
 
     protected $widgetCountActivityInjector = [
@@ -24,10 +24,4 @@ class NewThreads extends XFCP_NewThreads
         ],
     ];
     use WidgetUserCountActivityInjector;
-
-    protected function getUserActivityRepo(): UserActivityRepo
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->repository('SV\UserActivity:UserActivity');
-    }
 }

@@ -124,7 +124,7 @@ class Report extends XFCP_Report
 //            if ($report instanceof \XF\Entity\Report)
 //            {
 //                /** @var \SV\ReportCentreEssentials\XF\Entity\Report $report */
-//                $this->getUserActivityRepo()->pushViewUsageToParent($response, $report->ReportQueue, true);
+//                UserActivityRepo::get()->pushViewUsageToParent($response, $report->ReportQueue, true);
 //            }
 //        }
 //
@@ -146,10 +146,4 @@ class Report extends XFCP_Report
 //
 //        parent::updateSessionActivity($action, $params, $reply);
 //    }
-
-    protected function getUserActivityRepo(): UserActivityRepo
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->repository('SV\UserActivity:UserActivity');
-    }
 }

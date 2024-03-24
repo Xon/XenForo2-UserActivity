@@ -55,9 +55,7 @@ trait UserActivityInjector
         $activityInjector = $this->getSvActivityInjector(false);
         if (count($activityInjector) !== 0)
         {
-            /** @var UserActivityRepo $userActivityRepo */
-            $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');
-            $userActivityRepo->registerHandler($this->activityInjector['controller'], $this->activityInjector);
+            UserActivityRepo::get()->registerHandler($this->activityInjector['controller'], $this->activityInjector);
         }
     }
 
@@ -76,9 +74,7 @@ trait UserActivityInjector
             $actionL = strtolower($action);
             if (in_array($actionL, $this->activityInjector['actions'], true))
             {
-                /** @var UserActivityRepo $userActivityRepo */
-                $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');
-                $userActivityRepo->insertUserActivityIntoViewResponse($this->activityInjector['controller'], $reply);
+                UserActivityRepo::get()->insertUserActivityIntoViewResponse($this->activityInjector['controller'], $reply);
             }
         }
     }

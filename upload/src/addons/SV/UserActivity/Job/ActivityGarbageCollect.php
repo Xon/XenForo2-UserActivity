@@ -14,11 +14,7 @@ class ActivityGarbageCollect extends AbstractJob
      */
     public function run($maxRunTime): JobResult
     {
-        $app = \XF::app();
-
-        /** @var UserActivityRepo $userActivityRepo */
-		$userActivityRepo = $app->repository('SV\UserActivity:UserActivity');
-		$data = $userActivityRepo->garbageCollectActivity($this->data, $maxRunTime);
+		$data = UserActivityRepo::get()->garbageCollectActivity($this->data, $maxRunTime);
 		if (!$data)
 		{
 			return $this->complete();

@@ -39,7 +39,7 @@ class Post extends XFCP_Post
                     $thread = $threadId ? $this->em()->findCached('XF:Thread', $threadId) : null;
                     if ($thread instanceof \XF\Entity\Thread)
                     {
-                        $this->getUserActivityRepo()->pushViewUsageToParent($reply, $thread->Forum->Node);
+                        UserActivityRepo::get()->pushViewUsageToParent($reply, $thread->Forum->Node);
                     }
 
                     return true;
@@ -91,11 +91,5 @@ class Post extends XFCP_Post
         }
 
         parent::updateSessionActivity($action, $params, $reply);
-    }
-
-    protected function getUserActivityRepo(): UserActivityRepo
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->repository('SV\UserActivity:UserActivity');
     }
 }

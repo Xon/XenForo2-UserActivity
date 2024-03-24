@@ -16,7 +16,7 @@ class Watched extends XFCP_Watched
     /** @noinspection PhpUnusedParameterInspection */
     protected function threadFetcher(ViewReply $response, string $action, array $config): array
     {
-        return $this->getUserActivityRepo()->getFilteredThreadIds($response->getParams(),'threads');
+        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(),'threads');
     }
 
     /** @noinspection PhpUnusedParameterInspection */
@@ -33,7 +33,7 @@ class Watched extends XFCP_Watched
             $nodeIds = [];
         }
 
-        return $this->getUserActivityRepo()->getFilteredForumNodeIds($nodeIds);
+        return UserActivityRepo::get()->getFilteredForumNodeIds($nodeIds);
     }
 
     protected $countActivityInjector = [
@@ -51,10 +51,4 @@ class Watched extends XFCP_Watched
         ],
     ];
     use UserCountActivityInjector;
-
-    protected function getUserActivityRepo(): UserActivityRepo
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->repository('SV\UserActivity:UserActivity');
-    }
 }

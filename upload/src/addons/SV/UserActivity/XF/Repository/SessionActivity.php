@@ -18,8 +18,7 @@ class SessionActivity extends XFCP_SessionActivity
      */
     public function updateSessionActivity($userId, $ip, $controller, $action, array $params, $viewState, $robotKey)
     {
-        /** @var UserActivityRepo $userActivityRepo */
-        $userActivityRepo = \XF::repository('SV\UserActivity:UserActivity');
+        $userActivityRepo = UserActivityRepo::get();
         $visitor = \XF::visitor();
         if ($userActivityRepo->isLogging() && $viewState === 'valid' && $userId === $visitor->user_id)
         {

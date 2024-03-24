@@ -19,7 +19,7 @@ class Thread extends XFCP_Thread
             $thread = $response->getParam('thread');
             if ($thread instanceof \XF\Entity\Thread)
             {
-                $this->getUserActivityRepo()->pushViewUsageToParent($response, $thread->Forum->Node, true);
+                UserActivityRepo::get()->pushViewUsageToParent($response, $thread->Forum->Node, true);
             }
         }
 
@@ -79,10 +79,4 @@ class Thread extends XFCP_Thread
         'activeKey'  => 'thread',
     ];
     use UserActivityInjector;
-
-    protected function getUserActivityRepo(): UserActivityRepo
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->repository('SV\UserActivity:UserActivity');
-    }
 }

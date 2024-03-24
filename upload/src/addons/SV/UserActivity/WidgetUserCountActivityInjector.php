@@ -112,9 +112,7 @@ trait WidgetUserCountActivityInjector
 
         if (count($fetchData) !== 0)
         {
-            /** @var UserActivityRepo $repo */
-            $repo = \XF::repository('SV\UserActivity:UserActivity');
-            $repo->insertBulkUserActivityIntoViewResponse($renderer, $fetchData);
+            UserActivityRepo::get()->insertBulkUserActivityIntoViewResponse($renderer, $fetchData);
         }
 
         return $renderer;

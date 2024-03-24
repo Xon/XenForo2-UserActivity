@@ -20,7 +20,7 @@ class Ticket extends XFCP_Ticket
 //            ($ticket = $response->getParam('ticket')))
 //        {
 //            /** @var \NF\Tickets\Entity\Ticket $ticket */
-//            $this->getUserActivityRepo()->pushViewUsageToParent($response, $ticket->, true);
+//            UserActivityRepo::get()->pushViewUsageToParent($response, $ticket->, true);
 //        }
 //
 //        return $response;
@@ -47,10 +47,4 @@ class Ticket extends XFCP_Ticket
         'activeKey'  => 'nf_ticket',
     ];
     use UserActivityInjector;
-
-    protected function getUserActivityRepo(): UserActivityRepo
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->repository('SV\UserActivity:UserActivity');
-    }
 }

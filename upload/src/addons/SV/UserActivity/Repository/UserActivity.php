@@ -5,6 +5,8 @@ namespace SV\UserActivity\Repository;
 use Credis_Client;
 use SV\RedisCache\Redis;
 use SV\RedisCache\Repository\Redis as RedisRepo;
+use SV\StandardLib\Helper;
+use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use XF\Db\DeadlockException;
 use XF\Entity\Node;
 use XF\Entity\Thread;
@@ -32,6 +34,11 @@ class UserActivity extends Repository
     protected $handlers      = [];
     protected $logging       = true;
     protected $forceFallback = false;
+
+    public static function get(): self
+    {
+        return Helper::repository(self::class);
+    }
 
     public function getSampleInterval(): int
     {
@@ -934,8 +941,7 @@ class UserActivity extends Repository
         $nodeTrackLimit = (int)($options->svUAThreadNodeTrackLimit ?? 1);
         $nodeTrackLimit = $nodeTrackLimit < 0 ? PHP_INT_MAX : $nodeTrackLimit;
 
-        /** @var  UserActivity $repo */
-        $repo = \XF::repository('SV\UserActivity:UserActivity');
+        $repo = UserActivityRepo::get();
         if ($nodeTrackLimit > 0)
         {
             if ($pushToNode)

@@ -87,9 +87,7 @@ trait UserCountActivityInjector
 
         if (count($fetchData) !== 0)
         {
-            /** @var UserActivityRepo $repo */
-            $repo = \XF::repository('SV\UserActivity:UserActivity');
-            $repo->insertBulkUserActivityIntoViewResponse($response, $fetchData);
+            UserActivityRepo::get()->insertBulkUserActivityIntoViewResponse($response, $fetchData);
         }
     }
 }

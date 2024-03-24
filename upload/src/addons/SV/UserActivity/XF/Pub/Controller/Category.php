@@ -23,7 +23,7 @@ class Category extends XFCP_Category
             $category = $response->getParam('category');
             if ($category instanceof \XF\Entity\Category)
             {
-                $this->getUserActivityRepo()->pushViewUsageToParent($response, $category->Node, false, ['forum', 'category']);
+                UserActivityRepo::get()->pushViewUsageToParent($response, $category->Node, false, ['forum', 'category']);
             }
         }
 
@@ -66,7 +66,7 @@ class Category extends XFCP_Category
     /** @noinspection PhpUnusedParameterInspection */
     protected function forumListFetcher(ViewReply $response, string $action, array $config): array
     {
-        $repo = $this->getUserActivityRepo();
+        $repo = UserActivityRepo::get();
         $depth = $action === 'list' ? 1 : 0;
         /** @var Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
@@ -77,7 +77,7 @@ class Category extends XFCP_Category
     /** @noinspection PhpUnusedParameterInspection */
     protected function categoryListFetcher(ViewReply $response, string $action, array $config): array
     {
-        $repo = $this->getUserActivityRepo();
+        $repo = UserActivityRepo::get();
         $depth = $action === 'list' ? 1 : 0;
         /** @var Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
@@ -106,10 +106,4 @@ class Category extends XFCP_Category
         ],
     ];
     use UserCountActivityInjector;
-
-    protected function getUserActivityRepo(): UserActivityRepo
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->repository('SV\UserActivity:UserActivity');
-    }
 }

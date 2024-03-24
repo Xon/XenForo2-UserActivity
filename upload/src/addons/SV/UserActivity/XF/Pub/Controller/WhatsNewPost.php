@@ -14,7 +14,7 @@ class WhatsNewPost extends XFCP_WhatsNewPost
     /** @noinspection PhpUnusedParameterInspection */
     protected function threadFetcher(ViewReply $response, string $action, array $config): array
     {
-        return $this->getUserActivityRepo()->getFilteredThreadIds($response->getParams(),'threads');
+        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(),'threads');
     }
 
     protected $countActivityInjector = [
@@ -26,10 +26,4 @@ class WhatsNewPost extends XFCP_WhatsNewPost
         ],
     ];
     use UserCountActivityInjector;
-
-    protected function getUserActivityRepo(): UserActivityRepo
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->repository('SV\UserActivity:UserActivity');
-    }
 }
