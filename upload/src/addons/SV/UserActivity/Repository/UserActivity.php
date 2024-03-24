@@ -189,7 +189,7 @@ class UserActivity extends Repository
      * @return array|null
      * @noinspection PhpUnusedParameterInspection
      */
-    protected function _garbageCollectActivityFallback(array $data, float $targetRunTime = null): ?array
+    protected function _garbageCollectActivityFallback(array $data, ?float $targetRunTime = null): ?array
     {
         $app = $this->app();
         $options = $app->options();
@@ -209,7 +209,7 @@ class UserActivity extends Repository
      * @param float|null  $targetRunTime
      * @return array|null
      */
-    public function garbageCollectActivity(array $data, float $targetRunTime = null): ?array
+    public function garbageCollectActivity(array $data, ?float $targetRunTime = null): ?array
     {
         $credis = $this->getCredis();
         if (!$credis)
@@ -753,7 +753,7 @@ class UserActivity extends Repository
      * @param User|null   $viewingUser
      * @return void
      */
-    public function flushTrackViewerUsageBuffer(string $ip = null, string $robotKey = null, User $viewingUser = null): void
+    public function flushTrackViewerUsageBuffer(?string $ip = null, ?string $robotKey = null, ?User $viewingUser = null): void
     {
         if (!$this->isLogging() || count($this->trackBuffer) === 0)
         {

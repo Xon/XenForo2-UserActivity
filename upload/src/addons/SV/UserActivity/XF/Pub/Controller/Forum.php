@@ -52,7 +52,7 @@ class Forum extends XFCP_Forum
      * @param Tree|null $nodeTree
      * @return int[]
      */
-    protected function nodeListFetcher(string $typeFilter, int $depth, Tree $nodeTree = null): array
+    protected function nodeListFetcher(string $typeFilter, int $depth, ?Tree $nodeTree = null): array
     {
         $nodeIds = [];
         $flattenedNodeList = $nodeTree ? $nodeTree->getFlattened() : [];
