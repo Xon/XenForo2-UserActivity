@@ -6,7 +6,7 @@ use XF\Entity\User as UserEntity;
 use function is_array;
 
 /**
- * Extends \SV\StandardLib\TemplaterHelper
+ * @extends \SV\StandardLib\TemplaterHelper
  */
 class TemplaterHelper extends XFCP_TemplaterHelper
 {

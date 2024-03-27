@@ -8,6 +8,9 @@ use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Reply\View as ViewReply;
 use function array_merge;
 
+/**
+ * @extends \XF\Pub\Controller\Conversation
+ */
 class Conversation extends XFCP_Conversation
 {
     /** @noinspection PhpUnusedParameterInspection */

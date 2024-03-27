@@ -7,7 +7,7 @@ use SV\UserActivity\WidgetUserCountActivityInjector;
 use XF\Widget\WidgetRenderer;
 
 /**
- * Extends \XF\Widget\NewThreads
+ * @extends \XF\Widget\NewThreads
  */
 class NewThreads extends XFCP_NewThreads
 {

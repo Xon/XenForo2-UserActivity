@@ -8,7 +8,7 @@ use SV\UserActivity\UserActivityInjector;
 use XF\Mvc\Reply\View as ViewReply;
 
 /**
- * Extends \NF\Tickets\Pub\Controller\Ticket
+ * @extends \NF\Tickets\Pub\Controller\Ticket
  */
 class Ticket extends XFCP_Ticket
 {

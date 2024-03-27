@@ -7,7 +7,7 @@ use SV\UserActivity\WidgetUserCountActivityInjector;
 use XF\Widget\WidgetRenderer;
 
 /**
- * Extends \XF\Widget\NewPosts
+ * @extends \XF\Widget\NewPosts
  */
 class NewPosts extends XFCP_NewPosts
 {

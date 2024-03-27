@@ -5,7 +5,7 @@ namespace SV\UserActivity\NF\Calendar\Pub\Controller;
 use SV\UserActivity\UserActivityInjector;
 
 /**
- * Extends \NF\Calendar\Pub\Controller\Event
+ * @extends \NF\Calendar\Pub\Controller\Event
  */
 class Event extends XFCP_Event
 {

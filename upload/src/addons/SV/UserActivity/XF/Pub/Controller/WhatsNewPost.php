@@ -7,7 +7,7 @@ use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\Reply\View as ViewReply;
 
 /**
- * Extends \XF\Pub\Controller\WhatsNewPost
+ * @extends \XF\Pub\Controller\WhatsNewPost
  */
 class WhatsNewPost extends XFCP_WhatsNewPost
 {

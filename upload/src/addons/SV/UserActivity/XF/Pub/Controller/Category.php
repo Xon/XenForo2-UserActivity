@@ -9,7 +9,7 @@ use XF\Mvc\Reply\View as ViewReply;
 use XF\Tree;
 
 /**
- * Extends \XF\Pub\Controller\Category
+ * @extends \XF\Pub\Controller\Category
  */
 class Category extends XFCP_Category
 {

@@ -9,7 +9,7 @@ use XF\Mvc\Reply\View as ViewReply;
 use function array_column;
 
 /**
- * Extends \XF\Pub\Controller\Watched
+ * @extends \XF\Pub\Controller\Watched
  */
 class Watched extends XFCP_Watched
 {

@@ -12,7 +12,7 @@ use XF\Mvc\Reply\View as ViewReply;
 use XF\Tree;
 
 /**
- * Extends \XF\Pub\Controller\Forum
+ * @extends \XF\Pub\Controller\Forum
  */
 class Forum extends XFCP_Forum
 {
