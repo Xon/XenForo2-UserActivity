@@ -1,9 +1,9 @@
 {
     "template": "thread_view",
     "description": "Adds activity containers (list) - part 3",
-    "execution_order": 10,
+    "execution_order": 9,
     "enabled": true,
     "action": "preg_replace",
-    "find": "#<xf:extension id=\"below_quick_reply\".*?></xf:extension>#si",
+    "find": "#<xf:extension (?:name|id)=\"below_quick_reply\".*?></xf:extension>#si",
     "replace": "$0\n<xf:if is=\"$xf.options.RainDD_UA_ThreadViewPos == 3\">\n\t<xf:macro template=\"UA_ViewContainer_macros\" name=\"UserActivity\" arg-headerPhrase=\"{{ phrase('svUserActivity_users_who_are_viewing_this_thread') }}\" arg-records=\"{$UA_Records}\"/>\n</xf:if>"
 }

@@ -1,7 +1,7 @@
 {
     "template": "thread_view",
     "description": "Adds activity containers (list) - part 2",
-    "execution_order": 10,
+    "execution_order": 8,
     "enabled": true,
     "action": "preg_replace",
     "find": "#^<xf:ad position=\"thread_view_below_messages\".*?\\/>$#sim",
