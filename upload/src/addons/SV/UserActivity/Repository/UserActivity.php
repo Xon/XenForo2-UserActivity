@@ -43,46 +43,46 @@ class UserActivity extends Repository
     public function getDisplayCounts(): array
     {
         return [
-            'thread' => 'Thread List',
-            'thread-view' => 'Thread View',
-            'sticky-thread' => 'Sticky Thread List',
-            'index-forum' => 'Index Page Forums',
-            'index-category' => 'Index Page Categories',
-            'forum' => 'Forum List',
-            'category-view' => 'Category View',
-            'similar-threads' => \XF::phrase('svUA_display_count_similar_threads'),
-            'sub-forum' => 'Sub forum List',
-            'find-new' => 'Find New Threads',
-            'watched-forums' => 'Watched Forum List',
-            'watched-threads' => 'Watched Thread List',
-            'conversation' => 'Conversation List',
-            'report' => 'Reports View',
-            'report-list' => 'Reports List',
+            'thread' => \XF::phrase('svUserActivity_display_counts.thread'),
+            'thread-view' => \XF::phrase('svUserActivity_display_counts.thread_view'),
+            'sticky-thread' => \XF::phrase('svUserActivity_display_counts.sticky_thread'),
+            'index-forum' => \XF::phrase('svUserActivity_display_counts.index_forum'),
+            'index-category' => \XF::phrase('svUserActivity_display_counts.index_category'),
+            'forum' => \XF::phrase('svUserActivity_display_counts.forum'),
+            'category-view' => \XF::phrase('svUserActivity_display_counts.category_view'),
+            'similar-threads' => \XF::phrase('svUserActivity_display_counts.similar_threads'),
+            'sub-forum' => \XF::phrase('svUserActivity_display_counts.sub_forum'),
+            'find-new' => \XF::phrase('svUserActivity_display_counts.find_new'),
+            'watched-forums' => \XF::phrase('svUserActivity_display_counts.watched_forums'),
+            'watched-threads' => \XF::phrase('svUserActivity_display_counts.watched_threads'),
+            'conversation' => \XF::phrase('svUserActivity_display_counts.conversation'),
+            'report' => \XF::phrase('svUserActivity_display_counts.report'),
+            'report-list' => \XF::phrase('svUserActivity_display_counts.report_list'),
         ];
     }
 
     public function getDisplayUsers(): array
     {
         return [
-            'thread' => \XF::phrase('thread'),
-            'forum' => \XF::phrase('forum'),
-            'conversation' => \XF::phrase('conversation'),
-            'report' => \XF::phrase('report'),
-            'nf_ticket' => \XF::phrase('svUA_display_nf_ticket'),
-            'nf_calendar' => \XF::phrase('svUA_display_nf_calendar'),
+            'thread' => \XF::phrase('svUserActivity_display.thread'),
+            'forum' => \XF::phrase('svUserActivity_display.forum'),
+            'conversation' => \XF::phrase('svUserActivity_display.conversation'),
+            'report' => \XF::phrase('svUserActivity_display.report'),
+            'nf_ticket' => \XF::phrase('svUserActivity_display.nf_ticket'),
+            'nf_calendar' => \XF::phrase('svUserActivity_display.nf_calendar'),
         ];
     }
 
     public function getPopulateUsers(): array
     {
         return [
-            'thread' => \XF::phrase('thread'),
-            'forum' => \XF::phrase('forum'),
-            'category' => \XF::phrase('category'),
-            'conversation' => \XF::phrase('conversation'),
-            'report' => \XF::phrase('report'),
-            'nf_ticket' => \XF::phrase('svUA_display_nf_ticket'),
-            'nf_calendar' => \XF::phrase('svUA_display_nf_calendar'),
+            'thread' => \XF::phrase('svUserActivity_display.thread'),
+            'forum' => \XF::phrase('svUserActivity_display.forum'),
+            'category' => \XF::phrase('svUserActivity_display.category'),
+            'conversation' => \XF::phrase('svUserActivity_display.conversation'),
+            'report' => \XF::phrase('svUserActivity_display.report'),
+            'nf_ticket' => \XF::phrase('svUserActivity_display.nf_ticket'),
+            'nf_calendar' => \XF::phrase('svUserActivity_display.nf_calendar'),
         ];
     }
 
