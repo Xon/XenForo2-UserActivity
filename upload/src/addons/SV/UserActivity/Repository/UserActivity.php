@@ -40,6 +40,52 @@ class UserActivity extends Repository
         return Helper::repository(self::class);
     }
 
+    public function getDisplayCounts(): array
+    {
+        return [
+            'thread' => 'Thread List',
+            'thread-view' => 'Thread View',
+            'sticky-thread' => 'Sticky Thread List',
+            'index-forum' => 'Index Page Forums',
+            'index-category' => 'Index Page Categories',
+            'forum' => 'Forum List',
+            'category-view' => 'Category View',
+            'similar-threads' => \XF::phrase('svUA_display_count_similar_threads'),
+            'sub-forum' => 'Sub forum List',
+            'find-new' => 'Find New Threads',
+            'watched-forums' => 'Watched Forum List',
+            'watched-threads' => 'Watched Thread List',
+            'conversation' => 'Conversation List',
+            'report' => 'Reports View',
+            'report-list' => 'Reports List',
+        ];
+    }
+
+    public function getDisplayUsers(): array
+    {
+        return [
+            'thread' => \XF::phrase('thread'),
+            'forum' => \XF::phrase('forum'),
+            'conversation' => \XF::phrase('conversation'),
+            'report' => \XF::phrase('report'),
+            'nf_ticket' => \XF::phrase('svUA_display_nf_ticket'),
+            'nf_calendar' => \XF::phrase('svUA_display_nf_calendar'),
+        ];
+    }
+
+    public function getPopulateUsers(): array
+    {
+        return [
+            'thread' => \XF::phrase('thread'),
+            'forum' => \XF::phrase('forum'),
+            'category' => \XF::phrase('category'),
+            'conversation' => \XF::phrase('conversation'),
+            'report' => \XF::phrase('report'),
+            'nf_ticket' => \XF::phrase('svUA_display_nf_ticket'),
+            'nf_calendar' => \XF::phrase('svUA_display_nf_calendar'),
+        ];
+    }
+
     public function getSampleInterval(): int
     {
         return 30;
@@ -428,9 +474,9 @@ class UserActivity extends Repository
     {
         $db = $this->db();
         $raw = $db->fetchAll('
-            SELECT * 
-            FROM xf_sv_user_activity 
-            WHERE content_type = ? AND content_id = ? AND `timestamp` >= ? 
+            SELECT *
+            FROM xf_sv_user_activity
+            WHERE content_type = ? AND content_id = ? AND `timestamp` >= ?
             ORDER BY `timestamp` DESC
         ', [$contentType, $contentId, $start]);
 
@@ -747,7 +793,7 @@ class UserActivity extends Repository
             return;
         }
         $options = \XF::options();
-        if (empty($options->svUAPopulateUsers[$activeKey]))
+        if (empty($options->svUAPopulateUsers[$activeKey] ?? true))
         {
             return;
         }
@@ -910,7 +956,7 @@ class UserActivity extends Repository
         $options = \XF::options();
         foreach($keys as $key)
         {
-            if (empty($options->svUAPopulateUsers[$key]))
+            if (empty($options->svUAPopulateUsers[$key] ?? true))
             {
                 return;
             }

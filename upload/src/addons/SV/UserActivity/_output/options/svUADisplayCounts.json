@@ -1,6 +1,6 @@
 {
-    "edit_format": "checkbox",
-    "edit_format_params": "thread=Thread List\nthread-view=Thread View\nsticky-thread=Sticky Thread List\nindex-forum=Index Page Forums\nindex-category=Index Page Categories\nforum=Forum List\ncategory-view=Category View\nsimilar-threads={{ phrase('svUA_display_count_similar_threads') }}\nsub-forum=Sub forum List\nfind-new=Find New Threads\nwatched-forums=Watched Forum List\nwatched-threads=Watched Thread List\nconversation=Conversation List\nreport=Reports View\nreport-list=Reports List",
+    "edit_format": "template",
+    "edit_format_params": "option_template_svUADisplayCounts",
     "data_type": "array",
     "sub_options": [
         "*"

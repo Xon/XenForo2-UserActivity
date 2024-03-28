@@ -1,0 +1,13 @@
+<xf:set var="$populateUsers" value="{$xf.app.em.getRepository('SV\UserActivity:UserActivity').getPopulateUsers()}" />
+
+<xf:checkboxrow
+    label="{$option.title}"
+	hint="{$hintHtml}"
+	explain="{$explainHtml}"
+	html="{$listedHtml}"
+	rowclass="{$rowClass}">
+
+    <xf:foreach loop="$populateUsers" key="$name" value="$label">
+        <xf:option name="{$inputName}[{$name}]" selected="{$option.option_value.{$name}}" label="{$label}" />
+    </xf:foreach>
+</xf:checkboxrow>
