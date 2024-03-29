@@ -40,6 +40,24 @@ class UserActivity extends Repository
         return Helper::repository(self::class);
     }
 
+    public function getMergedExisting(array $list, $existing): array
+    {
+        if (!is_array($existing))
+        {
+            return $list;
+        }
+
+        foreach ($existing as $name => $value)
+        {
+            if (!array_key_exists($name, $list))
+            {
+                $list[$name] = $name;
+            }
+        }
+
+        return $list;
+    }
+
     public function getDisplayCounts(): array
     {
         return [

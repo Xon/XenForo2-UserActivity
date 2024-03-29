@@ -1,4 +1,5 @@
-<xf:set var="$populateUsers" value="{$xf.app.em.getRepository('SV\UserActivity:UserActivity').getPopulateUsers()}" />
+<xf:set var="$repo" value="{{ $xf.app.em.getRepository('SV\UserActivity:UserActivity') }}" />
+<xf:set var="$populateUsers" value="{{ $repo.getMergedExisting($repo.getPopulateUsers(), $option.option_value) }}" />
 
 <xf:checkboxrow
     label="{$option.title}"
