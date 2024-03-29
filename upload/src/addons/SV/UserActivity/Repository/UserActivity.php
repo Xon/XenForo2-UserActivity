@@ -221,19 +221,13 @@ class UserActivity extends Repository
         }
     }
 
-    protected function getCredis(): ?Credis_Client
+    protected function getRedisConnector(): ?Redis
     {
         if ($this->forceFallback)
         {
             return null;
         }
-        $cache = \XF::isAddOnActive('SV/RedisCache') ? RedisRepo::get()->getRedisConnector('userActivity') : null;
-        if ($cache === null || !($credis = $cache->getCredis()))
-        {
-            return null;
-        }
-
-        return $credis;
+        return \XF::isAddOnActive('SV/RedisCache') ? RedisRepo::get()->getRedisConnector('userActivity') : null;
     }
 
     /**
@@ -264,14 +258,11 @@ class UserActivity extends Repository
      */
     public function garbageCollectActivity(array $data, ?float $targetRunTime = null): ?array
     {
-        $credis = $this->getCredis();
-        if (!$credis)
+        $redis = $this->getRedisConnector();
+        if ($redis === null)
         {
             return $this->_garbageCollectActivityFallback($data, $targetRunTime);
         }
-
-        /** @var Redis $cache */
-        $cache = $this->app()->cache('userActivity');
 
         $onlineStatusTimeout = (int)(($options->onlineStatusTimeout ?? 15) * 60);
         $end = \XF::$time - $onlineStatusTimeout;
@@ -286,7 +277,7 @@ class UserActivity extends Repository
                     $credis->zRemRangeByScore($key, 0, $end);
                 }
                 $credis->exec();
-            }, 1000, $cache);
+            }, 1000, $redis);
         if (!$cursor)
         {
             return null;
@@ -399,16 +390,15 @@ class UserActivity extends Repository
     {
         $score = \XF::$time - (\XF::$time % $this->getSampleInterval());
 
-        $credis = $this->getCredis();
-        if (!$credis)
+        $redis = $this->getRedisConnector();
+        if ($redis === null)
         {
             $this->_updateSessionActivityFallback($updateSet, $score);
 
             return;
         }
-        /** @var Redis $cache */
-        $cache = $this->app()->cache('userActivity');
-        $useLua = $cache->useLua();
+        $credis = $redis->getCredis(false);
+        $useLua = $redis->useLua();
 
         // record keeping
         $options = \XF::options();
@@ -422,7 +412,7 @@ class UserActivity extends Repository
             [$contentType, $contentId, $raw] = $record;
             if ($useLua)
             {
-                $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
+                $key = $redis->getNamespacedId("activity_{$contentType}_{$contentId}");
                 $ret = $credis->evalSha(self::LUA_IFZADDEXPIRE_SH1, [$key], [$score, $raw, $onlineStatusTimeout]);
                 if ($ret === null)
                 {
@@ -443,7 +433,7 @@ class UserActivity extends Repository
             {
                 $credis->pipeline()->multi();
                 // O(log(N)) for each item added, where N is the number of elements in the sorted set.
-                $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
+                $key = $redis->getNamespacedId("activity_{$contentType}_{$contentId}");
                 $credis->zAdd($key, $score, $raw);
                 $credis->expire($key, $onlineStatusTimeout);
                 $credis->exec();
@@ -542,8 +532,8 @@ class UserActivity extends Repository
         $end = \XF::$time + 1;
         $pruneChance = (float)($options->UA_pruneChance ?? 0.1);
 
-        $credis = $this->getCredis();
-        if (!$credis)
+        $redis = $this->getRedisConnector();
+        if ($redis === null)
         {
             $onlineRecords = $this->_getUsersViewingFallback($contentType, $contentId, $start, $end);
             // check if the activity counter needs pruning
@@ -554,16 +544,15 @@ class UserActivity extends Repository
         }
         else
         {
-            /** @var Redis $cache */
-            $cache = $app->cache('userActivity');
-            $key = $cache->getNamespacedId("activity_{$contentType}_{$contentId}");
+            $credis = $redis->getCredis(true);
+            $key = $redis->getNamespacedId("activity_{$contentType}_{$contentId}");
 
             $onlineRecords = $credis->zRevRangeByScore($key, $end, $start, ['withscores' => true]);
             // check if the activity counter needs pruning
             if ($pruneChance > 0 && \mt_rand() < $pruneChance)
             {
                 $fillFactor = (float)($options->UA_fillFactor ?? 1.2);
-                $credis = $cache->getCredis(false);
+                $credis = $redis->getCredis(false);
                 if ($credis->zCard($key) >= count($onlineRecords) * $fillFactor)
                 {
                     // O(log(N)+M) with N being the number of elements in the sorted set and M the number of elements removed by the operation.
@@ -710,9 +699,9 @@ class UserActivity extends Repository
         $start = $start - ($start % $this->getSampleInterval());
         $end = \XF::$time + 1;
 
-        $credis = $this->getCredis();
+        $redis = $this->getRedisConnector();
         $pruneChance = (float)($options->UA_pruneChance ?? 0.1);
-        if (!$credis)
+        if ($redis === null)
         {
             $onlineRecords = $this->_getUsersViewingCountFallback($fetchData, $start, $end);
             // check if the activity counter needs pruning
@@ -723,11 +712,9 @@ class UserActivity extends Repository
         }
         else
         {
-            /** @var Redis $cache */
-            $cache = $app->cache('userActivity');
-            $credis = $this->getCredis();
+            $credis = $redis->getCredis();
             /** @noinspection PhpUnusedLocalVariableInspection */
-            $useLua = $cache->useLua();
+            $useLua = $redis->useLua();
 
             $onlineRecords = [];
             $args = [];
@@ -757,7 +744,7 @@ class UserActivity extends Repository
                 $credis->pipeline()->multi();
                 foreach ($args as $row)
                 {
-                    $key = $cache->getNamespacedId("activity_{$row[0]}_{$row[1]}");
+                    $key = $redis->getNamespacedId("activity_{$row[0]}_{$row[1]}");
                     $credis->zCount($key, $start, $end);
                 }
                 $ret = $credis->exec();
