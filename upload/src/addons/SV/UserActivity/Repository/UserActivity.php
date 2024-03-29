@@ -398,7 +398,6 @@ class UserActivity extends Repository
             return;
         }
         $credis = $redis->getCredis(false);
-        $useLua = $redis->useLua();
 
         // record keeping
         $options = \XF::options();
@@ -410,33 +409,22 @@ class UserActivity extends Repository
         {
             // $record has the format; [content_type, content_id, `blob`]
             [$contentType, $contentId, $raw] = $record;
-            if ($useLua)
+
+            $key = $redis->getNamespacedId("activity_{$contentType}_{$contentId}");
+            $ret = $credis->evalSha(self::LUA_IFZADDEXPIRE_SH1, [$key], [$score, $raw, $onlineStatusTimeout]);
+            if ($ret === null)
             {
-                $key = $redis->getNamespacedId("activity_{$contentType}_{$contentId}");
-                $ret = $credis->evalSha(self::LUA_IFZADDEXPIRE_SH1, [$key], [$score, $raw, $onlineStatusTimeout]);
-                if ($ret === null)
-                {
-                    $script =
-                        "local c = tonumber(redis.call('zscore', KEYS[1], ARGV[2])) " .
-                        'local n = tonumber(ARGV[1]) ' .
-                        'local retVal = 0 ' .
-                        'if c == nil or n > c then ' .
-                        "retVal = redis.call('ZADD', KEYS[1], n, ARGV[2]) " .
-                        'end ' .
-                        "redis.call('EXPIRE', KEYS[1], ARGV[3]) " .
-                        'return retVal ';
-                    /** @noinspection PhpUnusedLocalVariableInspection */
-                    $ret = $credis->eval($script, [$key], [$score, $raw, $onlineStatusTimeout]);
-                }
-            }
-            else
-            {
-                $credis->pipeline()->multi();
-                // O(log(N)) for each item added, where N is the number of elements in the sorted set.
-                $key = $redis->getNamespacedId("activity_{$contentType}_{$contentId}");
-                $credis->zAdd($key, $score, $raw);
-                $credis->expire($key, $onlineStatusTimeout);
-                $credis->exec();
+                $script =
+                    "local c = tonumber(redis.call('zscore', KEYS[1], ARGV[2])) " .
+                    'local n = tonumber(ARGV[1]) ' .
+                    'local retVal = 0 ' .
+                    'if c == nil or n > c then ' .
+                    "retVal = redis.call('ZADD', KEYS[1], n, ARGV[2]) " .
+                    'end ' .
+                    "redis.call('EXPIRE', KEYS[1], ARGV[3]) " .
+                    'return retVal ';
+                /** @noinspection PhpUnusedLocalVariableInspection */
+                $ret = $credis->eval($script, [$key], [$score, $raw, $onlineStatusTimeout]);
             }
         }
     }
@@ -713,9 +701,6 @@ class UserActivity extends Repository
         else
         {
             $credis = $redis->getCredis();
-            /** @noinspection PhpUnusedLocalVariableInspection */
-            $useLua = $redis->useLua();
-
             $onlineRecords = [];
             $args = [];
             foreach ($fetchData as $contentType => $list)
@@ -728,7 +713,7 @@ class UserActivity extends Repository
             }
 
             /** @noinspection PhpStatementHasEmptyBodyInspection */
-            if (false) //$useLua
+            if (false)
             {
                 /*
                 $ret = $credis->evalSha(self::LUA_IFZADDEXPIRE_SH1, [$key], [$score, $raw, $onlineStatusTimeout]);
