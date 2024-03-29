@@ -3,7 +3,6 @@
 namespace SV\UserActivity\NF\Tickets\Pub\Controller;
 
 
-use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use SV\UserActivity\UserActivityInjector;
 use XF\Mvc\Reply\View as ViewReply;
 

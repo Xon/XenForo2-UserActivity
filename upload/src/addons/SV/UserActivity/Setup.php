@@ -150,7 +150,7 @@ class Setup extends AbstractSetup
         $this->checkRequirementsTrait($errors,$warnings);
 
         $cache = \XF::isAddOnActive('SV/RedisCache') ? RedisRepo::get()->getRedisConnector('userActivity') : null;
-        if ($cache === null || !$cache->getCredis())
+        if ($cache === null)
         {
             $warnings[] = 'It is recommended that Redis Cache to be installed and configured, but a MySQL fallback is supported';
         }

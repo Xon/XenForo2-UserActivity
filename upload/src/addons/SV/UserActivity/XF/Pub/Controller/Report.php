@@ -3,7 +3,6 @@
 namespace SV\UserActivity\XF\Pub\Controller;
 
 use SV\ReportCentreEssentials\Entity\ReportQueue as ReportQueueEntity;
-use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
 use XF\Mvc\Entity\AbstractCollection;
