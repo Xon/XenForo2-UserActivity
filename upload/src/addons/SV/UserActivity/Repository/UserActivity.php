@@ -289,6 +289,14 @@ class UserActivity extends Repository
     }
 
     protected const LUA_IFZADDEXPIRE_SH1 = 'dc1d76eefaca2f4ccf848a6ed7e80def200ac7b7';
+    protected const LUA_IFZADDEXPIRE_SCRIPT = "local c = tonumber(redis.call('zscore', KEYS[1], ARGV[2])) " .
+                                              'local n = tonumber(ARGV[1]) ' .
+                                              'local retVal = 0 ' .
+                                              'if c == nil or n > c then ' .
+                                              "retVal = redis.call('ZADD', KEYS[1], n, ARGV[2]) " .
+                                              'end ' .
+                                              "redis.call('EXPIRE', KEYS[1], ARGV[3]) " .
+                                              'return retVal ';
 
     /**
      * @param array $updateSet
@@ -414,17 +422,8 @@ class UserActivity extends Repository
             $ret = $credis->evalSha(self::LUA_IFZADDEXPIRE_SH1, [$key], [$score, $raw, $onlineStatusTimeout]);
             if ($ret === null)
             {
-                $script =
-                    "local c = tonumber(redis.call('zscore', KEYS[1], ARGV[2])) " .
-                    'local n = tonumber(ARGV[1]) ' .
-                    'local retVal = 0 ' .
-                    'if c == nil or n > c then ' .
-                    "retVal = redis.call('ZADD', KEYS[1], n, ARGV[2]) " .
-                    'end ' .
-                    "redis.call('EXPIRE', KEYS[1], ARGV[3]) " .
-                    'return retVal ';
                 /** @noinspection PhpUnusedLocalVariableInspection */
-                $ret = $credis->eval($script, [$key], [$score, $raw, $onlineStatusTimeout]);
+                $ret = $credis->eval(self::LUA_IFZADDEXPIRE_SCRIPT, [$key], [$score, $raw, $onlineStatusTimeout]);
             }
         }
     }
