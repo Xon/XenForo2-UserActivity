@@ -782,7 +782,7 @@ class UserActivity extends Repository
             return;
         }
         $options = \XF::options();
-        if (empty($options->svUAPopulateUsers[$activeKey] ?? true))
+        if (empty($options->svUAPopulateUsers[$activeKey]))
         {
             return;
         }
@@ -945,7 +945,7 @@ class UserActivity extends Repository
         $options = \XF::options();
         foreach($keys as $key)
         {
-            if (empty($options->svUAPopulateUsers[$key] ?? true))
+            if (empty($options->svUAPopulateUsers[$key]))
             {
                 return;
             }

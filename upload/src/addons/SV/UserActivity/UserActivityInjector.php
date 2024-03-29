@@ -29,14 +29,14 @@ trait UserActivityInjector
         $options = \XF::options();
         if ($display)
         {
-            if (empty($options->svUADisplayUsers[$key] ?? true))
+            if (empty($options->svUADisplayUsers[$key]))
             {
                 return [];
             }
         }
         else
         {
-            if (empty($options->svUAPopulateUsers[$key] ?? true))
+            if (empty($options->svUAPopulateUsers[$key]))
             {
                 return [];
             }
