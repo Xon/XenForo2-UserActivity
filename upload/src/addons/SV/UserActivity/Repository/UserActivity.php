@@ -221,7 +221,7 @@ class UserActivity extends Repository
         }
     }
 
-    protected function getRedisConnector(): ?Redis
+    public function getRedisConnector(): ?Redis
     {
         if ($this->forceFallback)
         {
