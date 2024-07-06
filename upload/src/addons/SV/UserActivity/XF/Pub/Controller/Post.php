@@ -12,7 +12,6 @@ use function strtolower;
 class Post extends XFCP_Post
 {
     protected $activityInjector = [
-        'controller' => \XF\Pub\Controller\Post::Class,
         'type'       => 'thread',
         'id'         => 'thread_id',
         'actions'    => [],

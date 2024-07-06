@@ -140,7 +140,6 @@ class Forum extends XFCP_Forum
     use UserCountActivityInjector;
 
     protected $activityInjector = [
-        'controller' => \XF\Pub\Controller\Forum::Class,
         'type'       => 'node',
         'id'         => 'node_id',
         'actions'    => ['forum'],

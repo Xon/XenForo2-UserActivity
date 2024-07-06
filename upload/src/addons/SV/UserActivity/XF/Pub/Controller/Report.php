@@ -12,7 +12,6 @@ use function is_array;
 class Report extends XFCP_Report
 {
     protected $activityInjector = [
-        'controller' => \XF\Pub\Controller\Report::Class,
         'type'       => 'report',
         'id'         => 'report_id',
         'actions'    => ['view'],

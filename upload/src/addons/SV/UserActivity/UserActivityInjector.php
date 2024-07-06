@@ -8,6 +8,7 @@ namespace SV\UserActivity;
 use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
+use function array_key_exists;
 use function count;
 use function in_array;
 use function strtolower;
@@ -19,8 +20,7 @@ trait UserActivityInjector
 {
     protected function getSvActivityInjector(bool $display): array
     {
-        if (empty($this->activityInjector['controller']) ||
-            empty($this->activityInjector['activeKey']))
+        if (empty($this->activityInjector['activeKey']))
         {
             return [];
         }
@@ -40,6 +40,11 @@ trait UserActivityInjector
             {
                 return [];
             }
+        }
+
+        if (!array_key_exists('controller', $this->activityInjector))
+        {
+            $this->activityInjector['controller'] = $this->rootClass;
         }
 
         return $this->activityInjector;

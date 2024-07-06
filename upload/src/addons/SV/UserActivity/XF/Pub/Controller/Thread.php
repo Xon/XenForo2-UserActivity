@@ -72,7 +72,6 @@ class Thread extends XFCP_Thread
     use UserCountActivityInjector;
 
     protected $activityInjector = [
-        'controller' => \XF\Pub\Controller\Thread::Class,
         'type'       => 'thread',
         'id'         => 'thread_id',
         'actions'    => ['index'],
