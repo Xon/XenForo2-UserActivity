@@ -256,7 +256,7 @@ class UserActivity extends Repository
      */
     protected function _garbageCollectActivityFallback(array $data, ?float $targetRunTime = null): ?array
     {
-        $app = $this->app();
+        $app = \XF::app();
         $options = $app->options();
         $onlineStatusTimeout = (int)($options->onlineStatusTimeout ?? 15) * 60;
         $end = \XF::$time - $onlineStatusTimeout;
@@ -495,7 +495,7 @@ class UserActivity extends Repository
      */
     protected function getUsersViewing(string $contentType, int $contentId, User $viewingUser, bool $fetchUserList): array
     {
-        $app = $this->app();
+        $app = \XF::app();
         $options = $app->options();
         $cutoff = (int)(max(-1, $options->SV_UA_Cutoff ?? 250));
         if (!$fetchUserList)
@@ -698,7 +698,7 @@ class UserActivity extends Repository
      */
     protected function getUsersViewingCount(array $fetchData): array
     {
-        $app = $this->app();
+        $app = \XF::app();
         $options = $app->options();
         $start = \XF::$time - $options->onlineStatusTimeout * 60;
         $start = $start - ($start % $this->getSampleInterval());

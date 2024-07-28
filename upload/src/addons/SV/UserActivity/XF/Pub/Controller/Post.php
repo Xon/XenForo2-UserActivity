@@ -35,7 +35,7 @@ class Post extends XFCP_Post
                     // note; these are often ajax operation that we still want to consider as valid
                     // $this->request is used and not $params as this requires less data to be logged into the xf_session_activity table
                     $threadId = $this->request->get('thread_id', 0);
-                    $thread = $threadId ? $this->em()->findCached('XF:Thread', $threadId) : null;
+                    $thread = $threadId ? \SV\StandardLib\Helper::findCached(\XF\Entity\Thread::class, $threadId) : null;
                     if ($thread instanceof \XF\Entity\Thread)
                     {
                         UserActivityRepo::get()->pushViewUsageToParent($reply, $thread->Forum->Node);
@@ -53,7 +53,7 @@ class Post extends XFCP_Post
         $postId = (int)$params->get('post_id', 0);
         if ($postId !== 0)
         {
-            $post = $this->em()->findCached('XF:Post', $postId);
+            $post = \SV\StandardLib\Helper::findCached(\XF\Entity\Post::class, $postId);
             if ($post instanceof \XF\Entity\Post)
             {
                 $this->request->set('thread_id', $post->thread_id);

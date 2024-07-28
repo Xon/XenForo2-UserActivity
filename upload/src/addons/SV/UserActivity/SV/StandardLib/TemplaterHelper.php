@@ -32,11 +32,11 @@ class TemplaterHelper extends XFCP_TemplaterHelper
         if ($fauxUser && is_array($user))
         {
             $em = \XF::em();
-            $fauxUser = $em->findCached('XF:User', $user['user_id']);
+            $fauxUser = \SV\StandardLib\Helper::findCached(\XF\Entity\User::class, $user['user_id']);
             if (!$fauxUser)
             {
                 /** @var UserEntity $fauxUser */
-                $fauxUser = $em->instantiateEntity('XF:User', ['user_id' => $user['user_id'], 'language_id' => 0]);
+                $fauxUser = \SV\StandardLib\Helper::instantiateEntity(\XF\Entity\User::class, ['user_id' => $user['user_id'], 'language_id' => 0]);
                 foreach ($user as $key => $value)
                 {
                     if ($fauxUser->offsetExists($key))
