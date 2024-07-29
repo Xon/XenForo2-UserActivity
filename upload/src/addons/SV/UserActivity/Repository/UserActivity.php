@@ -262,7 +262,7 @@ class UserActivity extends Repository
         $end = \XF::$time - $onlineStatusTimeout;
         $end = $end - ($end % $this->getSampleInterval());
 
-        $db = $this->db();
+        $db = \XF::db();
         $db->query('DELETE FROM `xf_sv_user_activity` WHERE `timestamp` < ?', $end);
 
         return null;
@@ -323,7 +323,7 @@ class UserActivity extends Repository
      */
     protected function _updateSessionActivityFallback(array $updateSet, int $time): void
     {
-        $db = $this->db();
+        $db = \XF::db();
 
         $sqlParts = [];
         $sqlArgs = [];
@@ -467,7 +467,7 @@ class UserActivity extends Repository
      */
     protected function _getUsersViewingFallback(string $contentType, int $contentId, int $start, int $end): array
     {
-        $db = $this->db();
+        $db = \XF::db();
         $raw = $db->fetchAll('
             SELECT *
             FROM xf_sv_user_activity
@@ -655,7 +655,7 @@ class UserActivity extends Repository
      */
     protected function _getUsersViewingCountFallback(array $fetchData, int $start, int $end): array
     {
-        $db = $this->db();
+        $db = \XF::db();
 
         $args = [$start];
         $sql = [];
