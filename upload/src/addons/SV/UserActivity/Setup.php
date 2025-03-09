@@ -2,14 +2,12 @@
 
 namespace SV\UserActivity;
 
-use SV\RedisCache\Repository\Redis as RedisRepo;
 use SV\StandardLib\InstallerHelper;
 use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
 use XF\AddOn\StepRunnerUninstallTrait;
 use XF\AddOn\StepRunnerUpgradeTrait;
-use SV\RedisCache\Redis;
 use XF\Db\Schema\Alter;
 use XF\Db\Schema\Create;
 use XF\Entity\User;
@@ -43,7 +41,10 @@ class Setup extends AbstractSetup
 
         foreach ($this->getAlterTables() as $tableName => $callback)
         {
-            $sm->alterTable($tableName, $callback);
+            if ($sm->tableExists($tableName))
+            {
+                $sm->alterTable($tableName, $callback);
+            }
         }
     }
 
