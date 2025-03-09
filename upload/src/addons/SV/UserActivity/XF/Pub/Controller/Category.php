@@ -4,6 +4,7 @@ namespace SV\UserActivity\XF\Pub\Controller;
 
 use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use SV\UserActivity\UserCountActivityInjector;
+use XF\Entity\Category as CategoryEntity;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\View as ViewReply;
 use XF\Tree;
@@ -21,7 +22,7 @@ class Category extends XFCP_Category
             $this->responseType !== 'rss')
         {
             $category = $response->getParam('category');
-            if ($category instanceof \XF\Entity\Category)
+            if ($category instanceof CategoryEntity)
             {
                 UserActivityRepo::get()->pushViewUsageToParent($response, $category->Node, false, ['forum', 'category']);
             }
@@ -34,7 +35,7 @@ class Category extends XFCP_Category
     protected function categoryFetcher(ViewReply $response, string $action, array $config): array
     {
         $category = $response->getParam('category');
-        if ($category instanceof \XF\Entity\Category)
+        if ($category instanceof CategoryEntity)
         {
             return [$category->node_id];
         }

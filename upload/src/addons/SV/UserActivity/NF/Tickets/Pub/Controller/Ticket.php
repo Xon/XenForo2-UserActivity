@@ -3,6 +3,7 @@
 namespace SV\UserActivity\NF\Tickets\Pub\Controller;
 
 
+use NF\Tickets\Entity\Ticket as TicketEntity;
 use SV\UserActivity\UserActivityInjector;
 use XF\Mvc\Reply\View as ViewReply;
 
@@ -30,7 +31,7 @@ class Ticket extends XFCP_Ticket
     protected function ticketFetcher(ViewReply $response, string $action, array $config): array
     {
         $ticket = $response->getParam('ticket');
-        if ($ticket instanceof \NF\Tickets\Entity\Ticket)
+        if ($ticket instanceof TicketEntity)
         {
             return [$ticket->ticket_id];
         }

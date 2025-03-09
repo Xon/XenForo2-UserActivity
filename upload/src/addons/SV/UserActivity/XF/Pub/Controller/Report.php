@@ -5,6 +5,7 @@ namespace SV\UserActivity\XF\Pub\Controller;
 use SV\ReportCentreEssentials\Entity\ReportQueue as ReportQueueEntity;
 use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
+use XF\Entity\Report as ReportEntity;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Reply\View as ViewReply;
 use function is_array;
@@ -51,7 +52,7 @@ class Report extends XFCP_Report
         {
             foreach($reports as $report)
             {
-                if ($report instanceof \XF\Entity\Report)
+                if ($report instanceof ReportEntity)
                 {
                     $reportIds[$report->report_id] = true;
                 }
@@ -63,7 +64,7 @@ class Report extends XFCP_Report
         {
             foreach($reports as $report)
             {
-                if ($report instanceof \XF\Entity\Report)
+                if ($report instanceof ReportEntity)
                 {
                     $reportIds[$report->report_id] = true;
                 }
@@ -71,7 +72,7 @@ class Report extends XFCP_Report
         }
 
         $report = $response->getParam('report');
-        if ($report instanceof \XF\Entity\Report)
+        if ($report instanceof ReportEntity)
         {
             $reportIds[$report->report_id] = true;
         }

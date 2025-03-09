@@ -5,6 +5,7 @@ namespace SV\UserActivity\XF\Pub\Controller;
 use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
+use XF\Entity\Forum as ForumEntity;
 use XF\Entity\Node as NodeEntity;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
@@ -25,7 +26,7 @@ class Forum extends XFCP_Forum
             $this->responseType !== 'rss')
         {
             $forum = $response->getParam('forum');
-            if ($forum instanceof \XF\Entity\Forum)
+            if ($forum instanceof ForumEntity)
             {
                 UserActivityRepo::get()->pushViewUsageToParent($response, $forum->Node);
             }
@@ -38,7 +39,7 @@ class Forum extends XFCP_Forum
     protected function forumFetcher(ViewReply $response, string $action, array $config): array
     {
         $forum = $response->getParam('forum');
-        if ($forum instanceof \XF\Entity\Forum)
+        if ($forum instanceof ForumEntity)
         {
             return [$forum->node_id];
         }
