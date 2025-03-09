@@ -67,6 +67,7 @@ class UserActivity extends Repository
             'index-forum' => \XF::phrase('svUserActivity_display_counts.index_forum'),
             'index-category' => \XF::phrase('svUserActivity_display_counts.index_category'),
             'forum' => \XF::phrase('svUserActivity_display_counts.forum'),
+            'search-forum' => \XF::phrase('svUserActivity_display.search_forum'),
             'category-view' => \XF::phrase('svUserActivity_display_counts.category_view'),
             'similar-threads' => \XF::phrase('svUserActivity_display_counts.similar_threads'),
             'sub-forum' => \XF::phrase('svUserActivity_display_counts.sub_forum'),
@@ -84,6 +85,7 @@ class UserActivity extends Repository
         return [
             'thread' => \XF::phrase('svUserActivity_display.thread'),
             'forum' => \XF::phrase('svUserActivity_display.forum'),
+            'search-forum' => \XF::phrase('svUserActivity_display.search_forum'),
             'conversation' => \XF::phrase('svUserActivity_display.conversation'),
             'report' => \XF::phrase('svUserActivity_display.report'),
             'nf_ticket' => \XF::phrase('svUserActivity_display.nf_ticket'),
@@ -96,6 +98,7 @@ class UserActivity extends Repository
         return [
             'thread' => \XF::phrase('svUserActivity_display.thread'),
             'forum' => \XF::phrase('svUserActivity_display.forum'),
+            'search-forum' => \XF::phrase('svUserActivity_display.search_forum'),
             'category' => \XF::phrase('svUserActivity_display.category'),
             'conversation' => \XF::phrase('svUserActivity_display.conversation'),
             'report' => \XF::phrase('svUserActivity_display.report'),

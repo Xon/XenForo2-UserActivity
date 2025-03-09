@@ -1,5 +1,6 @@
 Limits the number of forums/node's view state touched by when a thread is viewed.<br/>
 <br/>
+Search forums can not inherit contained threads view counts!<br/>
 When a thread is viewed, the bread-crumb is traced to discover the thread's forum and any parents. These parent forums/nodes then have their activity record updated counting the thread's views<br/>
 0 to disable<br/>
 -1 for all

@@ -30,6 +30,7 @@ namespace SV\UserActivity\XF\Pub\Controller
 	class XFCP_Forum extends \XF\Pub\Controller\Forum {}
 	class XFCP_Post extends \XF\Pub\Controller\Post {}
 	class XFCP_Report extends \XF\Pub\Controller\Report {}
+	class XFCP_SearchForum extends \XF\Pub\Controller\SearchForum {}
 	class XFCP_Thread extends \XF\Pub\Controller\Thread {}
 	class XFCP_Watched extends \XF\Pub\Controller\Watched {}
 	class XFCP_WhatsNewPost extends \XF\Pub\Controller\WhatsNewPost {}
