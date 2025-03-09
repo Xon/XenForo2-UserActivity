@@ -9,7 +9,6 @@ use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use function array_key_exists;
-use function count;
 use function in_array;
 use function strtolower;
 
@@ -20,22 +19,22 @@ trait UserActivityInjector
 {
     protected function getSvActivityInjector(bool $display): array
     {
-        if (empty($this->activityInjector['activeKey']))
+        $key = $this->activityInjector['activeKey'] ?? null;
+        if ($key === null)
         {
             return [];
         }
 
-        $key = $this->activityInjector['activeKey'];
         if ($display)
         {
-            if (empty(\XF::options()->svUADisplayUsers[$key]))
+            if (!(\XF::options()->svUADisplayUsers[$key] ?? false))
             {
                 return [];
             }
         }
         else
         {
-            if (empty(\XF::options()->svUAPopulateUsers[$key]))
+            if (!(\XF::options()->svUAPopulateUsers[$key] ?? false))
             {
                 return [];
             }
@@ -57,9 +56,10 @@ trait UserActivityInjector
     {
         parent::preDispatch($action, $params);
         $activityInjector = $this->getSvActivityInjector(false);
-        if (count($activityInjector) !== 0)
+        $controller = $activityInjector['controller'] ?? null;
+        if ($controller !== null)
         {
-            UserActivityRepo::get()->registerHandler($this->activityInjector['controller'], $this->activityInjector);
+            UserActivityRepo::get()->registerHandler($controller, $activityInjector);
         }
     }
 
@@ -72,13 +72,14 @@ trait UserActivityInjector
     {
         parent::postDispatch($action, $params, $reply);
         $activityInjector = $this->getSvActivityInjector(true);
-        if (count($activityInjector) !== 0 &&
-            !empty($activityInjector['actions']))
+        $controller = $activityInjector['controller'] ?? null;
+        $actions = $activityInjector['actions'] ?? null;
+        if ($controller !== null && $actions !== null)
         {
             $actionL = strtolower($action);
-            if (in_array($actionL, $this->activityInjector['actions'], true))
+            if (in_array($actionL, $actions, true))
             {
-                UserActivityRepo::get()->insertUserActivityIntoViewResponse($this->activityInjector['controller'], $reply);
+                UserActivityRepo::get()->insertUserActivityIntoViewResponse($controller, $reply);
             }
         }
     }

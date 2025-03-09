@@ -23,12 +23,12 @@ class SessionActivity extends XFCP_SessionActivity
         if ($userActivityRepo->isLogging() && $viewState === 'valid' && $userId === $visitor->user_id)
         {
             $handler = $userActivityRepo->getHandler($controller);
-            if (!empty($handler))
+            if ($handler)
             {
-                $requiredKey = $handler['id'];
-                if (!empty($params[$requiredKey]))
+                $contentId = $params[$handler['id']] ?? null;
+                if ($contentId !== null)
                 {
-                    $userActivityRepo->bufferTrackViewerUsage($handler['type'], $params[$requiredKey], $handler['activeKey']);
+                    $userActivityRepo->bufferTrackViewerUsage($handler['type'], $contentId, $handler['activeKey']);
                 }
             }
 

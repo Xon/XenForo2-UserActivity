@@ -10,6 +10,7 @@ use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View as ViewReply;
 use function array_merge;
+use function count;
 use function in_array;
 use function is_array;
 use function is_callable;
@@ -44,7 +45,7 @@ trait UserCountActivityInjector
         $fetchData = [];
         $displayOptions = \XF::options()->svUADisplayCounts ?? [];
         $actionL = strtolower($action);
-        foreach ($this->countActivityInjector as $config)
+        foreach (($this->countActivityInjector ?? []) as $config)
         {
             /** @var array{activeKey: string, type: string, actions: array, fetcher: string} $config */
             $key = $config['activeKey'] ?? null;

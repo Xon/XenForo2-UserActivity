@@ -46,7 +46,7 @@ trait WidgetUserCountActivityInjector
     {
         $result = parent::verifyOptions($request, $options, $error);
 
-        $options['userActivity'] = $request->filter('userActivity', 'bool');
+        $options['userActivity'] = (bool)$request->filter('userActivity', 'bool');
 
         return $result;
     }
@@ -61,7 +61,7 @@ trait WidgetUserCountActivityInjector
 
     protected function _injectUserCountIntoResponse(WidgetRenderer $renderer): WidgetRenderer
     {
-        if (empty($this->widgetCountActivityInjector) || empty($this->options['userActivity']))
+        if (!($this->options['userActivity'] ?? false))
         {
             return $renderer;
         }

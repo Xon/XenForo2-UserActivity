@@ -163,12 +163,9 @@ class UserActivity extends Repository
      */
     public function getHandler(string $controllerName): array
     {
-        if (empty($this->handlers[$controllerName]))
-        {
-            return [];
-        }
+        $handler = $this->handlers[$controllerName] ?? null;
 
-        return $this->validateHandler($this->handlers[$controllerName]);
+        return $handler ? $this->validateHandler($handler) : [];
     }
 
     /**
@@ -521,7 +518,7 @@ class UserActivity extends Repository
             $structure = $viewingUser->structure();
             foreach(self::CacheKeys as $key)
             {
-                if (isset($structure->columns[$key]))
+                if (array_key_exists($key, $structure->columns))
                 {
                     $rec[$key] = $viewingUser[$key];
                 }
@@ -906,12 +903,12 @@ class UserActivity extends Repository
      */
     public function getFilteredThreadIds(array $params, string $key): array
     {
-        if (empty($params[$key]))
+        /** @var ThreadEntity[]|null $threads */
+        $threads = $params[$key] ?? null;
+        if ($threads === null)
         {
             return [];
         }
-        /** @var ThreadEntity[] $threads */
-        $threads = $params[$key];
 
         $visitor = \XF::visitor();
         $userId = $visitor->user_id;
