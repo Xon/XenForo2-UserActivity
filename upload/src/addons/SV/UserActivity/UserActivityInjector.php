@@ -26,17 +26,16 @@ trait UserActivityInjector
         }
 
         $key = $this->activityInjector['activeKey'];
-        $options = \XF::options();
         if ($display)
         {
-            if (empty($options->svUADisplayUsers[$key]))
+            if (empty(\XF::options()->svUADisplayUsers[$key]))
             {
                 return [];
             }
         }
         else
         {
-            if (empty($options->svUAPopulateUsers[$key]))
+            if (empty(\XF::options()->svUAPopulateUsers[$key]))
             {
                 return [];
             }

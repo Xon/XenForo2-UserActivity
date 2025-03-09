@@ -258,7 +258,7 @@ class UserActivity extends Repository
     {
         $app = \XF::app();
         $options = $app->options();
-        $onlineStatusTimeout = (int)($options->onlineStatusTimeout ?? 15) * 60;
+        $onlineStatusTimeout = ($options->onlineStatusTimeout ?? 15) * 60;
         $end = \XF::$time - $onlineStatusTimeout;
         $end = $end - ($end % $this->getSampleInterval());
 
@@ -426,8 +426,7 @@ class UserActivity extends Repository
         $credis = $redis->getCredis(false);
 
         // record keeping
-        $options = \XF::options();
-        $onlineStatusTimeout = (int)max(60, $options->onlineStatusTimeout * 60);
+        $onlineStatusTimeout = (int)max(60, \XF::options()->onlineStatusTimeout * 60);
 
         // not ideal, but fairly cheap
         // cluster support requires that each `key` potentially be on a separate host
@@ -532,10 +531,10 @@ class UserActivity extends Repository
             $records[] = $rec;
         }
 
-        $start = \XF::$time - (int)($options->onlineStatusTimeout ?? 15) * 60;
+        $start = \XF::$time - ($options->onlineStatusTimeout ?? 15) * 60;
         $start = $start - ($start % $this->getSampleInterval());
         $end = \XF::$time + 1;
-        $pruneChance = (float)($options->UA_pruneChance ?? 0.1);
+        $pruneChance = $options->UA_pruneChance ?? 0.1;
 
         $redis = $this->getRedisConnector();
         if ($redis === null)
@@ -556,7 +555,7 @@ class UserActivity extends Repository
             // check if the activity counter needs pruning
             if ($pruneChance > 0 && \mt_rand() < $pruneChance)
             {
-                $fillFactor = (float)($options->UA_fillFactor ?? 1.2);
+                $fillFactor = $options->UA_fillFactor ?? 1.2;
                 $credis = $redis->getCredis(false);
                 if ($credis->zCard($key) >= count($onlineRecords) * $fillFactor)
                 {
@@ -706,7 +705,7 @@ class UserActivity extends Repository
         $end = \XF::$time + 1;
 
         $redis = $this->getRedisConnector();
-        $pruneChance = (float)($options->UA_pruneChance ?? 0.1);
+        $pruneChance = $options->UA_pruneChance ?? 0.1;
         if ($redis === null)
         {
             $onlineRecords = $this->_getUsersViewingCountFallback($fetchData, $start, $end);
@@ -782,8 +781,7 @@ class UserActivity extends Repository
         {
             return;
         }
-        $options = \XF::options();
-        if (empty($options->svUAPopulateUsers[$activeKey]))
+        if (!(\XF::options()->svUAPopulateUsers[$activeKey] ?? false))
         {
             return;
         }
@@ -816,7 +814,7 @@ class UserActivity extends Repository
 
         if (empty($robotKey) || ($options->SV_UA_TrackRobots ?? false))
         {
-            $threadViewType = (int)($options->RainDD_UA_ThreadViewType ?? 0);
+            $threadViewType = $options->RainDD_UA_ThreadViewType ?? 0;
             $blob = $this->buildSessionActivityBlob($threadViewType, $ip, $robotKey, $viewingUser);
             if (!$blob)
             {
@@ -944,9 +942,10 @@ class UserActivity extends Repository
     public function pushViewUsageToParent(ViewReply $response, NodeEntity $node, bool $pushToNode = false, array $keys = ['forum'])
     {
         $options = \XF::options();
+        $pop = $options->svUAPopulateUsers ?? [];
         foreach($keys as $key)
         {
-            if (empty($options->svUAPopulateUsers[$key]))
+            if (!($pop[$key] ?? false))
             {
                 return;
             }
@@ -974,7 +973,7 @@ class UserActivity extends Repository
             }
         }
 
-        $nodeTrackLimit = (int)($options->svUAThreadNodeTrackLimit ?? 1);
+        $nodeTrackLimit = $options->svUAThreadNodeTrackLimit ?? 1;
         $nodeTrackLimit = $nodeTrackLimit < 0 ? PHP_INT_MAX : $nodeTrackLimit;
 
         $repo = UserActivityRepo::get();
