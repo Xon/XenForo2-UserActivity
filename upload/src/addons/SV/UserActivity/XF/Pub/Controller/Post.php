@@ -2,8 +2,11 @@
 
 namespace SV\UserActivity\XF\Pub\Controller;
 
+use SV\StandardLib\Helper;
 use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use SV\UserActivity\UserActivityInjector;
+use XF\Entity\Post as PostEntity;
+use XF\Entity\Thread as ThreadEntity;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View as ViewReply;
@@ -34,9 +37,9 @@ class Post extends XFCP_Post
 
                     // note; these are often ajax operation that we still want to consider as valid
                     // $this->request is used and not $params as this requires less data to be logged into the xf_session_activity table
-                    $threadId = $this->request->get('thread_id', 0);
-                    $thread = $threadId ? \SV\StandardLib\Helper::findCached(\XF\Entity\Thread::class, $threadId) : null;
-                    if ($thread instanceof \XF\Entity\Thread)
+                    $threadId = (int)$this->request->get('thread_id', 0);
+                    $thread = Helper::findCached(ThreadEntity::class, $threadId);
+                    if ($thread !== null)
                     {
                         UserActivityRepo::get()->pushViewUsageToParent($reply, $thread->Forum->Node);
                     }
@@ -53,8 +56,8 @@ class Post extends XFCP_Post
         $postId = (int)$params->get('post_id', 0);
         if ($postId !== 0)
         {
-            $post = \SV\StandardLib\Helper::findCached(\XF\Entity\Post::class, $postId);
-            if ($post instanceof \XF\Entity\Post)
+            $post = Helper::findCached(PostEntity::class, $postId);
+            if ($post !== null)
             {
                 $this->request->set('thread_id', $post->thread_id);
 

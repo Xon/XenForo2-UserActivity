@@ -8,9 +8,9 @@ use SV\RedisCache\Repository\Redis as RedisRepo;
 use SV\StandardLib\Helper;
 use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use XF\Db\DeadlockException;
-use XF\Entity\Node;
-use XF\Entity\Thread;
-use XF\Entity\User;
+use XF\Entity\Node as NodeEntity;
+use XF\Entity\Thread as ThreadEntity;
+use XF\Entity\User as UserEntity;
 use XF\Mvc\Entity\Repository;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View as ViewReply;
@@ -352,13 +352,13 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param int    $threadViewType
-     * @param string $ip
-     * @param string $robotKey
-     * @param User   $viewingUser
+     * @param int        $threadViewType
+     * @param string     $ip
+     * @param string     $robotKey
+     * @param UserEntity $viewingUser
      * @return array{user_id: int, username: string, visible: bool, robot: ?int, display_style_group_id: int, avatar_date: int, gravatar: string, ip: string }
      */
-    protected function buildSessionActivityBlob(int $threadViewType, string $ip, string $robotKey, User $viewingUser): array
+    protected function buildSessionActivityBlob(int $threadViewType, string $ip, string $robotKey, UserEntity $viewingUser): array
     {
         $userId = $viewingUser->user_id;
         $data = [
@@ -487,13 +487,13 @@ class UserActivity extends Repository
     //records: array{user_id: int, username: string, visible: bool, robot: ?int, display_style_group_id: int, avatar_date: int, gravatar: string, ip: string }
 
     /**
-     * @param string $contentType
-     * @param int    $contentId
-     * @param User   $viewingUser
-     * @param bool   $fetchUserList
+     * @param string     $contentType
+     * @param int        $contentId
+     * @param UserEntity $viewingUser
+     * @param bool       $fetchUserList
      * @return array{total: int, members: int, guests: int, robots: int, recordsUnseen: int, records: array}
      */
-    protected function getUsersViewing(string $contentType, int $contentId, User $viewingUser, bool $fetchUserList): array
+    protected function getUsersViewing(string $contentType, int $contentId, UserEntity $viewingUser, bool $fetchUserList): array
     {
         $app = \XF::app();
         $options = $app->options();
@@ -582,6 +582,7 @@ class UserActivity extends Repository
                 {
                     $rec = @array_combine(self::CacheKeys, $data);
                 }
+                /** @noinspection PhpMultipleClassDeclarationsInspection */
                 catch(\ValueError $e)
                 {
                     $rec = null;
@@ -790,12 +791,12 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param string|null $ip
-     * @param string|null $robotKey
-     * @param User|null   $viewingUser
+     * @param string|null     $ip
+     * @param string|null     $robotKey
+     * @param UserEntity|null $viewingUser
      * @return void
      */
-    public function flushTrackViewerUsageBuffer(?string $ip = null, ?string $robotKey = null, ?User $viewingUser = null): void
+    public function flushTrackViewerUsageBuffer(?string $ip = null, ?string $robotKey = null, ?UserEntity $viewingUser = null): void
     {
         if (!$this->isLogging() || count($this->trackBuffer) === 0)
         {
@@ -911,7 +912,7 @@ class UserActivity extends Repository
         {
             return [];
         }
-        /** @var Thread[] $threads */
+        /** @var ThreadEntity[] $threads */
         $threads = $params[$key];
 
         $visitor = \XF::visitor();
@@ -934,13 +935,13 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param ViewReply $response
-     * @param Node      $node
-     * @param bool      $pushToNode
-     * @param string[]  $keys
+     * @param ViewReply  $response
+     * @param NodeEntity $node
+     * @param bool       $pushToNode
+     * @param string[]   $keys
      * @return void
      */
-    public function pushViewUsageToParent(ViewReply $response, Node $node, bool $pushToNode = false, array $keys = ['forum'])
+    public function pushViewUsageToParent(ViewReply $response, NodeEntity $node, bool $pushToNode = false, array $keys = ['forum'])
     {
         $options = \XF::options();
         foreach($keys as $key)

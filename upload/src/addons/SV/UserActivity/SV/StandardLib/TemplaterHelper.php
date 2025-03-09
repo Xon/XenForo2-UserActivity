@@ -2,6 +2,7 @@
 
 namespace SV\UserActivity\SV\StandardLib;
 
+use SV\StandardLib\Helper;
 use XF\Entity\User as UserEntity;
 use function is_array;
 
@@ -31,12 +32,10 @@ class TemplaterHelper extends XFCP_TemplaterHelper
         $fauxUser = $this->templater->processAttributeToRaw($attributes, 'faux-user', '', true);
         if ($fauxUser && is_array($user))
         {
-            $em = \XF::em();
-            $fauxUser = \SV\StandardLib\Helper::findCached(\XF\Entity\User::class, $user['user_id']);
-            if (!$fauxUser)
+            $fauxUser = Helper::findCached(UserEntity::class, $user['user_id']);
+            if ($fauxUser === null)
             {
-                /** @var UserEntity $fauxUser */
-                $fauxUser = \SV\StandardLib\Helper::instantiateEntity(\XF\Entity\User::class, ['user_id' => $user['user_id'], 'language_id' => 0]);
+                $fauxUser = Helper::instantiateEntity(UserEntity::class, ['user_id' => $user['user_id'], 'language_id' => 0]);
                 foreach ($user as $key => $value)
                 {
                     if ($fauxUser->offsetExists($key))

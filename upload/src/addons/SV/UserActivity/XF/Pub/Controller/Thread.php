@@ -5,6 +5,7 @@ namespace SV\UserActivity\XF\Pub\Controller;
 use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
+use XF\Entity\Thread as ThreadEntity;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\View as ViewReply;
 
@@ -17,7 +18,7 @@ class Thread extends XFCP_Thread
         if ($response instanceof ViewReply)
         {
             $thread = $response->getParam('thread');
-            if ($thread instanceof \XF\Entity\Thread)
+            if ($thread instanceof ThreadEntity)
             {
                 UserActivityRepo::get()->pushViewUsageToParent($response, $thread->Forum->Node, true);
             }
@@ -33,7 +34,7 @@ class Thread extends XFCP_Thread
         $threads = $response->getParam('svSimilarThreads');
         if ($threads)
         {
-            /** @var \XF\Entity\Thread $thread */
+            /** @var ThreadEntity $thread */
             foreach ($threads as $thread)
             {
                 $threadIds[] = $thread->thread_id;
@@ -47,7 +48,7 @@ class Thread extends XFCP_Thread
     protected function threadFetcher(ViewReply $response, string $action, array $config): array
     {
         $thread = $response->getParam('thread');
-        if ($thread instanceof \XF\Entity\Thread )
+        if ($thread instanceof ThreadEntity)
         {
             return [$thread->thread_id];
         }

@@ -10,7 +10,7 @@ use XF\AddOn\StepRunnerUninstallTrait;
 use XF\AddOn\StepRunnerUpgradeTrait;
 use XF\Db\Schema\Alter;
 use XF\Db\Schema\Create;
-use XF\Entity\User;
+use XF\Entity\User as UserEntity;
 
 /**
  * Add-on installation, upgrade, and uninstall routines.
@@ -128,7 +128,7 @@ class Setup extends AbstractSetup
 
         if ($previousVersion === 0)
         {
-            $this->applyGlobalPermissionByGroup('svUserActivity','viewActivity', [User::GROUP_GUEST, User::GROUP_REG]);
+            $this->applyGlobalPermissionByGroup('svUserActivity','viewActivity', [UserEntity::GROUP_GUEST, UserEntity::GROUP_REG]);
             $applied = true;
         }
 
