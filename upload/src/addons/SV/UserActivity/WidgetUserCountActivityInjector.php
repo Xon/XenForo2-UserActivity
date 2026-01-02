@@ -51,12 +51,16 @@ trait WidgetUserCountActivityInjector
         return $result;
     }
 
-    /**
-     * @return WidgetRenderer
-     */
     public function render()
     {
-        return $this->_injectUserCountIntoResponse(parent::render());
+        $renderer = parent::render();
+
+        if ($renderer instanceof WidgetRenderer)
+        {
+            $renderer = $this->_injectUserCountIntoResponse($renderer);
+        }
+
+        return $renderer;
     }
 
     protected function _injectUserCountIntoResponse(WidgetRenderer $renderer): WidgetRenderer
