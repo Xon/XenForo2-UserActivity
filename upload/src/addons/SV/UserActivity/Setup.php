@@ -63,14 +63,21 @@ class Setup extends AbstractSetup
         $this->installStep2();
     }
 
-    public function upgrade1690049897Step1(): void
+    public function upgrade1690049897Step1(): void // 2.12.0
     {
         $this->renamePermission('RainDD_UA_PermissionsMain', 'RainDD_UA_ThreadViewers', 'svUserActivity', 'viewActivity');
     }
 
-    public function upgrade1690049897Step2(): void
+    public function upgrade1690049897Step2(): void // 2.12.0
     {
         $this->applyDefaultPermissions(1690049897 - 1);
+    }
+
+    public function upgrade1773457647Step1(): void // 2.15.0
+    {
+        $this->renamePermission( 'svUserActivity', 'viewCounters', 'general', 'svViewActivityCounters');
+        $this->renamePermission( 'svUserActivity', 'viewActivity', 'general', 'svViewActivity');
+        $this->renamePermission( 'svUserActivity', 'viewUsers', 'general', 'svViewActivityUsers');
     }
 
     public function uninstallStep1(): void
@@ -128,14 +135,14 @@ class Setup extends AbstractSetup
 
         if ($previousVersion === 0)
         {
-            $this->applyGlobalPermissionByGroup('svUserActivity','viewActivity', [UserEntity::GROUP_GUEST, UserEntity::GROUP_REG]);
+            $this->applyGlobalPermissionByGroup('general','svViewActivity', [UserEntity::GROUP_GUEST, UserEntity::GROUP_REG]);
             $applied = true;
         }
 
         if ($previousVersion < 1690049897)
         {
-            $this->applyGlobalPermission('svUserActivity','viewCounters', 'svUserActivity','viewActivity');
-            $this->applyGlobalPermission('svUserActivity','viewUsers', 'svUserActivity','viewActivity');
+            $this->applyGlobalPermission('general','svViewActivityCounters', 'general','svViewActivity');
+            $this->applyGlobalPermission('general','svViewActivityUsers', 'general','svViewActivity');
             $applied = true;
         }
 

@@ -1,1 +1,0 @@
-View user names/avatars in activity block

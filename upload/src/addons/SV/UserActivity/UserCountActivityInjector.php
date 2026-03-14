@@ -27,7 +27,7 @@ trait UserCountActivityInjector
         // this updates the session, and occurs after postDispatchController
         parent::postDispatchType($action, $params, $reply);
         $visitor = \XF::visitor();
-        if (!$visitor->hasPermission('svUserActivity', 'viewCounters'))
+        if (!$visitor->hasPermission('general', 'svViewActivityCounters'))
         {
             return;
         }

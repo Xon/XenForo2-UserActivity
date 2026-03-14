@@ -179,7 +179,7 @@ class UserActivity extends Repository
     public function insertBulkUserActivityIntoViewResponse(&$response, array $fetchData): void
     {
         $visitor = \XF::visitor();
-        if (!$visitor->hasPermission('svUserActivity', 'viewActivity'))
+        if (!$visitor->hasPermission('general', 'svViewActivity'))
         {
             return;
         }
@@ -204,7 +204,7 @@ class UserActivity extends Repository
         if ($response instanceof ViewReply)
         {
             $visitor = \XF::visitor();
-            if (!$visitor->hasPermission('svUserActivity', 'viewActivity'))
+            if (!$visitor->hasPermission('general', 'svViewActivity'))
             {
                 return;
             }
@@ -229,7 +229,7 @@ class UserActivity extends Repository
             {
                 return;
             }
-            $fetchUserList = (bool)$visitor->hasPermission('svUserActivity', 'viewUsers');
+            $fetchUserList = (bool)$visitor->hasPermission('general', 'svViewActivityUsers');
 
             $records = $this->getUsersViewing($contentType, $contentId, $visitor, $fetchUserList);
             if (!empty($records))
