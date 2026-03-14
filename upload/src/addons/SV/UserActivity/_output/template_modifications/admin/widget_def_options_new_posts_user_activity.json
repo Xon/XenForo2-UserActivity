@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<xf:numberboxrow name=\"options[limit]\"",
-    "replace": "<xf:macro template=\"public:UA_ViewContainer_macros\" \n\t\t  name=\"widget_admin_setup\"\n\t\t  arg-options=\"{$options}\"\n\t\t  />\n$0"
+    "replace": "<xf:macro name=\"public:UA_ViewContainer_macros::widget_admin_setup\"\n\t\t  arg-options=\"{$options}\"\n\t\t  />\n$0"
 }

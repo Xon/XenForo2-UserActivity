@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "preg_replace",
     "find": "#(<a.*?link\\('(?:direct-messages|conversations).*?\\$userConv\\.title.*?</a>)#si",
-    "replace": "$1<xf:macro template=\"UA_ViewContainer_macros\" name=\"viewerCounts\"\n\t\t\targ-recordCounts=\"{$__globals.UA_RecordCounts}\" \n\t\t\targ-contentType=\"conversation\"\n\t\t\targ-contentId=\"{$userConv.conversation_id}\"\n\t\t\t/>"
+    "replace": "$1<xf:macro name=\"UA_ViewContainer_macros::viewerCounts\"\n\t\t\targ-recordCounts=\"{$__globals.UA_RecordCounts}\" \n\t\t\targ-contentType=\"conversation\"\n\t\t\targ-contentId=\"{$userConv.conversation_id}\"\n\t\t\t/>"
 }
