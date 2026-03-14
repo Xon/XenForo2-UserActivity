@@ -88,7 +88,7 @@ trait UserCountActivityInjector
 
         if (count($fetchData) !== 0)
         {
-            UserActivityRepo::get()->insertBulkUserActivityIntoViewResponse($response, $fetchData);
+            UserActivityRepo::get()->insertUserCountActivityIntoViewResponse($response, $fetchData);
         }
     }
 }

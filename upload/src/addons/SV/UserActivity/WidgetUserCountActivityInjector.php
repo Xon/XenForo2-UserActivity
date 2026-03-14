@@ -56,7 +56,7 @@ trait WidgetUserCountActivityInjector
     {
         $renderer = parent::render();
 
-        if ($renderer instanceof WidgetRenderer)
+        if ($renderer instanceof WidgetRenderer && \XF::visitor()->hasPermission('general', 'svViewActivityCounters'))
         {
             $renderer = $this->_injectUserCountIntoResponse($renderer);
         }
@@ -117,7 +117,7 @@ trait WidgetUserCountActivityInjector
 
         if (count($fetchData) !== 0)
         {
-            UserActivityRepo::get()->insertBulkUserActivityIntoViewResponse($renderer, $fetchData);
+            UserActivityRepo::get()->insertUserCountActivityIntoViewResponse($renderer, $fetchData);
         }
 
         return $renderer;

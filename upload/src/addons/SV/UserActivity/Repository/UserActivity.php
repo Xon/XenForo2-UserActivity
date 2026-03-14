@@ -172,19 +172,22 @@ class UserActivity extends Repository
         return $handler ? $this->validateHandler($handler) : [];
     }
 
+    /** @deprecated */
+    public function insertBulkUserActivityIntoViewResponse(&$response, array $fetchData): void
+    {
+        if (\XF::visitor()->hasPermission('general', 'svViewActivity'))
+        {
+            $this->insertUserCountActivityIntoViewResponse($response, $fetchData);
+        }
+    }
+
     /**
      * @param AbstractReply|WidgetRenderer $response
      * @param array                        $fetchData
      * @return void
      */
-    public function insertBulkUserActivityIntoViewResponse(&$response, array $fetchData): void
+    public function insertUserCountActivityIntoViewResponse(&$response, array $fetchData): void
     {
-        $visitor = \XF::visitor();
-        if (!$visitor->hasPermission('general', 'svViewActivity'))
-        {
-            return;
-        }
-
         if ($response instanceof ViewReply)
         {
             $response->setParam('UA_RecordCounts', $this->getUsersViewingCount($fetchData));
