@@ -14,28 +14,28 @@ class ActivityGarbageCollect extends AbstractJob
      */
     public function run($maxRunTime): JobResult
     {
-		$data = UserActivityRepo::get()->garbageCollectActivity($this->data, $maxRunTime);
-		if (!$data)
-		{
-			return $this->complete();
-		}
+        $data = UserActivityRepo::get()->garbageCollectActivity($this->data, $maxRunTime);
+        if (!$data)
+        {
+            return $this->complete();
+        }
         $this->data = $data;
 
         return $this->resume();
     }
 
-	public function getStatusMessage(): string
+    public function getStatusMessage(): string
     {
-		return '';
-	}
+        return '';
+    }
 
-	public function canCancel(): bool
+    public function canCancel(): bool
     {
-		return false;
-	}
+        return false;
+    }
 
-	public function canTriggerByChoice(): bool
+    public function canTriggerByChoice(): bool
     {
-		return false;
-	}
+        return false;
+    }
 }
