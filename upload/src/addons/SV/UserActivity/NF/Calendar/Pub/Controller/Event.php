@@ -10,10 +10,10 @@ use SV\UserActivity\UserActivityInjector;
 class Event extends XFCP_Event
 {
     protected $activityInjector = [
-        'type'       => 'event',
-        'id'         => 'event_id',
-        'actions'    => ['view'],
-        'activeKey'  => 'nf_calendar',
+        'type'      => 'event',
+        'id'        => 'event_id',
+        'actions'   => ['view'],
+        'activeKey' => 'nf_calendar',
     ];
     use UserActivityInjector;
 }

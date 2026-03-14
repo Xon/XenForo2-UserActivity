@@ -11,13 +11,14 @@ use XF\Http\Request;
 use XF\Widget\WidgetRenderer;
 use function array_merge;
 use function array_replace;
+use function count;
 use function is_array;
 use function is_callable;
 use function is_string;
 
 /**
  * @property array{userActivity: bool} $options
- * @property array $widgetCountActivityInjector
+ * @property array                     $widgetCountActivityInjector
  */
 trait WidgetUserCountActivityInjector
 {
@@ -37,9 +38,9 @@ trait WidgetUserCountActivityInjector
     }
 
     /**
-     * @param Request $request
-     * @param array            $options
-     * @param string|null      $error
+     * @param Request     $request
+     * @param array       $options
+     * @param string|null $error
      * @return bool
      */
     public function verifyOptions(Request $request, array &$options, &$error = null)

@@ -49,7 +49,7 @@ trait UserActivityInjector
     }
 
     /**
-     * @param $action
+     * @param              $action
      * @param ParameterBag $params
      */
     public function preDispatch($action, ParameterBag $params)
@@ -64,8 +64,8 @@ trait UserActivityInjector
     }
 
     /**
-     * @param string $action
-     * @param ParameterBag $params
+     * @param string        $action
+     * @param ParameterBag  $params
      * @param AbstractReply $reply
      */
     public function postDispatch($action, ParameterBag $params, AbstractReply &$reply)

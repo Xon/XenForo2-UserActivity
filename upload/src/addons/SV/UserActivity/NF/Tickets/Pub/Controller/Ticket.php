@@ -40,10 +40,10 @@ class Ticket extends XFCP_Ticket
     }
 
     protected $activityInjector = [
-        'type'       => 'ticket',
-        'id'         => 'ticket_id',
-        'actions'    => ['view'],
-        'activeKey'  => 'nf_ticket',
+        'type'      => 'ticket',
+        'id'        => 'ticket_id',
+        'actions'   => ['view'],
+        'activeKey' => 'nf_ticket',
     ];
     use UserActivityInjector;
 }

@@ -61,22 +61,22 @@ class Thread extends XFCP_Thread
             'activeKey' => 'similar-threads',
             'type'      => 'thread',
             'actions'   => ['index'],
-            'fetcher'   => 'similarThreadFetcher'
+            'fetcher'   => 'similarThreadFetcher',
         ],
         [
             'activeKey' => 'thread-view',
             'type'      => 'thread',
             'actions'   => ['index'],
-            'fetcher'   => 'threadFetcher'
+            'fetcher'   => 'threadFetcher',
         ],
     ];
     use UserCountActivityInjector;
 
     protected $activityInjector = [
-        'type'       => 'thread',
-        'id'         => 'thread_id',
-        'actions'    => ['index'],
-        'activeKey'  => 'thread',
+        'type'      => 'thread',
+        'id'        => 'thread_id',
+        'actions'   => ['index'],
+        'activeKey' => 'thread',
     ];
     use UserActivityInjector;
 }

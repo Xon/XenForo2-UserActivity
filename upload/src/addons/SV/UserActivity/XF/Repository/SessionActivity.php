@@ -7,11 +7,11 @@ use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 class SessionActivity extends XFCP_SessionActivity
 {
     /**
-     * @param int $userId
-     * @param mixed $ip
+     * @param int    $userId
+     * @param mixed  $ip
      * @param string $controller
      * @param string $action
-     * @param array $params
+     * @param array  $params
      * @param string $viewState enum('valid','error')
      * @param string $robotKey
      * @return void

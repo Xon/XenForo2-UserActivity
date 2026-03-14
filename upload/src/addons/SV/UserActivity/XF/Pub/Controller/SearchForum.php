@@ -5,8 +5,8 @@ namespace SV\UserActivity\XF\Pub\Controller;
 use SV\UserActivity\Repository\UserActivity as UserActivityRepo;
 use SV\UserActivity\UserActivityInjector;
 use SV\UserActivity\UserCountActivityInjector;
-use XF\Entity\SearchForum as SearchForumEntity;
 use XF\Entity\Node as NodeEntity;
+use XF\Entity\SearchForum as SearchForumEntity;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View as ViewReply;
@@ -75,6 +75,7 @@ class SearchForum extends XFCP_SearchForum
         $depth = $action === 'list' ? 1 : 0;
         /** @var Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
+
         return $repo->getFilteredForumNodeIds($this->nodeListFetcher('Forum', $depth, $nodeTree));
     }
 
@@ -85,19 +86,20 @@ class SearchForum extends XFCP_SearchForum
         $depth = $action === 'list' ? 1 : 0;
         /** @var Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
+
         return $repo->getFilteredCategoryNodeIds($this->nodeListFetcher('Category', $depth, $nodeTree));
     }
 
     /** @noinspection PhpUnusedParameterInspection */
     protected function threadFetcher(ViewReply $response, string $action, array $config): array
     {
-        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(),'threads');
+        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(), 'threads');
     }
 
     /** @noinspection PhpUnusedParameterInspection */
     protected function stickyThreadFetcher(ViewReply $response, string $action, array $config): array
     {
-        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(),'stickyThreads');
+        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(), 'stickyThreads');
     }
 
     protected $countActivityInjector = [
@@ -129,16 +131,16 @@ class SearchForum extends XFCP_SearchForum
             'activeKey' => 'thread',
             'type'      => 'thread',
             'actions'   => ['view'],
-            'fetcher'   => 'threadFetcher'
+            'fetcher'   => 'threadFetcher',
         ],
     ];
     use UserCountActivityInjector;
 
     protected $activityInjector = [
-        'type'       => 'node',
-        'id'         => 'node_id',
-        'actions'    => ['view'],
-        'activeKey'  => 'search-forum',
+        'type'      => 'node',
+        'id'        => 'node_id',
+        'actions'   => ['view'],
+        'activeKey' => 'search-forum',
     ];
     use UserActivityInjector;
 

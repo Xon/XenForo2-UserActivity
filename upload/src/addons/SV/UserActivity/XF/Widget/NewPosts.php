@@ -20,7 +20,7 @@ class NewPosts extends XFCP_NewPosts
     protected $widgetCountActivityInjector = [
         [
             'type'    => 'thread',
-            'fetcher' => 'threadFetcher'
+            'fetcher' => 'threadFetcher',
         ],
     ];
     use WidgetUserCountActivityInjector;

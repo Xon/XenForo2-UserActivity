@@ -16,7 +16,7 @@ class Watched extends XFCP_Watched
     /** @noinspection PhpUnusedParameterInspection */
     protected function threadFetcher(ViewReply $response, string $action, array $config): array
     {
-        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(),'threads');
+        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(), 'threads');
     }
 
     /** @noinspection PhpUnusedParameterInspection */
@@ -41,13 +41,13 @@ class Watched extends XFCP_Watched
             'activeKey' => 'watched-threads',
             'type'      => 'thread',
             'actions'   => ['threads'],
-            'fetcher'   => 'threadFetcher'
+            'fetcher'   => 'threadFetcher',
         ],
         [
             'activeKey' => 'watched-forums',
             'type'      => 'node',
             'actions'   => ['forums'],
-            'fetcher'   => 'forumListFetcher'
+            'fetcher'   => 'forumListFetcher',
         ],
     ];
     use UserCountActivityInjector;

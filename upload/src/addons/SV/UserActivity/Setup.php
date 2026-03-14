@@ -17,7 +17,8 @@ use XF\Entity\User as UserEntity;
  */
 class Setup extends AbstractSetup
 {
-    use InstallerHelper {
+    use InstallerHelper
+    {
         checkRequirements as protected checkRequirementsTrait;
     }
     use StepRunnerInstallTrait;
@@ -75,9 +76,9 @@ class Setup extends AbstractSetup
 
     public function upgrade1773457647Step1(): void // 2.15.0
     {
-        $this->renamePermission( 'svUserActivity', 'viewCounters', 'general', 'svViewActivityCounters');
-        $this->renamePermission( 'svUserActivity', 'viewActivity', 'general', 'svViewActivity');
-        $this->renamePermission( 'svUserActivity', 'viewUsers', 'general', 'svViewActivityUsers');
+        $this->renamePermission('svUserActivity', 'viewCounters', 'general', 'svViewActivityCounters');
+        $this->renamePermission('svUserActivity', 'viewActivity', 'general', 'svViewActivity');
+        $this->renamePermission('svUserActivity', 'viewUsers', 'general', 'svViewActivityUsers');
     }
 
     public function uninstallStep1(): void
@@ -115,7 +116,7 @@ class Setup extends AbstractSetup
                 $this->addOrChangeColumn($table, 'blob', 'varbinary', 255);
                 $table->addUniqueKey(['content_type', 'content_id', 'blob'], 'content');
                 $table->addKey(['timestamp', 'content_id'], 'timestamp');
-            }
+            },
         ];
     }
 
@@ -135,14 +136,14 @@ class Setup extends AbstractSetup
 
         if ($previousVersion === 0)
         {
-            $this->applyGlobalPermissionByGroup('general','svViewActivity', [UserEntity::GROUP_GUEST, UserEntity::GROUP_REG]);
+            $this->applyGlobalPermissionByGroup('general', 'svViewActivity', [UserEntity::GROUP_GUEST, UserEntity::GROUP_REG]);
             $applied = true;
         }
 
         if ($previousVersion < 1690049897)
         {
-            $this->applyGlobalPermission('general','svViewActivityCounters', 'general','svViewActivity');
-            $this->applyGlobalPermission('general','svViewActivityUsers', 'general','svViewActivity');
+            $this->applyGlobalPermission('general', 'svViewActivityCounters', 'general', 'svViewActivity');
+            $this->applyGlobalPermission('general', 'svViewActivityUsers', 'general', 'svViewActivity');
             $applied = true;
         }
 
@@ -156,7 +157,7 @@ class Setup extends AbstractSetup
      */
     public function checkRequirements(&$errors = [], &$warnings = []): void
     {
-        $this->checkRequirementsTrait($errors,$warnings);
+        $this->checkRequirementsTrait($errors, $warnings);
 
         $redis = UserActivityRepo::get()->getRedisConnector();
         if ($redis === null)

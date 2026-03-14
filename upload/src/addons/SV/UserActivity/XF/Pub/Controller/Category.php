@@ -97,13 +97,13 @@ class Category extends XFCP_Category
             'activeKey' => 'sub-forum',
             'type'      => 'node',
             'actions'   => ['index'],
-            'fetcher'   => 'categoryListFetcher'
+            'fetcher'   => 'categoryListFetcher',
         ],
         [
             'activeKey' => 'category-view',
             'type'      => 'node',
             'actions'   => ['index'],
-            'fetcher'   => 'categoryFetcher'
+            'fetcher'   => 'categoryFetcher',
         ],
     ];
     use UserCountActivityInjector;

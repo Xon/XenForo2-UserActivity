@@ -50,6 +50,7 @@ class TemplaterHelper extends XFCP_TemplaterHelper
         }
 
         $oldFnAvatar = $this->oldFnAvatar;
+
         //$this->templater->fnAvatar($templater, $escape, $user, $size, $canonical, $attributes);
         return $oldFnAvatar($templater, $escape, $user, $size, $canonical, $attributes);
     }

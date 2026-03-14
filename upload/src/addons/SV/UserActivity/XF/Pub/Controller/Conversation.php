@@ -40,16 +40,16 @@ class Conversation extends XFCP_Conversation
             'activeKey' => 'conversation',
             'type'      => 'conversation',
             'actions'   => ['index', 'labeled'],
-            'fetcher'   => 'conversationFetcher'
+            'fetcher'   => 'conversationFetcher',
         ],
     ];
     use UserCountActivityInjector;
 
     protected $activityInjector = [
-        'type'       => 'conversation',
-        'id'         => 'conversation_id',
-        'actions'    => ['view'],
-        'activeKey'  => 'conversation',
+        'type'      => 'conversation',
+        'id'        => 'conversation_id',
+        'actions'   => ['view'],
+        'activeKey' => 'conversation',
     ];
     use UserActivityInjector;
 }

@@ -26,6 +26,7 @@ use function count;
 use function explode;
 use function implode;
 use function is_array;
+use function join;
 use function max;
 use function strlen;
 
@@ -61,49 +62,49 @@ class UserActivity extends Repository
     public function getDisplayCounts(): array
     {
         return [
-            'thread' => \XF::phrase('svUserActivity_display_counts.thread'),
-            'thread-view' => \XF::phrase('svUserActivity_display_counts.thread_view'),
-            'sticky-thread' => \XF::phrase('svUserActivity_display_counts.sticky_thread'),
-            'index-forum' => \XF::phrase('svUserActivity_display_counts.index_forum'),
-            'index-category' => \XF::phrase('svUserActivity_display_counts.index_category'),
-            'forum' => \XF::phrase('svUserActivity_display_counts.forum'),
-            'search-forum' => \XF::phrase('svUserActivity_display.search_forum'),
-            'category-view' => \XF::phrase('svUserActivity_display_counts.category_view'),
+            'thread'          => \XF::phrase('svUserActivity_display_counts.thread'),
+            'thread-view'     => \XF::phrase('svUserActivity_display_counts.thread_view'),
+            'sticky-thread'   => \XF::phrase('svUserActivity_display_counts.sticky_thread'),
+            'index-forum'     => \XF::phrase('svUserActivity_display_counts.index_forum'),
+            'index-category'  => \XF::phrase('svUserActivity_display_counts.index_category'),
+            'forum'           => \XF::phrase('svUserActivity_display_counts.forum'),
+            'search-forum'    => \XF::phrase('svUserActivity_display.search_forum'),
+            'category-view'   => \XF::phrase('svUserActivity_display_counts.category_view'),
             'similar-threads' => \XF::phrase('svUserActivity_display_counts.similar_threads'),
-            'sub-forum' => \XF::phrase('svUserActivity_display_counts.sub_forum'),
-            'find-new' => \XF::phrase('svUserActivity_display_counts.find_new'),
-            'watched-forums' => \XF::phrase('svUserActivity_display_counts.watched_forums'),
+            'sub-forum'       => \XF::phrase('svUserActivity_display_counts.sub_forum'),
+            'find-new'        => \XF::phrase('svUserActivity_display_counts.find_new'),
+            'watched-forums'  => \XF::phrase('svUserActivity_display_counts.watched_forums'),
             'watched-threads' => \XF::phrase('svUserActivity_display_counts.watched_threads'),
-            'conversation' => \XF::phrase('svUserActivity_display_counts.conversation'),
-            'report' => \XF::phrase('svUserActivity_display_counts.report'),
-            'report-list' => \XF::phrase('svUserActivity_display_counts.report_list'),
+            'conversation'    => \XF::phrase('svUserActivity_display_counts.conversation'),
+            'report'          => \XF::phrase('svUserActivity_display_counts.report'),
+            'report-list'     => \XF::phrase('svUserActivity_display_counts.report_list'),
         ];
     }
 
     public function getDisplayUsers(): array
     {
         return [
-            'thread' => \XF::phrase('svUserActivity_display.thread'),
-            'forum' => \XF::phrase('svUserActivity_display.forum'),
+            'thread'       => \XF::phrase('svUserActivity_display.thread'),
+            'forum'        => \XF::phrase('svUserActivity_display.forum'),
             'search-forum' => \XF::phrase('svUserActivity_display.search_forum'),
             'conversation' => \XF::phrase('svUserActivity_display.conversation'),
-            'report' => \XF::phrase('svUserActivity_display.report'),
-            'nf_ticket' => \XF::phrase('svUserActivity_display.nf_ticket'),
-            'nf_calendar' => \XF::phrase('svUserActivity_display.nf_calendar'),
+            'report'       => \XF::phrase('svUserActivity_display.report'),
+            'nf_ticket'    => \XF::phrase('svUserActivity_display.nf_ticket'),
+            'nf_calendar'  => \XF::phrase('svUserActivity_display.nf_calendar'),
         ];
     }
 
     public function getPopulateUsers(): array
     {
         return [
-            'thread' => \XF::phrase('svUserActivity_display.thread'),
-            'forum' => \XF::phrase('svUserActivity_display.forum'),
+            'thread'       => \XF::phrase('svUserActivity_display.thread'),
+            'forum'        => \XF::phrase('svUserActivity_display.forum'),
             'search-forum' => \XF::phrase('svUserActivity_display.search_forum'),
-            'category' => \XF::phrase('svUserActivity_display.category'),
+            'category'     => \XF::phrase('svUserActivity_display.category'),
             'conversation' => \XF::phrase('svUserActivity_display.conversation'),
-            'report' => \XF::phrase('svUserActivity_display.report'),
-            'nf_ticket' => \XF::phrase('svUserActivity_display.nf_ticket'),
-            'nf_calendar' => \XF::phrase('svUserActivity_display.nf_calendar'),
+            'report'       => \XF::phrase('svUserActivity_display.report'),
+            'nf_ticket'    => \XF::phrase('svUserActivity_display.nf_ticket'),
+            'nf_calendar'  => \XF::phrase('svUserActivity_display.nf_calendar'),
         ];
     }
 
@@ -151,8 +152,8 @@ class UserActivity extends Repository
     }
 
     /**
-     * @param string $controllerName
-     * @param array{controller: string, id: string, type: string, actions: array<string>, activeKey: string}  $handler
+     * @param string                                                                                         $controllerName
+     * @param array{controller: string, id: string, type: string, actions: array<string>, activeKey: string} $handler
      * @return void
      */
     public function registerHandler(string $controllerName, array $handler): void
@@ -245,11 +246,12 @@ class UserActivity extends Repository
         {
             return null;
         }
+
         return \XF::isAddOnActive('SV/RedisCache') ? RedisRepo::get()->getRedisConnector('userActivity') : null;
     }
 
     /**
-     * @param array        $data
+     * @param array      $data
      * @param float|null $targetRunTime
      * @return array|null
      * @noinspection PhpUnusedParameterInspection
@@ -269,8 +271,8 @@ class UserActivity extends Repository
 
 
     /**
-     * @param array $data
-     * @param float|null  $targetRunTime
+     * @param array      $data
+     * @param float|null $targetRunTime
      * @return array|null
      */
     public function garbageCollectActivity(array $data, ?float $targetRunTime = null): ?array
@@ -305,7 +307,7 @@ class UserActivity extends Repository
         return $data;
     }
 
-    protected const LUA_IFZADDEXPIRE_SH1 = 'dc1d76eefaca2f4ccf848a6ed7e80def200ac7b7';
+    protected const LUA_IFZADDEXPIRE_SH1    = 'dc1d76eefaca2f4ccf848a6ed7e80def200ac7b7';
     protected const LUA_IFZADDEXPIRE_SCRIPT = "local c = tonumber(redis.call('zscore', KEYS[1], ARGV[2])) " .
                                               'local n = tonumber(ARGV[1]) ' .
                                               'local retVal = 0 ' .
@@ -456,10 +458,10 @@ class UserActivity extends Repository
     ];
 
     /**
-     * @param string  $contentType
-     * @param int $contentId
-     * @param int $start
-     * @param int $end
+     * @param string $contentType
+     * @param int    $contentId
+     * @param int    $start
+     * @param int    $end
      * @return array
      * @noinspection PhpUnusedParameterInspection
      */
@@ -517,7 +519,7 @@ class UserActivity extends Repository
         {
             $rec = [];
             $structure = $viewingUser->structure();
-            foreach(self::CacheKeys as $key)
+            foreach (self::CacheKeys as $key)
             {
                 if (array_key_exists($key, $structure->columns))
                 {
@@ -579,8 +581,8 @@ class UserActivity extends Repository
                 {
                     $rec = @array_combine(self::CacheKeys, $data);
                 }
-                /** @noinspection PhpMultipleClassDeclarationsInspection */
-                catch(\ValueError $e)
+                    /** @noinspection PhpMultipleClassDeclarationsInspection */
+                catch (\ValueError $e)
                 {
                     $rec = null;
                 }
@@ -940,7 +942,7 @@ class UserActivity extends Repository
     {
         $options = \XF::options();
         $pop = $options->svUAPopulateUsers ?? [];
-        foreach($keys as $key)
+        foreach ($keys as $key)
         {
             if (!($pop[$key] ?? false))
             {
@@ -987,7 +989,7 @@ class UserActivity extends Repository
             $count = 1;
             if ($node->breadcrumb_data)
             {
-                foreach ($node->breadcrumb_data AS $crumb)
+                foreach ($node->breadcrumb_data as $crumb)
                 {
                     if ($crumb['node_type_id'] === 'Forum')
                     {

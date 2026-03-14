@@ -8,15 +8,16 @@ use SV\UserActivity\UserCountActivityInjector;
 use XF\Entity\Report as ReportEntity;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Reply\View as ViewReply;
+use function array_keys;
 use function is_array;
 
 class Report extends XFCP_Report
 {
     protected $activityInjector = [
-        'type'       => 'report',
-        'id'         => 'report_id',
-        'actions'    => ['view'],
-        'activeKey'  => 'report',
+        'type'      => 'report',
+        'id'        => 'report_id',
+        'actions'   => ['view'],
+        'activeKey' => 'report',
     ];
     use UserActivityInjector;
 
@@ -27,18 +28,18 @@ class Report extends XFCP_Report
 //            'actions'   => ['index', 'closed'],
 //            'fetcher'   => 'reportQueueFetcher',
 //        ],
-        [
-            'activeKey' => 'report-list',
-            'type'      => 'report',
-            'actions'   => ['index', 'closed'],
-            'fetcher'   => 'reportsFetcher',
-        ],
-        [
-            'activeKey' => 'report',
-            'type'      => 'report',
-            'actions'   => ['view'],
-            'fetcher'   => 'reportsFetcher'
-        ],
+[
+    'activeKey' => 'report-list',
+    'type'      => 'report',
+    'actions'   => ['index', 'closed'],
+    'fetcher'   => 'reportsFetcher',
+],
+[
+    'activeKey' => 'report',
+    'type'      => 'report',
+    'actions'   => ['view'],
+    'fetcher'   => 'reportsFetcher',
+],
     ];
     use UserCountActivityInjector;
 
@@ -50,7 +51,7 @@ class Report extends XFCP_Report
         $reports = $response->getParam('openReports');
         if ($reports instanceof AbstractCollection || is_array($reports))
         {
-            foreach($reports as $report)
+            foreach ($reports as $report)
             {
                 if ($report instanceof ReportEntity)
                 {
@@ -62,7 +63,7 @@ class Report extends XFCP_Report
         $reports = $response->getParam('closedReports');
         if ($reports instanceof AbstractCollection || is_array($reports))
         {
-            foreach($reports as $report)
+            foreach ($reports as $report)
             {
                 if ($report instanceof ReportEntity)
                 {
@@ -89,7 +90,7 @@ class Report extends XFCP_Report
             $queues = $response->getParam('reportQueues');
             if ($queues instanceof AbstractCollection || is_array($queues))
             {
-                foreach($queues as $queue)
+                foreach ($queues as $queue)
                 {
                     if ($queue instanceof ReportQueueEntity)
                     {

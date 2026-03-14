@@ -75,6 +75,7 @@ class Forum extends XFCP_Forum
         $depth = $action === 'list' ? 1 : 0;
         /** @var Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
+
         return $repo->getFilteredForumNodeIds($this->nodeListFetcher('Forum', $depth, $nodeTree));
     }
 
@@ -85,19 +86,20 @@ class Forum extends XFCP_Forum
         $depth = $action === 'list' ? 1 : 0;
         /** @var Tree $nodeTree */
         $nodeTree = $response->getParam('nodeTree');
+
         return $repo->getFilteredCategoryNodeIds($this->nodeListFetcher('Category', $depth, $nodeTree));
     }
 
     /** @noinspection PhpUnusedParameterInspection */
     protected function threadFetcher(ViewReply $response, string $action, array $config): array
     {
-        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(),'threads');
+        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(), 'threads');
     }
 
     /** @noinspection PhpUnusedParameterInspection */
     protected function stickyThreadFetcher(ViewReply $response, string $action, array $config): array
     {
-        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(),'stickyThreads');
+        return UserActivityRepo::get()->getFilteredThreadIds($response->getParams(), 'stickyThreads');
     }
 
     protected $countActivityInjector = [
@@ -129,22 +131,22 @@ class Forum extends XFCP_Forum
             'activeKey' => 'thread',
             'type'      => 'thread',
             'actions'   => ['forum'],
-            'fetcher'   => 'threadFetcher'
+            'fetcher'   => 'threadFetcher',
         ],
         [
             'activeKey' => 'sticky-thread',
             'type'      => 'thread',
             'actions'   => ['forum'],
-            'fetcher'   => 'stickyThreadFetcher'
+            'fetcher'   => 'stickyThreadFetcher',
         ],
     ];
     use UserCountActivityInjector;
 
     protected $activityInjector = [
-        'type'       => 'node',
-        'id'         => 'node_id',
-        'actions'    => ['forum'],
-        'activeKey'  => 'forum',
+        'type'      => 'node',
+        'id'        => 'node_id',
+        'actions'   => ['forum'],
+        'activeKey' => 'forum',
     ];
     use UserActivityInjector;
 

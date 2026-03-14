@@ -15,10 +15,10 @@ use function strtolower;
 class Post extends XFCP_Post
 {
     protected $activityInjector = [
-        'type'       => 'thread',
-        'id'         => 'thread_id',
-        'actions'    => [],
-        'activeKey'  => 'thread',
+        'type'      => 'thread',
+        'id'        => 'thread_id',
+        'actions'   => [],
+        'activeKey' => 'thread',
     ];
     use UserActivityInjector;
 
