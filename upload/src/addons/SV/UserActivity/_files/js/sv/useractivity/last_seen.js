@@ -52,7 +52,7 @@ SV.extendObject = SV.extendObject || XF.extendObject || jQuery.extend;
             this.dateHtml = dateElement.innerHTML;
 
             if (this.dateHtml) {
-                const content = XF.phrase('ua_x_was_last_seen', {'{username}': this.options.username, '{date}': this.dateHtml}),
+                const content = XF.phrase('ua_x_was_last_seen', {'{username}': XF.htmlspecialchars(this.options.username), '{date}': this.dateHtml}),
                     tooltipOptions = XF.TooltipOptions.extractTooltip(this.options),
                     triggerOptions = XF.TooltipOptions.extractTrigger(this.options);
                 tooltipOptions.html = true;
